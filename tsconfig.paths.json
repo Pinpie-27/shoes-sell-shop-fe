@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "paths": {
+            "validate":["src/lib/utils/zod"],
+            "types": ["src/lib/interfaces"],
+            "@/*": ["src/*"]
+        }
+    }
+}

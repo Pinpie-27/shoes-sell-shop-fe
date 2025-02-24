@@ -1,0 +1,24 @@
+{
+    "common": {
+        "login": "Login",
+        "sign-up": "Sign up",
+        "submit": "Submit",
+        "username": "Username",
+        "password": "Password",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address"
+    },
+    "auth": {
+        "do-not-forgot-to-check-spam-box": "Do not forgot to check SPAM box.",
+        "send-password-reset-email": "Send Password Reset Email",
+        "back-to-login": "Back to Login",
+        "forgot-password": "Forgot Password",
+        "enter-your-username": "Enter your username",
+        "enter-your-password": "Enter your password",
+        "enter-your-email": "Enter your email",
+        "enter-your-phone": "Enter your phone number",
+        "enter-your-address": "Enter your address",
+        "do-not-have-an-account": "Don't have an account?"
+    }
+}

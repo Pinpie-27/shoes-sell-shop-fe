@@ -1,0 +1,17 @@
+{
+    "common": {
+        "login": "Login",
+        "submit": "Submit",
+        "username": "Username",
+        "password": "Password"
+    },
+    "auth": {
+        "do-not-forgot-to-check-spam-box": "Do not forgot to check SPAM box.",
+        "send-password-reset-email": "Send Password Reset Email",
+        "back-to-login": "Back to Login",
+        "forgot-password": "Forgot Password",
+        "enter-your-email": "Enter your email",
+        "enter-your-password": "Enter your password",
+        "do-not-have-an-account": "Don't have an account?"
+    }
+}

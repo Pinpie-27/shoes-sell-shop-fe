@@ -1,0 +1,75 @@
+{
+  "root": true,
+  "extends": [
+      "prettier",
+      "plugin:import/errors",
+      "plugin:import/warnings",
+      "plugin:import/typescript"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+      "project": "./tsconfig.json",
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+  },
+  "plugins": ["react", "@typescript-eslint"],
+  "settings": {
+      "import/resolver": {
+          "alias": {
+              "map": [["@", "./src"] , ["types","./src/lib/interfaces"],["validate","./src/lib/utils/zod"]],
+              "extensions": [".tsx", ".ts", ".js", ".json"]
+          }
+      }
+  },
+  "ignorePatterns":["vite.config.ts"],
+  "rules": {
+      "indent": ["error", 4 ,{ "SwitchCase": 1 }],
+      "no-unused-vars": [
+          "error",
+          {
+              "vars": "all",
+              "args": "after-used",
+              "ignoreRestSiblings": false,
+              "argsIgnorePattern": "^_",
+              "varsIgnorePattern": "^Enum.*$"
+          }
+      ],
+      "arrow-body-style": ["error", "as-needed"],
+      "react/self-closing-comp": ["error", { "component": true, "html": true }],
+      "max-lines": [1, 250],
+      "react/no-multi-comp": [1],
+      "max-len": [1, { "code": 120 }],
+      "react/no-unknown-property": [2, { "ignore": ["tw", "css"] }],
+      "no-param-reassign": [
+          2,
+          {
+              "props": true,
+              "ignorePropertyModificationsForRegex": ["^draft", "^req", "^ctx"]
+          }
+      ],
+      "sort-imports": [2, { "ignoreCase": true, "ignoreDeclarationSort": true }],
+      "import/order": [
+          1,
+          {
+              "groups": [["external", "builtin"], "internal", ["sibling", "parent"], "index"],
+              "pathGroups": [
+                  {
+                      "pattern": "@(react|react-native)",
+                      "group": "external",
+                      "position": "before"
+                  },
+                  {
+                      "pattern": "@src/**",
+                      "group": "internal"
+                  }
+              ],
+              "pathGroupsExcludedImportTypes": ["internal", "react"],
+              "newlines-between": "always",
+              "alphabetize": {
+                  "order": "asc",
+                  "caseInsensitive": true
+              }
+          }
+      ]
+  }
+}
