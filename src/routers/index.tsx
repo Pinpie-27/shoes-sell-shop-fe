@@ -4,14 +4,18 @@ import { RouteObject, useRoutes } from 'react-router-dom';
 
 import { Loadable } from '@/components/Elements';
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { CustomerLayout } from '@/layouts/CustomerLayout';
 import { DefaultLayout } from '@/layouts/DefaultLayout';
 import { AuthProvider } from '@/lib/providers';
+import AccountPage from '@/pages/DashboardPage/AccountPage';
 
 const LoginPage = Loadable(lazy(() => import('@/pages/auth/LoginPage')));
 const SignUpPage = Loadable(lazy(() => import('@/pages/auth/SignUpPage')));
 const ForgotPasswordPage = Loadable(lazy(() => import('@/pages/auth/ForgotPasswordPage')));
 const DashboardPage = Loadable(lazy(() => import('@/pages/DashboardPage')));
 const NotFoundPage = Loadable(lazy(() => import('@/pages/maintenance/NotFoundPage')));
+const CustomerPage = Loadable(lazy(() => import('@/pages/CustomerPage')));
+
 
 const routers: RouteObject[] = [
     {
@@ -23,10 +27,6 @@ const routers: RouteObject[] = [
         ),
         children: [
             {
-                path: '',
-                element: <DashboardPage />,
-            },
-            {
                 path: 'dashboard',
                 element: <DashboardPage />,
             },
@@ -35,13 +35,23 @@ const routers: RouteObject[] = [
                 children: [
                     {
                         path: 'account',
-                        element: <>Account</>,
+                        element: <AccountPage/>,
                     },
                     {
                         path: 'role',
                         element: <>Role</>,
                     },
                 ],
+            },
+        ],
+    },
+    {
+        path: 'customers',
+        element: <CustomerLayout />,
+        children: [
+            {
+                path: '',
+                element: <CustomerPage />,
             },
         ],
     },

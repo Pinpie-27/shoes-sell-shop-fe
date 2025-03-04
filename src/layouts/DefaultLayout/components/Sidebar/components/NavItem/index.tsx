@@ -26,9 +26,9 @@ export const NavItem: React.FC<NavItemProps> = ({ item, level, activeUrl = '' })
 
     const toggleIcon = () =>
         isOpen ? (
-            <DownOutlined tw="ml-1 text-[0.625rem]" css={[isOpen && tw`text-primary-main`]} />
+            <DownOutlined tw="ml-1 text-black text-[0.625rem]" css={[isOpen && tw`text-primary-main`]} />
         ) : (
-            <UpOutlined tw="ml-1 text-[0.625rem]" css={[isOpen && tw`text-primary-main`]} />
+            <UpOutlined tw="ml-1 text-black text-[0.625rem]" css={[isOpen && tw`text-primary-main`]} />
         );
 
     let listItemProps = {
@@ -59,7 +59,7 @@ export const NavItem: React.FC<NavItemProps> = ({ item, level, activeUrl = '' })
                         css={[
                             isSelect || isOpen
                                 ? tw`text-primary-main!`
-                                : tw`text-textColor-primary`,
+                                : tw`text-black!`,
                             tw`w-[36px] h-[36px]`,
                         ]}
                     >
@@ -70,7 +70,7 @@ export const NavItem: React.FC<NavItemProps> = ({ item, level, activeUrl = '' })
                     primary={
                         <Typography
                             variant="h6"
-                            css={[isOpen ? tw`text-primary-main` : tw`text-textColor-primary`]}
+                            css={[isOpen ? tw`text-black` : tw`text-black`]}
                         >
                             {item.title}
                         </Typography>
