@@ -1,6 +1,4 @@
-import axios from "axios";
-
-const API_BASE_URL = "http://localhost:3000";
+import axiosClient from "@/lib/configs/axios";
 
 export interface LoginPayload {
     username: string;
@@ -9,7 +7,7 @@ export interface LoginPayload {
 
 export const login = async (data: LoginPayload) => {
     try {
-        const response = await axios.post(`${API_BASE_URL}/api/login`, data);
+        const response = await axiosClient.post("/login", data);
         return response.data;
     } catch (error: any) {
         console.error("Login error:", error.response?.data || error.message);

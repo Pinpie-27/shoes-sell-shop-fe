@@ -60,8 +60,6 @@ export const useLogin = () => {
                 return;
             }
 
-            console.log('Saving token:', result.accessToken);
-    
             if (!result?.role) {
                 console.error('Missing role in response');
                 return;
@@ -76,10 +74,9 @@ export const useLogin = () => {
                 removeUsername();
                 removePassword();
                 removeRemember();
-                sessionStorage.setItem('authToken', result.accessToken);
+                localStorage.setItem('authToken', result.accessToken);
             }
 
-            // navigate(result.role === 'admin' ? '/dashboard' : '/customers');
             setTimeout(() => {
                 navigate(result.role === 'admin' ? '/dashboard' : '/customers');
             }, 500);
@@ -90,7 +87,6 @@ export const useLogin = () => {
         
     };
 
-    
     React.useEffect(() => {
         if (remember === 'true') {
             setIsRemember(true);

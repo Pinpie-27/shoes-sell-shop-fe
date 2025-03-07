@@ -1,31 +1,41 @@
 import axios from "axios";
 
+export const BASE_URL = "http://localhost:3000/api";
 
+const getAuthToken = () => localStorage.getItem("authToken") || "";
 
-function axiosConfig () {
-    const token = sessionStorage.getItem("authToken") || localStorage.getItem("authToken");
-    if (!token) {
-        console.warn("Token not found in localStorage, checking sessionStorage...");
+// Tạo axios instance
+const axiosClient = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+        "Content-Type": "application/json",
+    },
+});
+
+// Interceptor: Add token vào headers
+axiosClient.interceptors.request.use(
+    (config) => {
+        const token = getAuthToken();
+        if (token) {
+            // eslint-disable-next-line no-param-reassign
+            config.headers.token = `Bearer ${token}`;
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
+
+// Interceptor: Xử lý lỗi 401
+axiosClient.interceptors.response.use(
+    (response) => response,
+    (error) => {
+        if (error.response?.status === 401) {
+            console.error("Unauthorized! Redirecting to login...");
+            localStorage.removeItem("authToken");
+            window.location.href = "/auth/login";
+        }
+        return Promise.reject(error);
     }
+);
 
-    if (!token) {
-        console.error("Token does not exist or has not been saved!");
-        throw new Error("Token does not exist or has not been saved!");
-    } else {
-        console.log("Fetching token:", token);
-    }
-
-    try {
-        return axios.create({
-            baseURL: "http://localhost:3000/api",
-            headers: {
-                token: `Bearer ${token}`,
-            },
-        });
-    } catch (error) {
-        console.error("Error fetching users:", error);
-        throw error;
-    }
-};
-
-export const axiosClient = axiosConfig();
+export default axiosClient;

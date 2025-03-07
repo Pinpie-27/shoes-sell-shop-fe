@@ -1,9 +1,6 @@
 import React from 'react';
 
-import { Box, Typography } from '@mui/material';
-
 import { useGetUsers } from '@/lib/hooks/features/users/get-user';
-
 
 export const UserForm: React.FC = () => {
     const { data: users, isLoading, isError } = useGetUsers();
@@ -12,18 +9,18 @@ export const UserForm: React.FC = () => {
     if (isError) return <p>Error fetching users</p>;
 
     return (
-        <Box>
-            <Typography tw="text-black">
+        <div>
+            <ul tw="text-black">
                 {users && users.length > 0 ? (
                     users.map((user: { id: number; username: string; email: string; role: string }) => (
-                        <Typography key={user.id}>
+                        <li key={user.id}>
                             <strong>{user.username}</strong> - {user.email} - {user.role}
-                        </Typography>
+                        </li>
                     ))
                 ) : (
-                    <Typography>No users found</Typography>
+                    <p>No users found</p>
                 )}
-            </Typography>
-        </Box>
+            </ul>
+        </div>
     );
 };
