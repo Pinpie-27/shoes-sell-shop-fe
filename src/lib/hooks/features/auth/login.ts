@@ -70,11 +70,13 @@ export const useLogin = () => {
                 setPassword(passwordEncrypt);
                 setRemember('true');
                 localStorage.setItem('authToken', result.accessToken);
+                localStorage.setItem('username', values.username);
             } else {
                 removeUsername();
                 removePassword();
                 removeRemember();
                 localStorage.setItem('authToken', result.accessToken);
+                localStorage.setItem('username', values.username);
             }
 
             setTimeout(() => {

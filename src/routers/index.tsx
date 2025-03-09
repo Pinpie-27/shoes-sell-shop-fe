@@ -7,6 +7,7 @@ import { AuthLayout } from '@/layouts/AuthLayout';
 import { CustomerLayout } from '@/layouts/CustomerLayout';
 import { DefaultLayout } from '@/layouts/DefaultLayout';
 import { AuthProvider } from '@/lib/providers';
+import ProfilePage from '@/pages/CustomerPage/ProfilePage';
 import AccountPage from '@/pages/DashboardPage/AccountPage';
 
 const LoginPage = Loadable(lazy(() => import('@/pages/auth/LoginPage')));
@@ -52,6 +53,10 @@ const routers: RouteObject[] = [
             {
                 path: '',
                 element: <CustomerPage />,
+            },
+            {
+                path: 'profile',
+                element: <ProfilePage />,
             },
         ],
     },
