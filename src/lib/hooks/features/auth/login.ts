@@ -69,11 +69,13 @@ export const useLogin = () => {
                 localStorage.setItem('username', values.username);
                 setRemember('true');
                 localStorage.setItem('authToken', result.accessToken);
+                localStorage.setItem('username', values.username);
             } else {
                 setLoginForm({ username: '', password: '' });
                 localStorage.setItem('username', values.username);
                 removeRemember();
                 localStorage.setItem('authToken', result.accessToken);
+                localStorage.setItem('username', values.username);
             }
 
             setTimeout(() => {

@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { Box, Button, Drawer } from '@mui/material';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Box, Drawer } from '@mui/material';
+import { useLocation } from 'react-router-dom';
 
 import { Img } from '@/components/Elements';
 
@@ -17,22 +17,10 @@ export const SideBar: React.FC = () => {
 
     const path = useLocation();
 
-    const navigate = useNavigate();
-    const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        navigate("auth/login"); 
-    };
-
     const renderContent = () => (
         <>
             <Box tw="h-[60px] p-4 flex">
                 <Img src={ananasLogo} alt="" tw="w-full h-full" />
-                <Button 
-                    onClick={handleLogout} 
-                    tw="bg-red-500 text-white px-4 py-2 rounded-md"
-                >
-                    Logout
-                </Button>
             </Box>
             {menuItems.map((item) => (
                 <NavItem item={item} key={item.id} level={1} activeUrl={path.pathname} />
