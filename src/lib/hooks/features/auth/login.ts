@@ -20,8 +20,7 @@ export const useLogin = () => {
 
     const [isRemember, setIsRemember] = React.useState<boolean>(false);
 
-    const [username, setUsername, removeUsername] = useLocalStorage<string>('username', '');
-    const [password, setPassword, removePassword] = useLocalStorage<string>('password', '');
+    const [loginForm, setLoginForm] = React.useState<LoginForm>({ username: '', password: '' });
     const [remember, setRemember, removeRemember] = useLocalStorage<string>('rememberMe', 'false');
     const { encrypt, decrypt } = useEncryption();
 
@@ -66,13 +65,13 @@ export const useLogin = () => {
             }
             if (isRemember) {
                 const passwordEncrypt = encrypt(values.password);
-                setUsername(values.username);
-                setPassword(passwordEncrypt);
+                setLoginForm({ username: values.username, password: passwordEncrypt });
+                localStorage.setItem('username', values.username);
                 setRemember('true');
                 localStorage.setItem('authToken', result.accessToken);
             } else {
-                removeUsername();
-                removePassword();
+                setLoginForm({ username: '', password: '' });
+                localStorage.setItem('username', values.username);
                 removeRemember();
                 localStorage.setItem('authToken', result.accessToken);
             }
@@ -90,9 +89,10 @@ export const useLogin = () => {
     React.useEffect(() => {
         if (remember === 'true') {
             setIsRemember(true);
-            const passwordDecrypt = password ? decrypt(password) : '';
+            const storedUsername = localStorage.getItem('username') || '';
+            const passwordDecrypt = loginForm.password ? decrypt(loginForm.password) : '';
             reset({
-                username: username || '',
+                username: storedUsername,
                 password: passwordDecrypt,
             });
         }

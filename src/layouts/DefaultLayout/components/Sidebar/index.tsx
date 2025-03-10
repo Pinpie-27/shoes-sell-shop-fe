@@ -7,7 +7,7 @@ import { Img } from '@/components/Elements';
 
 import { menuItems } from './common';
 import { NavItem } from './components';
-import ananas_logo from '../../../../assets/images/auth/ananas_logo.svg'
+import ananasLogo from '../../../../assets/images/auth/ananas_logo.svg'
 
 
 export const SideBar: React.FC = () => {  
@@ -26,7 +26,7 @@ export const SideBar: React.FC = () => {
     const renderContent = () => (
         <>
             <Box tw="h-[60px] p-4 flex">
-                <Img src={ananas_logo} alt="" tw="w-full h-full" />
+                <Img src={ananasLogo} alt="" tw="w-full h-full" />
                 <Button 
                     onClick={handleLogout} 
                     tw="bg-red-500 text-white px-4 py-2 rounded-md"
