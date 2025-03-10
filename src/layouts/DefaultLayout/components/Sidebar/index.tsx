@@ -7,7 +7,7 @@ import { Img } from '@/components/Elements';
 
 import { menuItems } from './common';
 import { NavItem } from './components';
-import ananas_logo from '../../../../assets/images/auth/ananas_logo.svg'
+import ananasLogo from '../../../../assets/images/auth/ananas_logo.svg'
 
 
 export const SideBar: React.FC = () => {  
@@ -19,8 +19,8 @@ export const SideBar: React.FC = () => {
 
     const renderContent = () => (
         <>
-            <Box tw="flex h-[60px] p-4">
-                <Img src={ananas_logo} alt="" tw="w-full h-full" />
+            <Box tw="h-[60px] p-4 flex">
+                <Img src={ananasLogo} alt="" tw="w-full h-full" />
             </Box>
             {menuItems.map((item) => (
                 <NavItem item={item} key={item.id} level={1} activeUrl={path.pathname} />
