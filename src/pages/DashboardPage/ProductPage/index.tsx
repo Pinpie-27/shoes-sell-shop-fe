@@ -3,19 +3,18 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 
 import { useTranslation } from '@/lib/hooks';
-import { UserForm } from '@/sections/dashboard';
+import { ProductForm } from '@/sections/dashboard/ProductForm';
 
-
-const AccountPage: React.FC = () => {
+const ProductPage: React.FC = () => {
     const t = useTranslation('auth');
     return (
         <Box tw="flex flex-col">
             <Box tw="flex justify-between items-end">
-                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">{t('account-page')}</Typography>
+                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">{t('product-page')}</Typography>
             </Box>
-            <UserForm/>
+            <ProductForm/>
         </Box>
     );
 };
 
-export default AccountPage;
+export default ProductPage;

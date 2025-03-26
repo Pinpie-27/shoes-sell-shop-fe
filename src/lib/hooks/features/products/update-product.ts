@@ -5,38 +5,32 @@ import tw from 'twin.macro';
 import { FormInputGenericProps } from '@/components/interactive';
 import  axiosClient from '@/lib/configs/axios';
 
-interface User {
+interface Product {
     id: number;
-    username: string;
-    email: string;
-    phone: string;
-    address: string;
-    vip_level_id: number;
-    role: string;
 }
-interface UpdateUserParams {
+interface UpdateProductParams {
     id: number;
-    updatedUser: Partial<User>;
+    updatedProduct: Partial<Product>;
 }
 
 
 
-export const updateUserById = async ({ id, updatedUser }: UpdateUserParams) => {
-    const response = await axiosClient.put(`/update/${id}`, updatedUser);
+export const updateProductById = async ({ id, updatedProduct }: UpdateProductParams) => {
+    const response = await axiosClient.put(`/product/${id}`, updatedProduct);
     return response.data;
 };
 
-export const useUpdateUser = () => {
+export const useUpdateProduct = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: updateUserById,
+        mutationFn: updateProductById,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['users'] });
-            toast.success(`User updated successfully`);
+            queryClient.invalidateQueries({ queryKey: ['product'] });
+            toast.success(`Product updated successfully`);
         },
         onError: () => {
-            toast.error('Failed to update user');
+            toast.error('Failed to update product');
         }
     });
 };
@@ -49,41 +43,40 @@ export const formStructure: FormInputGenericProps[] = [
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Username',
-        name: 'username',
+        label: 'Name',
+        name: 'name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Email',
-        name: 'email',
+        label: 'Description',
+        name: 'description',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Phone',
-        name: 'phone',
+        label: 'Price',
+        name: 'price',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Address',
-        name: 'address',
+        label: 'Stock',
+        name: 'stock',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Vip level id',
-        name: 'vip_level_id',
+        label: 'CategoryId',
+        name: 'category_id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Role',
-        name: 'role',
+        label: 'Image',
+        name: 'image_url',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     }
     
 ]
-

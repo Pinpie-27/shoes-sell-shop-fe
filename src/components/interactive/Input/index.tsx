@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { EyeInvisibleOutlined, EyeOutlined } from '@ant-design/icons';
+import SearchIcon from "@mui/icons-material/Search";
 import {
     FormHelperText,
     IconButton,
@@ -50,7 +51,23 @@ export const Input: React.FC<InputProps> = (props) => {
                     '& .MuiInputBase-input': {
                         color: 'black',
                     },
+                    ...(type === "search" && {
+                        borderRadius: "19px",
+                        paddingRight: "100px",
+                        "& .MuiOutlinedInput-notchedOutline": { borderColor: "black" },
+                        "&:hover .MuiOutlinedInput-notchedOutline": { borderColor: "var(--color-primary-dark)" },
+                        "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "var(--color-primary-main)" },
+                        "& input": { color: "black" },
+                        "& input::placeholder": { color: "black" },
+                    }),
                 }}
+                startAdornment={
+                    type === "search" && (
+                        <InputAdornment position="start" sx={{ marginLeft: 0.5 }}>
+                            <SearchIcon sx={{ color: "black" }} />
+                        </InputAdornment>
+                    )
+                }
                 endAdornment={
                     endAdornment ||
                     (type === 'password' && (

@@ -9,6 +9,10 @@ import { DefaultLayout } from '@/layouts/DefaultLayout';
 import { AuthProvider } from '@/lib/providers';
 import ProfilePage from '@/pages/CustomerPage/ProfilePage';
 import AccountPage from '@/pages/DashboardPage/AccountPage';
+import CategoryPage from '@/pages/DashboardPage/CategoryPage';
+import ProductPage from '@/pages/DashboardPage/ProductPage';
+import ReviewPage from '@/pages/DashboardPage/ReviewPage';
+import VipLevelPage from '@/pages/DashboardPage/VipLevelPage';
 
 const LoginPage = Loadable(lazy(() => import('@/pages/auth/LoginPage')));
 const SignUpPage = Loadable(lazy(() => import('@/pages/auth/SignUpPage')));
@@ -39,8 +43,20 @@ const routers: RouteObject[] = [
                         element: <AccountPage/>,
                     },
                     {
-                        path: 'role',
-                        element: <>Role</>,
+                        path: 'vipLevels',
+                        element: <VipLevelPage />,
+                    },
+                    {
+                        path: 'categories',
+                        element: <CategoryPage />,
+                    },
+                    {
+                        path: 'products',
+                        element: <ProductPage />,
+                    },
+                    {
+                        path: 'reviews',
+                        element: <ReviewPage />,
                     },
                 ],
             },

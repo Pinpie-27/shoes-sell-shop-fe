@@ -21,6 +21,10 @@
         "enter-your-address": "Enter your address",
         "do-not-have-an-account": "Don't have an account?",
         "account-page": "Account Page",
-        "profile": "Profile"
+        "profile": "Profile",
+        "vipLevel-page": "Vip level page",
+        "category-page": "Category Page",
+        "product-page": "Product Page",
+        "review-page": "Review Page"
     }
 }
