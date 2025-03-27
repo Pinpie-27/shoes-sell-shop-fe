@@ -9,8 +9,9 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { formStructureSearch, useDeleteVipLevel, useSearchVipLevels } from '@/lib/hooks/features/vipLevels';
+import { useDeleteVipLevel } from '@/lib/hooks/features/vipLevels/delete-vipLevel';
 import { useGetVipLevels } from '@/lib/hooks/features/vipLevels/get-vipLevel';
+import { formStructureSearch, useSearchVipLevels } from '@/lib/hooks/features/vipLevels/search-vipLevel';
 import {formStructure, useUpdateVipLevel } from '@/lib/hooks/features/vipLevels/update-vipLevel';
 interface VipLevel {
     id: number;
