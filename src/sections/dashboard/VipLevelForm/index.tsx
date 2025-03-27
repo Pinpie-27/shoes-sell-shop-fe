@@ -126,7 +126,7 @@ export const VipLevelForm: React.FC = () => {
                                     <IconButton onClick={() => handleOpenDialog(vipLevel.id)}>
                                         <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
                                     </IconButton>
-                                </TableCell>
+                                </TableCell> 
                             </TableRow>
                         ))}
                     </TableBody>

@@ -12,7 +12,7 @@ import { FieldGroup } from '@/components/interactive';
 import { useDeleteUser } from '@/lib/hooks/features/users/delete-user';
 import { useGetUsers } from '@/lib/hooks/features/users/get-user';
 import { formStructureSearch, useSearchUsers } from '@/lib/hooks/features/users/search-user';
-import { formStructure, useUpdateUser } from '@/lib/hooks/features/users/update-user';
+import { formStructure as formStructureUser, useUpdateUser } from '@/lib/hooks/features/users/update-user';
 
 
 
@@ -164,7 +164,7 @@ export const UserForm: React.FC = () => {
                     {selectedUser && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureUser}
                             spacing={tw`gap-4`}
                         />
                     )}
