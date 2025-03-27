@@ -11,7 +11,7 @@ import tw from 'twin.macro';
 import { FieldGroup } from '@/components/interactive';
 import { useDeleteUser } from '@/lib/hooks/features/users/delete-user';
 import { useGetUsers } from '@/lib/hooks/features/users/get-user';
-import { formStructureSearch, useSearchUsers } from '@/lib/hooks/features/users/search-user';
+import { formStructureSearch as formStructureSearchUser, useSearchUsers } from '@/lib/hooks/features/users/search-user';
 import { formStructure as formStructureUser, useUpdateUser } from '@/lib/hooks/features/users/update-user';
 
 
@@ -103,7 +103,7 @@ export const UserForm: React.FC = () => {
             <Box sx={{display: 'flex',flexDirection: "column", justifyContent: "flex-end",alignItems: "flex-end",width: "100%",  paddingBottom: "30px"}}>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearch}
+                    formStructure={formStructureSearchUser}
                     spacing={tw`gap-4`}
                 />
             </Box>

@@ -11,8 +11,8 @@ import tw from 'twin.macro';
 import { FieldGroup } from '@/components/interactive';
 import { useDeleteVipLevel } from '@/lib/hooks/features/vipLevels/delete-vipLevel';
 import { useGetVipLevels } from '@/lib/hooks/features/vipLevels/get-vipLevel';
-import { formStructureSearch, useSearchVipLevels } from '@/lib/hooks/features/vipLevels/search-vipLevel';
-import {formStructure, useUpdateVipLevel } from '@/lib/hooks/features/vipLevels/update-vipLevel';
+import { formStructureSearch as formStructureSearchUserVL, useSearchVipLevels } from '@/lib/hooks/features/vipLevels/search-vipLevel';
+import {formStructure as formStructureVL, useUpdateVipLevel } from '@/lib/hooks/features/vipLevels/update-vipLevel';
 interface VipLevel {
     id: number;
     level_name: string;
@@ -94,7 +94,7 @@ export const VipLevelForm: React.FC = () => {
             <Box sx={{display: 'flex',flexDirection: "column", justifyContent: "flex-end",alignItems: "flex-end",width: "100%",  paddingBottom: "30px"}}>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearch}
+                    formStructure={formStructureSearchUserVL}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -153,7 +153,7 @@ export const VipLevelForm: React.FC = () => {
                     {selectedVipLevels && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureVL}
                             spacing={tw`gap-4`}
                         />
                     )}
