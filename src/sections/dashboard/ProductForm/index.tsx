@@ -13,7 +13,7 @@ import { FieldGroup } from '@/components/interactive';
 import { useCreateProduct } from '@/lib/hooks/features/products/create-product';
 import { useDeleteProduct } from '@/lib/hooks/features/products/delete-product';
 import { useGetProducts } from '@/lib/hooks/features/products/get-product';
-import { formStructureSearch, useSearchProducts } from '@/lib/hooks/features/products/search-product';
+import { formStructureSearchProducts, useSearchProducts } from '@/lib/hooks/features/products/search-product';
 import {formStructure, useUpdateProduct } from '@/lib/hooks/features/products/update-product';
 interface Product {
     id: number;
@@ -135,7 +135,7 @@ export const ProductForm: React.FC = () => {
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearch}
+                    formStructure={formStructureSearchProducts}
                     spacing={tw`gap-4`}
                 />
             </Box>

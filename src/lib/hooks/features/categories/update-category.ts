@@ -35,7 +35,7 @@ export const useUpdateCategory = () => {
     });
 };
 
-export const formStructure: FormInputGenericProps[] = [
+export const formStructureCategory: FormInputGenericProps[] = [
     {
         label: 'ID',
         name: 'id',

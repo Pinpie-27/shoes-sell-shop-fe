@@ -12,8 +12,8 @@ import { FieldGroup } from '@/components/interactive';
 import { useGetCategories} from '@/lib/hooks/features/categories';
 import { useCreateCategory } from '@/lib/hooks/features/categories/create-category';
 import { useDeleteCategory } from '@/lib/hooks/features/categories/delete-category';
-import { formStructureSearch, useSearchCategories } from '@/lib/hooks/features/categories/search-category';
-import {formStructure, useUpdateCategory } from '@/lib/hooks/features/categories/update-category';
+import { formStructureSearchCategories, useSearchCategories } from '@/lib/hooks/features/categories/search-category';
+import {formStructureCategory, useUpdateCategory } from '@/lib/hooks/features/categories/update-category';
 interface Category {
     id: number;
     name: string;
@@ -123,7 +123,7 @@ export const CategoryForm: React.FC = () => {
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearch}
+                    formStructure={formStructureSearchCategories}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -176,7 +176,7 @@ export const CategoryForm: React.FC = () => {
                     {selectedCategories && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureCategory}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -192,7 +192,7 @@ export const CategoryForm: React.FC = () => {
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructure.filter(field => field.name !== 'id')}
+                        formStructure={formStructureCategory.filter(field => field.name !== 'id')}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

@@ -36,7 +36,7 @@ export const useUpdateVipLevel = () => {
     });
 };
 
-export const formStructure: FormInputGenericProps[] = [
+export const formStructureVL: FormInputGenericProps[] = [
     {
         label: 'ID',
         name: 'id',

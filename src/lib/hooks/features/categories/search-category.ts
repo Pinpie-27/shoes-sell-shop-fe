@@ -17,7 +17,7 @@ export const useSearchCategories = (searchTerm: string) => useQuery({
 });
 
 
-export const formStructureSearch: FormInputGenericProps[] = [
+export const formStructureSearchCategories: FormInputGenericProps[] = [
     {
         name: 'search',
         type: 'search',

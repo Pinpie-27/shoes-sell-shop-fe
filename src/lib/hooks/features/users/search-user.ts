@@ -17,7 +17,7 @@ export const useSearchUsers = (searchTerm: string) => useQuery({
 });
 
 
-export const formStructureSearch: FormInputGenericProps[] = [
+export const formStructureSearchUser: FormInputGenericProps[] = [
     {
         name: 'search',
         type: 'search',

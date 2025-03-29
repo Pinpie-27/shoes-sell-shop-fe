@@ -11,8 +11,8 @@ import tw from 'twin.macro';
 import { FieldGroup } from '@/components/interactive';
 import { useDeleteUser } from '@/lib/hooks/features/users/delete-user';
 import { useGetUsers } from '@/lib/hooks/features/users/get-user';
-import { formStructureSearch as formStructureSearchUser, useSearchUsers } from '@/lib/hooks/features/users/search-user';
-import { formStructure as formStructureUser, useUpdateUser } from '@/lib/hooks/features/users/update-user';
+import { formStructureSearchUser, useSearchUsers } from '@/lib/hooks/features/users/search-user';
+import { formStructureUser, useUpdateUser } from '@/lib/hooks/features/users/update-user';
 
 
 

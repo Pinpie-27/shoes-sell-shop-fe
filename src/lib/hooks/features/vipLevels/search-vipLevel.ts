@@ -17,7 +17,7 @@ export const useSearchVipLevels= (searchTerm: string) => useQuery({
 });
 
 
-export const formStructureSearch: FormInputGenericProps[] = [
+export const formStructureSearchVL: FormInputGenericProps[] = [
     {
         name: 'search',
         type: 'search',

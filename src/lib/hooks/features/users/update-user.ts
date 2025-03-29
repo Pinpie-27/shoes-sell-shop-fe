@@ -41,7 +41,7 @@ export const useUpdateUser = () => {
     });
 };
 
-export const formStructure: FormInputGenericProps[] = [
+export const formStructureUser: FormInputGenericProps[] = [
     {
         label: 'ID',
         name: 'id',
