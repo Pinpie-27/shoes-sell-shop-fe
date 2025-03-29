@@ -9,91 +9,82 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useDeleteUser } from '@/lib/hooks/features/users/delete-user';
-import { useGetUsers } from '@/lib/hooks/features/users/get-user';
-import { formStructureSearchUser, useSearchUsers } from '@/lib/hooks/features/users/search-user';
-import { formStructureUser, useUpdateUser } from '@/lib/hooks/features/users/update-user';
-
-
-
-interface User {
+import { useDeleteVipLevel } from '@/lib/hooks/features/vipLevels/delete-vipLevel';
+import { useGetVipLevels } from '@/lib/hooks/features/vipLevels/get-vipLevel';
+import { formStructureSearchVL, useSearchVipLevels } from '@/lib/hooks/features/vipLevels/search-vipLevel';
+import {formStructureVL as formStructureVL, useUpdateVipLevel } from '@/lib/hooks/features/vipLevels/update-vipLevel';
+interface VipLevel {
     id: number;
-    username: string;
-    email: string;
-    phone: string;
-    address: string;
-    vip_level_id: number;
-    role: string;
+    level_name: string;
+    discount_rate: number;
+    min_spend: number;
 }
 
-export const UserForm: React.FC = () => {
-    const { data: users, isLoading, isError, error } = useGetUsers();
-    const { mutate: deleteUser } = useDeleteUser();
-    const { mutate: updateUser } = useUpdateUser();
+export const VipLevelForm: React.FC = () => {
+    const { data: vipLevels, isLoading, isError, error } = useGetVipLevels();
+    const { mutate: deleteVipLevel } = useDeleteVipLevel();
+    const { mutate: updateVipLevel } = useUpdateVipLevel();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedUsers } = useSearchUsers(searchTerm);   
+    const { data: searchedUsers } = useSearchVipLevels(searchTerm); 
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
-    const [selectedUser, setSelectedUser] = React.useState<User | null>(null);
+    const [selectedVipLevels, setSelectedVipLevels] = React.useState<VipLevel | null>(null);
 
     const handleOpenDialog = (id: number) => {
-        setSelectedUser(users.find((user: User) => user.id === id) || null);
+        setSelectedVipLevels(vipLevels.find((vipLevel: VipLevel) => vipLevel.id === id) || null);
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedUser(null);
+        setSelectedVipLevels(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedUser?.id !== undefined) {
-            deleteUser(selectedUser.id);
+        if (selectedVipLevels?.id !== undefined) {
+            deleteVipLevel(selectedVipLevels.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (user: User) => {
-        setSelectedUser(user);
+    const formHandler = useForm<VipLevel>({
+        defaultValues: selectedVipLevels ?? { id: 0, level_name: '', discount_rate: 0, min_spend: 0 },
+    });
+
+    const handleOpenEditDialog = (vipLevel: VipLevel) => {
+        setSelectedVipLevels(vipLevel);
+        formHandler.reset(vipLevel); 
         setOpenEditDialog(true);
     };
-
-    const handleCloseEditDialog = () => {
-        setOpenEditDialog(false);
-        setSelectedUser(null);
-    };
-
-    const formHandler = useForm<User>({ defaultValues: selectedUser ?? {} });
-
+    
+    
     const handleEditSubmit = () => {
-        const updatedUser = formHandler.getValues();
-        if (selectedUser) {
-            updateUser({ id: selectedUser.id, updatedUser });
+        const updatedVipLevel = formHandler.getValues();
+        if (selectedVipLevels) {
+            updateVipLevel({ id: selectedVipLevels.id, updatedVipLevel });
         }
         handleCloseEditDialog();
     };
 
-
-    React.useEffect(() => {
-        if (selectedUser) {
-            formHandler.reset(selectedUser); 
-        }
-    }, [selectedUser, formHandler]);
+    const handleCloseEditDialog = () => {
+        setOpenEditDialog(false);
+        setSelectedVipLevels(null);
+    };
 
     const formHandlerSearch = useForm<{ search: string }>({
         defaultValues: { search: "" },
     });
-
+    
     React.useEffect(() => {
         const subscription = formHandlerSearch.watch((value) => {
             setSearchTerm(value.search || "");
         });
-      
+          
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
-      
+          
 
     if (isLoading) return <p>Loading users...</p>;
     if (isError) return <p>Error fetching users: {error?.message}</p>;
@@ -103,7 +94,7 @@ export const UserForm: React.FC = () => {
             <Box sx={{display: 'flex',flexDirection: "column", justifyContent: "flex-end",alignItems: "flex-end",width: "100%",  paddingBottom: "30px"}}>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchUser}
+                    formStructure={formStructureSearchVL}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -111,34 +102,32 @@ export const UserForm: React.FC = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Username</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Email</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Phone</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Address</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}>Vip Level</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Role</TableCell>
+                            <TableCell sx={{ color: 'black',fontWeight: 'bold' }}>ID</TableCell>
+                            <TableCell sx={{ color: 'black',fontWeight: 'bold' }}>Level Name</TableCell>
+                            <TableCell sx={{ color: 'black',fontWeight: 'bold' }}>Discount rate</TableCell>
+                            <TableCell sx={{ color: 'black',fontWeight: 'bold' }}>Min spend</TableCell>
                             <TableCell sx={{ color: 'black',fontWeight: 'bold', textAlign: 'center' }}>Action</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedUsers?.length ? searchedUsers : users)?.map((user: User) => (
-                            <TableRow key={user.id}>
-                                <TableCell sx={{ color: 'black' }}>{user.id}</TableCell>
-                                <TableCell sx={{ color: 'black' }}>{user.username}</TableCell>
-                                <TableCell sx={{ color: 'black' }}>{user.email}</TableCell>
-                                <TableCell sx={{ color: 'black' }}>{user.phone}</TableCell>
-                                <TableCell sx={{ color: 'black' }}>{user.address}</TableCell>
-                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>{user.vip_level_id}</TableCell>
-                                <TableCell sx={{ color: 'black' }}>{user.role}</TableCell>
+                        {/* {vipLevels.map((vipLevel: VipLevel) => ( */}
+                        {(searchedUsers?.length ? searchedUsers : vipLevels)?.map((vipLevel: VipLevel) => (
+                            <TableRow key={vipLevel.id}>
+                                <TableCell sx={{ color: 'black' }}>{vipLevel.id}</TableCell>
+                                <TableCell sx={{ color: 'black' }}>{vipLevel.level_name}</TableCell>
+                                <TableCell sx={{ color: 'black' }}>{vipLevel.discount_rate}%</TableCell>
+                                <TableCell sx={{ color: 'black' }}>
+                                    {vipLevel.min_spend.toLocaleString('vi-VN')} VND
+                                </TableCell>
+
                                 <TableCell sx={{ textAlign: 'center' }}>
-                                    <IconButton onClick={() => handleOpenEditDialog(user)}>
+                                    <IconButton onClick={() => handleOpenEditDialog(vipLevel)}>
                                         <EditNoteOutlinedIcon sx={{ color: 'black' }} />
                                     </IconButton>
-                                    <IconButton onClick={() => handleOpenDialog(user.id)}>
+                                    <IconButton onClick={() => handleOpenDialog(vipLevel.id)}>
                                         <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
                                     </IconButton>
-                                </TableCell>
+                                </TableCell> 
                             </TableRow>
                         ))}
                     </TableBody>
@@ -149,7 +138,7 @@ export const UserForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this user?
+                        Are you sure you want to delete this vip level?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -159,12 +148,12 @@ export const UserForm: React.FC = () => {
             </Dialog>
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
-                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">Edit account</Typography>
+                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">Edit vip level</Typography>
                 <DialogContent>
-                    {selectedUser && (
+                    {selectedVipLevels && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructureUser}
+                            formStructure={formStructureVL}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -174,7 +163,6 @@ export const UserForm: React.FC = () => {
                     <Button onClick={handleEditSubmit} color="success">Save</Button>
                 </DialogActions>
             </Dialog>
-
         </Box>
     );
-}; 
+};
