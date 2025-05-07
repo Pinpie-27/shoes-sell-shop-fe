@@ -56,6 +56,42 @@ export const menuItems: MenuItem[] = [
                 type: 'item',
                 url: '/user/reviews',
             },
+            {
+                id: 'cartItems',
+                title: 'Cart Items',
+                type: 'item',
+                url: '/user/cartItems',
+            },
+            {
+                id: 'colors',
+                title: 'Colors',
+                type: 'item',
+                url: '/user/colors',
+            },
+            {
+                id: 'colorVariants',
+                title: 'Color Variants',
+                type: 'item',
+                url: '/user/colorVariants',
+            },
+            {
+                id: 'inventories',
+                title: 'Inventory',
+                type: 'item',
+                url: '/user/inventories',
+            },
+            {
+                id: 'productColors',
+                title: 'Product Colors',
+                type: 'item',
+                url: '/user/productColors',
+            },
+            {
+                id: 'productImages',
+                title: 'Product Images',
+                type: 'item',
+                url: '/user/productImages',
+            },
         ],
     },
 ];

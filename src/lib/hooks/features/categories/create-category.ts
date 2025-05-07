@@ -1,13 +1,12 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface Category {
     name: string;
-    quantity: number;
+    description: string;
 }
-
 
 export const createCategory = async (newCategory: Category) => {
     const response = await axiosClient.post(`/category`, newCategory);
@@ -25,6 +24,6 @@ export const useCreateCategory = () => {
         },
         onError: () => {
             toast.error('Failed to create category');
-        }
+        },
     });
 };

@@ -25,6 +25,13 @@
         "vipLevel-page": "Vip level page",
         "category-page": "Category Page",
         "product-page": "Product Page",
-        "review-page": "Review Page"
+        "review-page": "Review Page",
+        "cartItem-page": "Cart Item Page",
+        "color-page": "Color Page",
+        "colorVariant-page": "Color Variant Page",
+        "inventory-page": "Color Variant Page",
+        "productColor-page": "Product Color Page",
+        "productImage-page": "Product Image Page"
+
     }
 }

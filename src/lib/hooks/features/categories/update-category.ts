@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import tw from 'twin.macro';
 
 import { FormInputGenericProps } from '@/components/interactive';
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface Category {
     id: number;
@@ -12,8 +12,6 @@ interface UpdateCategoryParams {
     id: number;
     updatedCategory: Partial<Category>;
 }
-
-
 
 export const updateCategoryById = async ({ id, updatedCategory }: UpdateCategoryParams) => {
     const response = await axiosClient.put(`/category/${id}`, updatedCategory);
@@ -31,7 +29,7 @@ export const useUpdateCategory = () => {
         },
         onError: () => {
             toast.error('Failed to update category');
-        }
+        },
     });
 };
 
@@ -49,9 +47,9 @@ export const formStructureCategory: FormInputGenericProps[] = [
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Quantity',
-        name: 'quantity',
+        label: 'Description',
+        name: 'description',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
-]
+];
