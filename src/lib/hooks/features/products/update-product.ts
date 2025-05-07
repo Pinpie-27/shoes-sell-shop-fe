@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import tw from 'twin.macro';
 
 import { FormInputGenericProps } from '@/components/interactive';
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface Product {
     id: number;
@@ -12,8 +12,6 @@ interface UpdateProductParams {
     id: number;
     updatedProduct: Partial<Product>;
 }
-
-
 
 export const updateProductById = async ({ id, updatedProduct }: UpdateProductParams) => {
     const response = await axiosClient.put(`/product/${id}`, updatedProduct);
@@ -31,7 +29,7 @@ export const useUpdateProduct = () => {
         },
         onError: () => {
             toast.error('Failed to update product');
-        }
+        },
     });
 };
 
@@ -67,16 +65,21 @@ export const formStructure: FormInputGenericProps[] = [
         colSpan: tw`col-span-12`,
     },
     {
+        label: 'Style',
+        name: 'style',
+        inputType: 'TextField',
+        colSpan: tw`col-span-12`,
+    },
+    {
+        label: 'Size',
+        name: 'size',
+        inputType: 'TextField',
+        colSpan: tw`col-span-12`,
+    },
+    {
         label: 'CategoryId',
         name: 'category_id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
-    {
-        label: 'Image',
-        name: 'image_url',
-        inputType: 'TextField',
-        colSpan: tw`col-span-12`,
-    }
-    
-]
+];

@@ -1,10 +1,8 @@
 /* eslint-disable max-lines */
-/* eslint-disable max-len */
 import React from 'react';
 
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-// eslint-disable-next-line max-len
 import {
     Box,
     Button,
@@ -26,114 +24,117 @@ import {
 import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
-import { FieldGroup } from '@/components/interactive';
-import { useGetCategories } from '@/lib/hooks/features/categories';
-import { useCreateCategory } from '@/lib/hooks/features/categories/create-category';
-import { useDeleteCategory } from '@/lib/hooks/features/categories/delete-category';
+import { useGetInventory } from '@/lib/hooks/features/inventory/get-inventory';
+
+import { FieldGroup } from '../../../components/interactive';
 import {
-    formStructureSearchCategories,
-    useSearchCategories,
-} from '@/lib/hooks/features/categories/search-category';
-import {
-    formStructureCategory,
-    useUpdateCategory,
-} from '@/lib/hooks/features/categories/update-category';
-interface Category {
+    formStructureInventory,
+    useCreateInventory,
+    useDeleteInventory,
+    useUpdateInventory,
+} from '../../../lib/hooks/features/inventory';
+
+interface Inventory {
     id: number;
-    name: string;
-    description: string;
+    product_id: number;
+    color_id: number;
+    size: string;
+    quantity: number;
 }
 
-export const CategoryForm: React.FC = () => {
-    const { data: categories, isLoading, isError, error } = useGetCategories();
-    const { mutate: deleteCategory } = useDeleteCategory();
-    const { mutate: updateCategory } = useUpdateCategory();
-    const { mutate: createCategory } = useCreateCategory();
-
-    const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedCategories } = useSearchCategories(searchTerm);
+export const InventoryForm: React.FC = () => {
+    const { data: inventories, isLoading, isError, error } = useGetInventory();
+    const { mutate: deleteInventory } = useDeleteInventory();
+    const { mutate: updateInventory } = useUpdateInventory();
+    const { mutate: createInventory } = useCreateInventory();
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedCategories, setSelectedCategories] = React.useState<Category | null>(null);
-    const [, setNewCategory] = React.useState({ name: '', description: '' });
+    const [selectedInventories, setSelectInventories] = React.useState<Inventory | null>(null);
+
+    const [, setNewInventory] = React.useState({
+        product_id: '',
+        color_id: '',
+        size: '',
+        quantity: '',
+    });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedCategories(categories.find((category: Category) => category.id === id) || null);
+        setSelectInventories(
+            inventories.find((inventorie: Inventory) => inventorie.id === id) || null
+        );
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedCategories(null);
+        setSelectInventories(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedCategories?.id !== undefined) {
-            deleteCategory(selectedCategories.id);
+        if (selectedInventories?.id !== undefined) {
+            deleteInventory(selectedInventories.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (category: Category) => {
-        setSelectedCategories(category);
+    const handleOpenEditDialog = (inventory: Inventory) => {
+        setSelectInventories(inventory);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedCategories(null);
+        setSelectInventories(null);
     };
 
-    const formHandler = useForm<Category>({ defaultValues: selectedCategories ?? {} });
+    const formHandler = useForm<Inventory>({ defaultValues: selectedInventories ?? {} });
 
     const handleEditSubmit = () => {
-        const updatedCategory = formHandler.getValues();
-        if (selectedCategories) {
-            updateCategory({ id: selectedCategories.id, updatedCategory });
+        const updatedInventory = formHandler.getValues();
+        if (selectedInventories) {
+            updateInventory({ id: selectedInventories.id, updatedInventory });
         }
-        handleCloseEditDialog();
+        handleCloseDialog();
     };
 
     React.useEffect(() => {
-        if (selectedCategories) {
-            formHandler.reset(selectedCategories);
+        if (selectedInventories) {
+            formHandler.reset(selectedInventories);
         }
-    }, [selectedCategories, formHandler]);
+    }, [selectedInventories, formHandler]);
+
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
-
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewCategory({ name: '', description: '' });
+        setNewInventory({
+            product_id: '',
+            color_id: '',
+            size: '',
+            quantity: '',
+        });
     };
 
-    const addFormHandler = useForm<Omit<Category, 'id'>>({
-        defaultValues: { name: '', description: '' },
+    const addFormHandler = useForm<Omit<Inventory, 'id'>>({
+        defaultValues: {
+            product_id: 0,
+            color_id: 0,
+            size: '',
+            quantity: 0,
+        },
     });
 
     const handleAddSubmit = () => {
-        const newCategory = addFormHandler.getValues();
-        createCategory(newCategory);
+        const newInventory = addFormHandler.getValues();
+        createInventory(newInventory);
         handleCloseAddDialog();
     };
 
-    const formHandlerSearch = useForm<{ search: string }>({
-        defaultValues: { search: '' },
-    });
-
-    React.useEffect(() => {
-        const subscription = formHandlerSearch.watch((value) => {
-            setSearchTerm(value.search || '');
-        });
-
-        return () => subscription.unsubscribe();
-    }, [formHandlerSearch]);
-
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    if (isLoading) return <p>Loading inventories...</p>;
+    if (isError) return <p>Error fetching inventories: {error?.message}</p>;
 
     return (
         <Box sx={{ padding: '30px' }}>
@@ -147,29 +148,27 @@ export const CategoryForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Category
+                    Add Inventory
                 </Button>
-                <FieldGroup
-                    formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchCategories}
-                    spacing={tw`gap-4`}
-                />
             </Box>
             <TableContainer sx={{ padding: '1rem', marginTop: '30px' }} component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
+                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                                Product Id
+                            </TableCell>
+                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                                Color Id
+                            </TableCell>
+                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Size</TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                Name
+                                Quantity
                             </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                Description
-                            </TableCell>
+
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
@@ -178,27 +177,28 @@ export const CategoryForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedCategories?.length ? searchedCategories : categories)?.map(
-                            (category: Category) => (
-                                <TableRow key={category.id}>
-                                    <TableCell sx={{ color: 'black' }}>{category.id}</TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.name}
-                                    </TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.description}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(category)}>
-                                            <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(category.id)}>
-                                            <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
+                        {inventories?.map((inventory: Inventory) => (
+                            <TableRow key={inventory.id}>
+                                <TableCell sx={{ color: 'black' }}>{inventory.id}</TableCell>
+                                <TableCell sx={{ color: 'black' }}>
+                                    {inventory.product_id}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black' }}>{inventory.color_id}</TableCell>
+                                <TableCell sx={{ color: 'black' }}>{inventory.size}</TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {inventory.quantity}
+                                </TableCell>
+
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton onClick={() => handleOpenEditDialog(inventory)}>
+                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleOpenDialog(inventory.id)}>
+                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -207,7 +207,7 @@ export const CategoryForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this category?
+                        Are you sure you want to delete this inventory?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -222,13 +222,13 @@ export const CategoryForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit category
+                    Edit inventory
                 </Typography>
                 <DialogContent>
-                    {selectedCategories && (
+                    {selectedInventories && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructureCategory}
+                            formStructure={formStructureInventory}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -242,15 +242,16 @@ export const CategoryForm: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Category
+                    Add inventory
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructureCategory.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureInventory.filter(
+                            (field) => field.name !== 'id'
+                        )}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

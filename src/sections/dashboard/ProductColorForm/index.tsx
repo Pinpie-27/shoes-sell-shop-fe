@@ -27,96 +27,99 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useGetCategories } from '@/lib/hooks/features/categories';
-import { useCreateCategory } from '@/lib/hooks/features/categories/create-category';
-import { useDeleteCategory } from '@/lib/hooks/features/categories/delete-category';
+
 import {
-    formStructureSearchCategories,
-    useSearchCategories,
-} from '@/lib/hooks/features/categories/search-category';
-import {
-    formStructureCategory,
-    useUpdateCategory,
-} from '@/lib/hooks/features/categories/update-category';
-interface Category {
+    formStructureProductColor,
+    formStructureSearchProductColors,
+    useCreateProductColor,
+    useDeleteProductColor,
+    useGetProductColors,
+    useSearchProductColors,
+    useUpdateProductColor,
+} from '../../../lib/hooks/features/product-colors';
+interface ProductColor {
     id: number;
-    name: string;
-    description: string;
+    product_id: number;
+    color_variant_id: number;
 }
 
-export const CategoryForm: React.FC = () => {
-    const { data: categories, isLoading, isError, error } = useGetCategories();
-    const { mutate: deleteCategory } = useDeleteCategory();
-    const { mutate: updateCategory } = useUpdateCategory();
-    const { mutate: createCategory } = useCreateCategory();
+export const ProductColorForm: React.FC = () => {
+    const { data: productColors, isLoading, isError, error } = useGetProductColors();
+    const { mutate: deleteProductColor } = useDeleteProductColor();
+    const { mutate: updateProductColor } = useUpdateProductColor();
+    const { mutate: createProductColor } = useCreateProductColor();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedCategories } = useSearchCategories(searchTerm);
+    const { data: searchedProductColors } = useSearchProductColors(searchTerm);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedCategories, setSelectedCategories] = React.useState<Category | null>(null);
-    const [, setNewCategory] = React.useState({ name: '', description: '' });
+    const [selectedProductColors, setSelectedProductColors] = React.useState<ProductColor | null>(
+        null
+    );
+    const [, setNewProductColor] = React.useState({ product_id: '', color_variant_id: '' });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedCategories(categories.find((category: Category) => category.id === id) || null);
+        setSelectedProductColors(
+            productColors.find((productColor: ProductColor) => productColor.id === id) || null
+        );
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedCategories(null);
+        setSelectedProductColors(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedCategories?.id !== undefined) {
-            deleteCategory(selectedCategories.id);
+        if (selectedProductColors?.id !== undefined) {
+            deleteProductColor(selectedProductColors.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (category: Category) => {
-        setSelectedCategories(category);
+    const handleOpenEditDialog = (productColor: ProductColor) => {
+        setSelectedProductColors(productColor);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedCategories(null);
+        setSelectedProductColors(null);
     };
 
-    const formHandler = useForm<Category>({ defaultValues: selectedCategories ?? {} });
+    const formHandler = useForm<ProductColor>({ defaultValues: selectedProductColors ?? {} });
 
     const handleEditSubmit = () => {
-        const updatedCategory = formHandler.getValues();
-        if (selectedCategories) {
-            updateCategory({ id: selectedCategories.id, updatedCategory });
+        const updatedProductColor = formHandler.getValues();
+        if (selectedProductColors) {
+            updateProductColor({ id: selectedProductColors.id, updatedProductColor });
         }
         handleCloseEditDialog();
     };
 
     React.useEffect(() => {
-        if (selectedCategories) {
-            formHandler.reset(selectedCategories);
+        if (selectedProductColors) {
+            formHandler.reset(selectedProductColors);
         }
-    }, [selectedCategories, formHandler]);
+    }, [selectedProductColors, formHandler]);
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewCategory({ name: '', description: '' });
+        setNewProductColor({ product_id: '', color_variant_id: '' });
     };
 
-    const addFormHandler = useForm<Omit<Category, 'id'>>({
-        defaultValues: { name: '', description: '' },
+    const addFormHandler = useForm<Omit<ProductColor, 'id'>>({
+        defaultValues: { product_id: 0, color_variant_id: 0 },
     });
 
     const handleAddSubmit = () => {
-        const newCategory = addFormHandler.getValues();
-        createCategory(newCategory);
+        const newProductColor = addFormHandler.getValues();
+        createProductColor(newProductColor);
         handleCloseAddDialog();
     };
 
@@ -147,11 +150,11 @@ export const CategoryForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Category
+                    Add Product Color
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchCategories}
+                    formStructure={formStructureSearchProductColors}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -163,12 +166,12 @@ export const CategoryForm: React.FC = () => {
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                Name
+                                ProductId
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                Description
+                                ColorVariantId
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
@@ -178,27 +181,28 @@ export const CategoryForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedCategories?.length ? searchedCategories : categories)?.map(
-                            (category: Category) => (
-                                <TableRow key={category.id}>
-                                    <TableCell sx={{ color: 'black' }}>{category.id}</TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.name}
-                                    </TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.description}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(category)}>
-                                            <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(category.id)}>
-                                            <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
+                        {(searchedProductColors?.length
+                            ? searchedProductColors
+                            : productColors
+                        )?.map((productColor: ProductColor) => (
+                            <TableRow key={productColor.id}>
+                                <TableCell sx={{ color: 'black' }}>{productColor.id}</TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {productColor.product_id}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {productColor.color_variant_id}
+                                </TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton onClick={() => handleOpenEditDialog(productColor)}>
+                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleOpenDialog(productColor.id)}>
+                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -207,7 +211,7 @@ export const CategoryForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this category?
+                        Are you sure you want to delete this product color?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -222,13 +226,13 @@ export const CategoryForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit category
+                    Edit product color
                 </Typography>
                 <DialogContent>
-                    {selectedCategories && (
+                    {selectedProductColors && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructureCategory}
+                            formStructure={formStructureProductColor}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -245,12 +249,14 @@ export const CategoryForm: React.FC = () => {
 
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Category
+                    Add product color
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructureCategory.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureProductColor.filter(
+                            (field) => field.name !== 'id'
+                        )}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

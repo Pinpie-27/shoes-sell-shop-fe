@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 /* eslint-disable max-len */
 import React from 'react';
 
@@ -27,96 +26,93 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useGetCategories } from '@/lib/hooks/features/categories';
-import { useCreateCategory } from '@/lib/hooks/features/categories/create-category';
-import { useDeleteCategory } from '@/lib/hooks/features/categories/delete-category';
 import {
-    formStructureSearchCategories,
-    useSearchCategories,
-} from '@/lib/hooks/features/categories/search-category';
-import {
-    formStructureCategory,
-    useUpdateCategory,
-} from '@/lib/hooks/features/categories/update-category';
-interface Category {
+    formStructureColor,
+    formStructureSearchColors,
+    useCreateColor,
+    useDeleteColor,
+    useGetColors,
+    useSearchColors,
+    useUpdateColor,
+} from '@/lib/hooks/features/colors';
+
+interface Color {
     id: number;
     name: string;
-    description: string;
 }
 
-export const CategoryForm: React.FC = () => {
-    const { data: categories, isLoading, isError, error } = useGetCategories();
-    const { mutate: deleteCategory } = useDeleteCategory();
-    const { mutate: updateCategory } = useUpdateCategory();
-    const { mutate: createCategory } = useCreateCategory();
+export const ColorForm: React.FC = () => {
+    const { data: colors, isLoading, isError, error } = useGetColors();
+    const { mutate: deleteColor } = useDeleteColor();
+    const { mutate: updateColor } = useUpdateColor();
+    const { mutate: createColor } = useCreateColor();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedCategories } = useSearchCategories(searchTerm);
+    const { data: searchedColors } = useSearchColors(searchTerm);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedCategories, setSelectedCategories] = React.useState<Category | null>(null);
-    const [, setNewCategory] = React.useState({ name: '', description: '' });
+    const [selectedColors, setSelectedColors] = React.useState<Color | null>(null);
+
+    const [, setNewColor] = React.useState({ name: '' });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedCategories(categories.find((category: Category) => category.id === id) || null);
+        setSelectedColors(colors.find((color: Color) => color.id === id) || null);
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedCategories(null);
+        setSelectedColors(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedCategories?.id !== undefined) {
-            deleteCategory(selectedCategories.id);
+        if (selectedColors?.id !== undefined) {
+            deleteColor(selectedColors.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (category: Category) => {
-        setSelectedCategories(category);
+    const formHandler = useForm<Color>({
+        defaultValues: selectedColors ?? { id: 0, name: '' },
+    });
+
+    const handleOpenEditDialog = (color: Color) => {
+        setSelectedColors(color);
+        formHandler.reset(color);
         setOpenEditDialog(true);
     };
 
-    const handleCloseEditDialog = () => {
-        setOpenEditDialog(false);
-        setSelectedCategories(null);
-    };
-
-    const formHandler = useForm<Category>({ defaultValues: selectedCategories ?? {} });
-
     const handleEditSubmit = () => {
-        const updatedCategory = formHandler.getValues();
-        if (selectedCategories) {
-            updateCategory({ id: selectedCategories.id, updatedCategory });
+        const updatedColor = formHandler.getValues();
+        if (selectedColors) {
+            updateColor({ id: selectedColors.id, updatedColor });
         }
         handleCloseEditDialog();
     };
 
-    React.useEffect(() => {
-        if (selectedCategories) {
-            formHandler.reset(selectedCategories);
-        }
-    }, [selectedCategories, formHandler]);
+    const handleCloseEditDialog = () => {
+        setOpenEditDialog(false);
+        setSelectedColors(null);
+    };
+
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewCategory({ name: '', description: '' });
+        setNewColor({ name: '' });
     };
 
-    const addFormHandler = useForm<Omit<Category, 'id'>>({
-        defaultValues: { name: '', description: '' },
+    const addFormHandler = useForm<Omit<Color, 'id'>>({
+        defaultValues: { name: '' },
     });
 
     const handleAddSubmit = () => {
-        const newCategory = addFormHandler.getValues();
-        createCategory(newCategory);
+        const newColor = addFormHandler.getValues();
+        createColor(newColor);
         handleCloseAddDialog();
     };
 
@@ -132,8 +128,8 @@ export const CategoryForm: React.FC = () => {
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
 
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    if (isLoading) return <p>Loading users...</p>;
+    if (isError) return <p>Error fetching users: {error?.message}</p>;
 
     return (
         <Box sx={{ padding: '30px' }}>
@@ -147,29 +143,20 @@ export const CategoryForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Category
+                    Add Color
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchCategories}
+                    formStructure={formStructureSearchColors}
                     spacing={tw`gap-4`}
                 />
             </Box>
-            <TableContainer sx={{ padding: '1rem', marginTop: '30px' }} component={Paper}>
+            <TableContainer sx={{ padding: '1rem' }} component={Paper}>
                 <Table>
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                Name
-                            </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                Description
-                            </TableCell>
+                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Name</TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
@@ -178,27 +165,21 @@ export const CategoryForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedCategories?.length ? searchedCategories : categories)?.map(
-                            (category: Category) => (
-                                <TableRow key={category.id}>
-                                    <TableCell sx={{ color: 'black' }}>{category.id}</TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.name}
-                                    </TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {category.description}
-                                    </TableCell>
-                                    <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(category)}>
-                                            <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(category.id)}>
-                                            <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
+                        {/* {vipLevels.map((vipLevel: VipLevel) => ( */}
+                        {(searchedColors?.length ? searchedColors : colors)?.map((color: Color) => (
+                            <TableRow key={color.id}>
+                                <TableCell sx={{ color: 'black' }}>{color.id}</TableCell>
+                                <TableCell sx={{ color: 'black' }}>{color.name}</TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton onClick={() => handleOpenEditDialog(color)}>
+                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleOpenDialog(color.id)}>
+                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -207,7 +188,7 @@ export const CategoryForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this category?
+                        Are you sure you want to delete this color?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -222,13 +203,13 @@ export const CategoryForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit category
+                    Edit color
                 </Typography>
                 <DialogContent>
-                    {selectedCategories && (
+                    {selectedColors && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructureCategory}
+                            formStructure={formStructureColor}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -242,15 +223,14 @@ export const CategoryForm: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Category
+                    Add Product
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructureCategory.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureColor.filter((field) => field.name !== 'id')}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>
