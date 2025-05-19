@@ -1,9 +1,10 @@
-/* eslint-disable max-len */
 /* eslint-disable max-lines */
+/* eslint-disable max-len */
 import React from 'react';
 
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+// eslint-disable-next-line max-len
 import {
     Box,
     Button,
@@ -26,112 +27,103 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useCreateProduct } from '@/lib/hooks/features/products/create-product';
-import { useDeleteProduct } from '@/lib/hooks/features/products/delete-product';
-import { useGetProducts } from '@/lib/hooks/features/products/get-product';
 import {
-    formStructureSearchProducts,
-    useSearchProducts,
-} from '@/lib/hooks/features/products/search-product';
-import { formStructure, useUpdateProduct } from '@/lib/hooks/features/products/update-product';
-interface Product {
+    formStructureImportReceipt,
+    formStructureSearchImportReceipts,
+    useCreateImportReceipt,
+    useDeleteImportReceipt,
+    useGetImportReceipt,
+    useSearchImportReceipts,
+    useUpdateImportReceipt,
+} from '@/lib/hooks/features/import-receipts';
+interface ImportReceipt {
     id: number;
-    name: string;
-    description: string;
-    category_id: number;
-    style_id: number;
+    receipt_number: string;
+    import_date?: string;
+    supplier_id: number;
 }
 
-export const ProductForm: React.FC = () => {
-    const { data: products, isLoading, isError, error } = useGetProducts();
-    const { mutate: deleteProduct } = useDeleteProduct();
-    const { mutate: updateProduct } = useUpdateProduct();
-    const { mutate: createProduct } = useCreateProduct();
+export const ImportReceiptForm: React.FC = () => {
+    const { data: importReceipts, isLoading, isError, error } = useGetImportReceipt();
+    const { mutate: deleteImportReceipt } = useDeleteImportReceipt();
+    const { mutate: updateImportReceipt } = useUpdateImportReceipt();
+    const { mutate: createImportReceipt } = useCreateImportReceipt();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedProducts } = useSearchProducts(searchTerm);
+    const { data: searchedImportReceipts } = useSearchImportReceipts(searchTerm);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedProducts, setSelectedProducts] = React.useState<Product | null>(null);
-    // eslint-disable-next-line max-len
-    const [, setNewProduct] = React.useState({
-        name: '',
-        description: '',
-        category_id: '',
-        style_id: '',
+    const [selectedImportReceipts, setSelectedImportReceipts] =
+        React.useState<ImportReceipt | null>(null);
+    const [, setNewImportReceipt] = React.useState({
+        receipt_number: '',
+        import_date: '',
+        supplier_id: '',
     });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedProducts(products.find((product: Product) => product.id === id) || null);
+        setSelectedImportReceipts(
+            importReceipts?.find((importReceipt: ImportReceipt) => importReceipt.id === id) || null
+        );
+
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedProducts(null);
+        setSelectedImportReceipts(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedProducts?.id !== undefined) {
-            deleteProduct(selectedProducts.id);
+        if (selectedImportReceipts?.id !== undefined) {
+            deleteImportReceipt(selectedImportReceipts.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (product: Product) => {
-        setSelectedProducts(product);
+    const handleOpenEditDialog = (importReceipt: ImportReceipt) => {
+        setSelectedImportReceipts(importReceipt);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedProducts(null);
+        setSelectedImportReceipts(null);
     };
 
-    const formHandler = useForm<Product>({ defaultValues: selectedProducts ?? {} });
+    const formHandler = useForm<ImportReceipt>({ defaultValues: selectedImportReceipts ?? {} });
 
     const handleEditSubmit = () => {
-        const updatedProduct = formHandler.getValues();
-        if (selectedProducts) {
-            updateProduct({ id: selectedProducts.id, updatedProduct });
+        const updatedImportReceipt = formHandler.getValues();
+        if (selectedImportReceipts) {
+            updateImportReceipt({ id: selectedImportReceipts.id, updatedImportReceipt });
         }
         handleCloseEditDialog();
     };
 
     React.useEffect(() => {
-        if (selectedProducts) {
-            formHandler.reset(selectedProducts);
+        if (selectedImportReceipts) {
+            formHandler.reset(selectedImportReceipts);
         }
-    }, [selectedProducts, formHandler]);
-
+    }, [selectedImportReceipts, formHandler]);
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewProduct({
-            name: '',
-            description: '',
-            category_id: '',
-            style_id: '',
-        });
+        setNewImportReceipt({ receipt_number: '', import_date: '', supplier_id: '' });
     };
 
-    const addFormHandler = useForm<Omit<Product, 'id'>>({
-        defaultValues: {
-            name: '',
-            description: '',
-            category_id: 0,
-            style_id: 0,
-        },
+    const addFormHandler = useForm<Omit<ImportReceipt, 'id'>>({
+        defaultValues: { receipt_number: '', import_date: '', supplier_id: 1 },
     });
 
     const handleAddSubmit = () => {
-        const newProduct = addFormHandler.getValues();
-        createProduct(newProduct);
+        const newImportReceipt = addFormHandler.getValues();
+        createImportReceipt(newImportReceipt);
         handleCloseAddDialog();
     };
 
@@ -147,8 +139,8 @@ export const ProductForm: React.FC = () => {
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
 
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    if (isLoading) return <p>Loading import receipt...</p>;
+    if (isError) return <p>Error fetching import receipt: {error?.message}</p>;
 
     return (
         <Box sx={{ padding: '30px' }}>
@@ -162,11 +154,11 @@ export const ProductForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Product
+                    Add Import Receipt
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchProducts}
+                    formStructure={formStructureSearchImportReceipts}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -175,19 +167,20 @@ export const ProductForm: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Name</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                                Description
+                            <TableCell
+                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                            >
+                                Receipt Number
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                CategoryId
+                                Import Date
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                StyleId
+                                SupplierId
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
@@ -197,33 +190,31 @@ export const ProductForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedProducts?.length ? searchedProducts : products)?.map(
-                            (product: Product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell sx={{ color: 'black' }}>{product.id}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>{product.name}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>
-                                        {product.description}
-                                    </TableCell>
-
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.category_id}
-                                    </TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.style_id}
-                                    </TableCell>
-
-                                    <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(product)}>
-                                            <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(product.id)}>
-                                            <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
+                        {(searchedImportReceipts?.length
+                            ? searchedImportReceipts
+                            : importReceipts
+                        )?.map((importReceipt: ImportReceipt) => (
+                            <TableRow key={importReceipt.id}>
+                                <TableCell sx={{ color: 'black' }}>{importReceipt.id}</TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {importReceipt.receipt_number}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {importReceipt.import_date?.toString()}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {importReceipt.supplier_id}
+                                </TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton onClick={() => handleOpenEditDialog(importReceipt)}>
+                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleOpenDialog(importReceipt.id)}>
+                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -232,7 +223,7 @@ export const ProductForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this product?
+                        Are you sure you want to delete this import receipt?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -247,13 +238,13 @@ export const ProductForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit product
+                    Edit import receipt
                 </Typography>
                 <DialogContent>
-                    {selectedProducts && (
+                    {selectedImportReceipts && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureImportReceipt}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -267,14 +258,17 @@ export const ProductForm: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Product
+                    Add import receipt
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructure.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureImportReceipt.filter(
+                            (field) => field.name !== 'id'
+                        )}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

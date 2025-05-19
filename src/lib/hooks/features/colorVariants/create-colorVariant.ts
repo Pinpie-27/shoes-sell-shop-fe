@@ -6,6 +6,7 @@ import axiosClient from '@/lib/configs/axios';
 interface colorVariants {
     color_id: number;
     variant_name: string;
+    color_code: string;
 }
 
 export const createColorVariant = async (newColorVariant: colorVariants) => {

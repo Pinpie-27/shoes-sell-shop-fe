@@ -1,9 +1,10 @@
-/* eslint-disable max-len */
 /* eslint-disable max-lines */
+/* eslint-disable max-len */
 import React from 'react';
 
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+// eslint-disable-next-line max-len
 import {
     Box,
     Button,
@@ -26,112 +27,96 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useCreateProduct } from '@/lib/hooks/features/products/create-product';
-import { useDeleteProduct } from '@/lib/hooks/features/products/delete-product';
-import { useGetProducts } from '@/lib/hooks/features/products/get-product';
 import {
-    formStructureSearchProducts,
-    useSearchProducts,
-} from '@/lib/hooks/features/products/search-product';
-import { formStructure, useUpdateProduct } from '@/lib/hooks/features/products/update-product';
-interface Product {
+    formStructureSearchSuppliers,
+    formStructureSupplier,
+    useCreateSupplier,
+    useDeleteSupplier,
+    useGetSuppliers,
+    useSearchSuppliers,
+    useUpdateSupplier,
+} from '@/lib/hooks/features/suppliers';
+interface Supplier {
     id: number;
     name: string;
-    description: string;
-    category_id: number;
-    style_id: number;
+    phone: string;
+    email: string;
+    address: string;
 }
 
-export const ProductForm: React.FC = () => {
-    const { data: products, isLoading, isError, error } = useGetProducts();
-    const { mutate: deleteProduct } = useDeleteProduct();
-    const { mutate: updateProduct } = useUpdateProduct();
-    const { mutate: createProduct } = useCreateProduct();
+export const SupplierForm: React.FC = () => {
+    const { data: suppliers, isLoading, isError, error } = useGetSuppliers();
+    const { mutate: deleteSupplier } = useDeleteSupplier();
+    const { mutate: updateSupplier } = useUpdateSupplier();
+    const { mutate: createSupplier } = useCreateSupplier();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedProducts } = useSearchProducts(searchTerm);
+    const { data: searchedSuppliers } = useSearchSuppliers(searchTerm);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedProducts, setSelectedProducts] = React.useState<Product | null>(null);
-    // eslint-disable-next-line max-len
-    const [, setNewProduct] = React.useState({
-        name: '',
-        description: '',
-        category_id: '',
-        style_id: '',
-    });
+    const [selectedSuppliers, setSelectedSuppliers] = React.useState<Supplier | null>(null);
+    const [, setNewSupplier] = React.useState({ name: '', phone: '', email: '', address: '' });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedProducts(products.find((product: Product) => product.id === id) || null);
+        setSelectedSuppliers(suppliers.find((supplier: Supplier) => supplier.id === id) || null);
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedProducts(null);
+        setSelectedSuppliers(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedProducts?.id !== undefined) {
-            deleteProduct(selectedProducts.id);
+        if (selectedSuppliers?.id !== undefined) {
+            deleteSupplier(selectedSuppliers.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (product: Product) => {
-        setSelectedProducts(product);
+    const handleOpenEditDialog = (supplier: Supplier) => {
+        setSelectedSuppliers(supplier);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedProducts(null);
+        setSelectedSuppliers(null);
     };
 
-    const formHandler = useForm<Product>({ defaultValues: selectedProducts ?? {} });
+    const formHandler = useForm<Supplier>({ defaultValues: selectedSuppliers ?? {} });
 
     const handleEditSubmit = () => {
-        const updatedProduct = formHandler.getValues();
-        if (selectedProducts) {
-            updateProduct({ id: selectedProducts.id, updatedProduct });
+        const updatedSupplier = formHandler.getValues();
+        if (selectedSuppliers) {
+            updateSupplier({ id: selectedSuppliers.id, updatedSupplier });
         }
         handleCloseEditDialog();
     };
 
     React.useEffect(() => {
-        if (selectedProducts) {
-            formHandler.reset(selectedProducts);
+        if (selectedSuppliers) {
+            formHandler.reset(selectedSuppliers);
         }
-    }, [selectedProducts, formHandler]);
-
+    }, [selectedSuppliers, formHandler]);
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewProduct({
-            name: '',
-            description: '',
-            category_id: '',
-            style_id: '',
-        });
+        setNewSupplier({ name: '', phone: '', email: '', address: '' });
     };
 
-    const addFormHandler = useForm<Omit<Product, 'id'>>({
-        defaultValues: {
-            name: '',
-            description: '',
-            category_id: 0,
-            style_id: 0,
-        },
+    const addFormHandler = useForm<Omit<Supplier, 'id'>>({
+        defaultValues: { name: '', phone: '', email: '', address: '' },
     });
 
     const handleAddSubmit = () => {
-        const newProduct = addFormHandler.getValues();
-        createProduct(newProduct);
+        const newSupplier = addFormHandler.getValues();
+        createSupplier(newSupplier);
         handleCloseAddDialog();
     };
 
@@ -147,8 +132,8 @@ export const ProductForm: React.FC = () => {
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
 
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    if (isLoading) return <p>Loading suppliers...</p>;
+    if (isError) return <p>Error fetching suppliers: {error?.message}</p>;
 
     return (
         <Box sx={{ padding: '30px' }}>
@@ -162,11 +147,11 @@ export const ProductForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Product
+                    Add Supplier
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchProducts}
+                    formStructure={formStructureSearchSuppliers}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -175,19 +160,25 @@ export const ProductForm: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Name</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
-                                Description
+                            <TableCell
+                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                            >
+                                Name
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                CategoryId
+                                Phone
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
-                                StyleId
+                                Email
+                            </TableCell>
+                            <TableCell
+                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                            >
+                                Address
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
@@ -197,27 +188,27 @@ export const ProductForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedProducts?.length ? searchedProducts : products)?.map(
-                            (product: Product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell sx={{ color: 'black' }}>{product.id}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>{product.name}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>
-                                        {product.description}
-                                    </TableCell>
-
+                        {(searchedSuppliers?.length ? searchedSuppliers : suppliers)?.map(
+                            (supplier: Supplier) => (
+                                <TableRow key={supplier.id}>
+                                    <TableCell sx={{ color: 'black' }}>{supplier.id}</TableCell>
                                     <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.category_id}
+                                        {supplier.name}
                                     </TableCell>
                                     <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.style_id}
+                                        {supplier.phone}
                                     </TableCell>
-
+                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                        {supplier.email}
+                                    </TableCell>
+                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                        {supplier.address}
+                                    </TableCell>
                                     <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(product)}>
+                                        <IconButton onClick={() => handleOpenEditDialog(supplier)}>
                                             <EditNoteOutlinedIcon sx={{ color: 'black' }} />
                                         </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(product.id)}>
+                                        <IconButton onClick={() => handleOpenDialog(supplier.id)}>
                                             <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
                                         </IconButton>
                                     </TableCell>
@@ -232,7 +223,7 @@ export const ProductForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this product?
+                        Are you sure you want to delete this supplier?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -247,13 +238,13 @@ export const ProductForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit product
+                    Edit supplier
                 </Typography>
                 <DialogContent>
-                    {selectedProducts && (
+                    {selectedSuppliers && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureSupplier}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -267,14 +258,15 @@ export const ProductForm: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Product
+                    Add supplier
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructure.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureSupplier.filter((field) => field.name !== 'id')}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

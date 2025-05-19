@@ -5,34 +5,35 @@ import tw from 'twin.macro';
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
 
-interface Inventory {
+interface Supplier {
     id: number;
 }
-
-interface UpdateInventoryParams {
+interface UpdateSupplierParams {
     id: number;
-    updatedInventory: Partial<Inventory>;
+    updatedSupplier: Partial<Supplier>;
 }
 
-export const updateInventoryById = async ({ id, updatedInventory }: UpdateInventoryParams) => {
-    const response = await axiosClient.put(`/inventory/${id}`, updatedInventory);
+export const updateSupplierById = async ({ id, updatedSupplier }: UpdateSupplierParams) => {
+    const response = await axiosClient.put(`/supplier/${id}`, updatedSupplier);
     return response.data;
 };
-export const useUpdateInventory = () => {
+
+export const useUpdateSupplier = () => {
     const queryClient = useQueryClient();
+
     return useMutation({
-        mutationFn: updateInventoryById,
+        mutationFn: updateSupplierById,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['inventories'] });
-            toast.success(`Inventory updated successfully`);
+            queryClient.invalidateQueries({ queryKey: ['supplier'] });
+            toast.success(`Supplier updated successfully`);
         },
         onError: () => {
-            toast.error('Failed to update inventory');
+            toast.error('Failed to update supplier');
         },
     });
 };
 
-export const formStructureInventory: FormInputGenericProps[] = [
+export const formStructureSupplier: FormInputGenericProps[] = [
     {
         label: 'ID',
         name: 'id',
@@ -40,26 +41,26 @@ export const formStructureInventory: FormInputGenericProps[] = [
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Product Id',
-        name: 'product_id',
+        label: 'Name',
+        name: 'name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Color Id',
-        name: 'color_id',
+        label: 'Phone',
+        name: 'phone',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Size',
-        name: 'size',
+        label: 'Email',
+        name: 'email',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Quantity',
-        name: 'quantity',
+        label: 'Address',
+        name: 'address',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },

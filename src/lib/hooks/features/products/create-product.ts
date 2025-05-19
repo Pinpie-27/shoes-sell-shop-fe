@@ -6,11 +6,8 @@ import axiosClient from '@/lib/configs/axios';
 interface Product {
     name: string;
     description: string;
-    price: number;
-    stock: number;
-    style: string;
-    size: string;
     category_id: number;
+    style_id: number;
 }
 
 export const createProduct = async (newProduct: Product) => {
