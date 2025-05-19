@@ -92,6 +92,30 @@ export const menuItems: MenuItem[] = [
                 type: 'item',
                 url: '/user/productImages',
             },
+            {
+                id: 'styles',
+                title: 'Styles',
+                type: 'item',
+                url: '/user/styles',
+            },
+            {
+                id: 'suppliers',
+                title: 'Suppliers',
+                type: 'item',
+                url: '/user/suppliers',
+            },
+            {
+                id: 'importReceipts',
+                title: 'Import Receipts',
+                type: 'item',
+                url: '/user/importReceipts',
+            },
+            {
+                id: 'importReceiptItems',
+                title: 'Import Receipt Items',
+                type: 'item',
+                url: '/user/importReceiptItems',
+            },
         ],
     },
 ];

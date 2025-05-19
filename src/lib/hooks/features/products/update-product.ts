@@ -71,12 +71,6 @@ export const formStructure: FormInputGenericProps[] = [
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Size',
-        name: 'size',
-        inputType: 'TextField',
-        colSpan: tw`col-span-12`,
-    },
-    {
         label: 'CategoryId',
         name: 'category_id',
         inputType: 'TextField',

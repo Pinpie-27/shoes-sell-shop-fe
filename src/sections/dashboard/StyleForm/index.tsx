@@ -1,9 +1,10 @@
-/* eslint-disable max-len */
 /* eslint-disable max-lines */
+/* eslint-disable max-len */
 import React from 'react';
 
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
+// eslint-disable-next-line max-len
 import {
     Box,
     Button,
@@ -26,112 +27,94 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useCreateProduct } from '@/lib/hooks/features/products/create-product';
-import { useDeleteProduct } from '@/lib/hooks/features/products/delete-product';
-import { useGetProducts } from '@/lib/hooks/features/products/get-product';
 import {
-    formStructureSearchProducts,
-    useSearchProducts,
-} from '@/lib/hooks/features/products/search-product';
-import { formStructure, useUpdateProduct } from '@/lib/hooks/features/products/update-product';
-interface Product {
+    formStructureSearchStyles,
+    formStructureStyle,
+    useCreateStyle,
+    useDeleteStyle,
+    useGetStyles,
+    useSearchStyles,
+    useUpdateStyle,
+} from '@/lib/hooks/features/styles';
+interface Style {
     id: number;
     name: string;
     description: string;
-    category_id: number;
-    style_id: number;
 }
 
-export const ProductForm: React.FC = () => {
-    const { data: products, isLoading, isError, error } = useGetProducts();
-    const { mutate: deleteProduct } = useDeleteProduct();
-    const { mutate: updateProduct } = useUpdateProduct();
-    const { mutate: createProduct } = useCreateProduct();
+export const StyleForm: React.FC = () => {
+    const { data: styles, isLoading, isError, error } = useGetStyles();
+    const { mutate: deleteStyle } = useDeleteStyle();
+    const { mutate: updateStyle } = useUpdateStyle();
+    const { mutate: createStyle } = useCreateStyle();
 
     const [searchTerm, setSearchTerm] = React.useState('');
-    const { data: searchedProducts } = useSearchProducts(searchTerm);
+    const { data: searchedStyles } = useSearchStyles(searchTerm);
 
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedProducts, setSelectedProducts] = React.useState<Product | null>(null);
-    // eslint-disable-next-line max-len
-    const [, setNewProduct] = React.useState({
-        name: '',
-        description: '',
-        category_id: '',
-        style_id: '',
-    });
+    const [selectedStyles, setSelectedStyles] = React.useState<Style | null>(null);
+    const [, setNewStyle] = React.useState({ name: '', description: '' });
 
     const handleOpenDialog = (id: number) => {
-        setSelectedProducts(products.find((product: Product) => product.id === id) || null);
+        setSelectedStyles(styles.find((style: Style) => style.id === id) || null);
         setOpenDialog(true);
     };
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedProducts(null);
+        setSelectedStyles(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedProducts?.id !== undefined) {
-            deleteProduct(selectedProducts.id);
+        if (selectedStyles?.id !== undefined) {
+            deleteStyle(selectedStyles.id);
         }
         handleCloseDialog();
     };
 
-    const handleOpenEditDialog = (product: Product) => {
-        setSelectedProducts(product);
+    const handleOpenEditDialog = (style: Style) => {
+        setSelectedStyles(style);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedProducts(null);
+        setSelectedStyles(null);
     };
 
-    const formHandler = useForm<Product>({ defaultValues: selectedProducts ?? {} });
+    const formHandler = useForm<Style>({ defaultValues: selectedStyles ?? {} });
 
     const handleEditSubmit = () => {
-        const updatedProduct = formHandler.getValues();
-        if (selectedProducts) {
-            updateProduct({ id: selectedProducts.id, updatedProduct });
+        const updatedStyle = formHandler.getValues();
+        if (selectedStyles) {
+            updateStyle({ id: selectedStyles.id, updatedStyle });
         }
         handleCloseEditDialog();
     };
 
     React.useEffect(() => {
-        if (selectedProducts) {
-            formHandler.reset(selectedProducts);
+        if (selectedStyles) {
+            formHandler.reset(selectedStyles);
         }
-    }, [selectedProducts, formHandler]);
-
+    }, [selectedStyles, formHandler]);
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewProduct({
-            name: '',
-            description: '',
-            category_id: '',
-            style_id: '',
-        });
+        setNewStyle({ name: '', description: '' });
     };
 
-    const addFormHandler = useForm<Omit<Product, 'id'>>({
-        defaultValues: {
-            name: '',
-            description: '',
-            category_id: 0,
-            style_id: 0,
-        },
+    const addFormHandler = useForm<Omit<Style, 'id'>>({
+        defaultValues: { name: '', description: '' },
     });
 
     const handleAddSubmit = () => {
-        const newProduct = addFormHandler.getValues();
-        createProduct(newProduct);
+        const newStyle = addFormHandler.getValues();
+        createStyle(newStyle);
         handleCloseAddDialog();
     };
 
@@ -147,8 +130,8 @@ export const ProductForm: React.FC = () => {
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
 
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    if (isLoading) return <p>Loading styles...</p>;
+    if (isError) return <p>Error fetching styles: {error?.message}</p>;
 
     return (
         <Box sx={{ padding: '30px' }}>
@@ -162,11 +145,11 @@ export const ProductForm: React.FC = () => {
                 }}
             >
                 <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Product
+                    Add Style
                 </Button>
                 <FieldGroup
                     formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchProducts}
+                    formStructure={formStructureSearchStyles}
                     spacing={tw`gap-4`}
                 />
             </Box>
@@ -175,19 +158,15 @@ export const ProductForm: React.FC = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>Name</TableCell>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                            <TableCell
+                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                            >
+                                Name
+                            </TableCell>
+                            <TableCell
+                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                            >
                                 Description
-                            </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                CategoryId
-                            </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                StyleId
                             </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
@@ -197,33 +176,25 @@ export const ProductForm: React.FC = () => {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {(searchedProducts?.length ? searchedProducts : products)?.map(
-                            (product: Product) => (
-                                <TableRow key={product.id}>
-                                    <TableCell sx={{ color: 'black' }}>{product.id}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>{product.name}</TableCell>
-                                    <TableCell sx={{ color: 'black' }}>
-                                        {product.description}
-                                    </TableCell>
-
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.category_id}
-                                    </TableCell>
-                                    <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                        {product.style_id}
-                                    </TableCell>
-
-                                    <TableCell sx={{ textAlign: 'center' }}>
-                                        <IconButton onClick={() => handleOpenEditDialog(product)}>
-                                            <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                        <IconButton onClick={() => handleOpenDialog(product.id)}>
-                                            <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                        </IconButton>
-                                    </TableCell>
-                                </TableRow>
-                            )
-                        )}
+                        {(searchedStyles?.length ? searchedStyles : styles)?.map((style: Style) => (
+                            <TableRow key={style.id}>
+                                <TableCell sx={{ color: 'black' }}>{style.id}</TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {style.name}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
+                                    {style.description}
+                                </TableCell>
+                                <TableCell sx={{ textAlign: 'center' }}>
+                                    <IconButton onClick={() => handleOpenEditDialog(style)}>
+                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                    <IconButton onClick={() => handleOpenDialog(style.id)}>
+                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
+                                    </IconButton>
+                                </TableCell>
+                            </TableRow>
+                        ))}
                     </TableBody>
                 </Table>
             </TableContainer>
@@ -232,7 +203,7 @@ export const ProductForm: React.FC = () => {
                 <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
                 <DialogContent>
                     <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this product?
+                        Are you sure you want to delete this category?
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
@@ -247,13 +218,13 @@ export const ProductForm: React.FC = () => {
 
             <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit product
+                    Edit category
                 </Typography>
                 <DialogContent>
-                    {selectedProducts && (
+                    {selectedStyles && (
                         <FieldGroup
                             formHandler={formHandler}
-                            formStructure={formStructure}
+                            formStructure={formStructureStyle}
                             spacing={tw`gap-4`}
                         />
                     )}
@@ -267,14 +238,15 @@ export const ProductForm: React.FC = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
             <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
                 <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add Product
+                    Add Category
                 </Typography>
                 <DialogContent>
                     <FieldGroup
                         formHandler={addFormHandler}
-                        formStructure={formStructure.filter((field) => field.name !== 'id')}
+                        formStructure={formStructureStyle.filter((field) => field.name !== 'id')}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>

@@ -4,19 +4,19 @@ import tw from 'twin.macro';
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
 
-export const searchInventories = async (searchTerm: string) => {
-    const response = await axiosClient.get(`//inventory?keyword=${searchTerm}`);
+export const searchStyles = async (searchTerm: string) => {
+    const response = await axiosClient.get(`/search/style?keyword=${searchTerm}`);
     return response.data;
 };
 
-export const useSearchInventories = (searchTerm: string) =>
+export const useSearchStyles = (searchTerm: string) =>
     useQuery({
-        queryKey: ['inventories', searchTerm],
-        queryFn: () => searchInventories(searchTerm),
+        queryKey: ['style', searchTerm],
+        queryFn: () => searchStyles(searchTerm),
         enabled: !!searchTerm,
     });
 
-export const formStructureSearchInventories: FormInputGenericProps[] = [
+export const formStructureSearchStyles: FormInputGenericProps[] = [
     {
         name: 'search',
         type: 'search',

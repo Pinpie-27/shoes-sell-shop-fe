@@ -29,9 +29,12 @@
         "cartItem-page": "Cart Item Page",
         "color-page": "Color Page",
         "colorVariant-page": "Color Variant Page",
-        "inventory-page": "Color Variant Page",
+        "inventory-page": "Kho",
         "productColor-page": "Product Color Page",
-        "productImage-page": "Product Image Page"
-
+        "productImage-page": "Product Image Page",
+        "style-page": "Kiểu dáng",
+        "supplier-page": "Nhà cung cấp",
+        "importReceipt-page": "Nhập kho",
+        "importReceiptItem-page": "Chi tiết nhập kho"
     }
 }

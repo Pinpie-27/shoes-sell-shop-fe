@@ -41,6 +41,7 @@ interface ColorVariant {
     id: number;
     color_id: number;
     variant_name: string;
+    color_code: string;
 }
 
 export const ColorVariantForm: React.FC = () => {
@@ -59,7 +60,11 @@ export const ColorVariantForm: React.FC = () => {
         null
     );
 
-    const [, setNewColorVariant] = React.useState({ color_id: 0, variant_name: '' });
+    const [, setNewColorVariant] = React.useState({
+        color_id: 0,
+        variant_name: '',
+        color_code: '',
+    });
 
     const handleOpenDialog = (id: number) => {
         setSelectedColorVariants(
@@ -81,7 +86,12 @@ export const ColorVariantForm: React.FC = () => {
     };
 
     const formHandler = useForm<ColorVariant>({
-        defaultValues: selectedColorVariants ?? { id: 0, color_id: 0, variant_name: '' },
+        defaultValues: selectedColorVariants ?? {
+            id: 0,
+            color_id: 0,
+            variant_name: '',
+            color_code: '',
+        },
     });
 
     const handleOpenEditDialog = (colorVariant: ColorVariant) => {
@@ -109,11 +119,11 @@ export const ColorVariantForm: React.FC = () => {
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewColorVariant({ color_id: 0, variant_name: '' });
+        setNewColorVariant({ color_id: 0, variant_name: '', color_code: '' });
     };
 
     const addFormHandler = useForm<Omit<ColorVariant, 'id'>>({
-        defaultValues: { color_id: 0, variant_name: '' },
+        defaultValues: { color_id: 0, variant_name: '', color_code: '' },
     });
 
     const handleAddSubmit = () => {
@@ -168,6 +178,9 @@ export const ColorVariantForm: React.FC = () => {
                             <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
                                 Variant Name
                             </TableCell>
+                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>
+                                Color Code
+                            </TableCell>
                             <TableCell
                                 sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
                             >
@@ -188,6 +201,9 @@ export const ColorVariantForm: React.FC = () => {
                                 </TableCell>
                                 <TableCell sx={{ color: 'black' }}>
                                     {colorVariant.variant_name}
+                                </TableCell>
+                                <TableCell sx={{ color: 'black' }}>
+                                    {colorVariant.color_code}
                                 </TableCell>
                                 <TableCell sx={{ textAlign: 'center' }}>
                                     <IconButton onClick={() => handleOpenEditDialog(colorVariant)}>

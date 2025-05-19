@@ -55,4 +55,10 @@ export const formStructureColorVariants: FormInputGenericProps[] = [
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
+    {
+        label: 'Color code',
+        name: 'color_code',
+        inputType: 'TextField',
+        colSpan: tw`col-span-12`,
+    },
 ];
