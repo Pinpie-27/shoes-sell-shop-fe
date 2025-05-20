@@ -2,7 +2,9 @@ import React from 'react';
 
 import { Outlet } from 'react-router-dom';
 
-import { Footer, Header, SideBar } from './components';
+import ScrollToTopButton from '@/sections/customer/ScrollToTopButton';
+
+import { Footer, Header, SideBar, VipLevelBanner } from './components';
 
 export const CustomerLayout: React.FC = () => {
     const [sidebarOpen, setSidebarOpen] = React.useState<boolean>(true);
@@ -13,9 +15,11 @@ export const CustomerLayout: React.FC = () => {
             </div>
             <div tw="flex-1">
                 <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+                <VipLevelBanner />
                 <div>
                     <Outlet />
                 </div>
+                <ScrollToTopButton />
                 <Footer />
             </div>
         </div>

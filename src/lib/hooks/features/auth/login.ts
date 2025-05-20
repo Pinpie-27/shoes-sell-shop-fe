@@ -8,7 +8,6 @@ import { useEncryption, useFormHandler, useLocalStorage, useTranslation } from '
 import { login } from '@/lib/serviceCallApi/Login';
 import { z } from 'validate';
 
-
 interface LoginForm {
     username: string;
     password: string;
@@ -42,7 +41,6 @@ export const useLogin = () => {
             validate: z.string().required(),
             placeholder: t('enter-your-password'),
         },
-        
     ];
     const { formHandler } = useFormHandler<LoginForm>(formStructure);
 
@@ -50,10 +48,10 @@ export const useLogin = () => {
 
     const onSubmit = async (values: LoginForm) => {
         console.log('values', values);
-    
+
         try {
             const result = await login(values);
-    
+
             if (!result?.accessToken) {
                 console.error('Missing accessToken in response');
                 return;
@@ -70,22 +68,22 @@ export const useLogin = () => {
                 setRemember('true');
                 localStorage.setItem('authToken', result.accessToken);
                 localStorage.setItem('username', values.username);
+                localStorage.setItem('id', values.username);
             } else {
                 setLoginForm({ username: '', password: '' });
                 localStorage.setItem('username', values.username);
                 removeRemember();
                 localStorage.setItem('authToken', result.accessToken);
                 localStorage.setItem('username', values.username);
+                localStorage.setItem('id', values.username);
             }
 
             setTimeout(() => {
-                navigate(result.role === 'admin' ? '/dashboard' : '/customers');
+                navigate(result.role === 'admin' ? '/dashboard' : '/customers/homepage');
             }, 500);
         } catch (error) {
             console.error('Login failed:', error);
         }
-
-        
     };
 
     React.useEffect(() => {
