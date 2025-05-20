@@ -21,7 +21,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('username');
-        navigate('auth/login');
+        navigate('/auth/login');
     };
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

@@ -4,18 +4,21 @@ import React from 'react';
 import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
-import { useGetCategories, useGetProducts } from '@/lib/hooks/features';
+import { useGetCategories, useGetProducts, useGetReviews } from '@/lib/hooks/features';
 import { useGetColorVariants } from '@/lib/hooks/features/colorVariants';
 import { useGetInventory, useGetInventoryGroup } from '@/lib/hooks/features/inventory';
 import { useGetProductColors } from '@/lib/hooks/features/product-colors/get-productColor';
 import { useGetProductImages } from '@/lib/hooks/features/product-images';
 import { useGetStyles } from '@/lib/hooks/features/styles/get-style';
 
+import { Review } from '../../review/ReviewForm';
+import { ReviewList } from '../../review/ReviewList';
 import RelatedProducts from '../ProductRelated';
 
 const ProductDetail = () => {
     const { id } = useParams();
     const productId = Number(id);
+    const userId = Number(id);
 
     const [selectedImage, setSelectedImage] = React.useState<string | null>(null);
     const [selectedSize, setSelectedSize] = React.useState<string | null>(null);
@@ -53,6 +56,7 @@ const ProductDetail = () => {
         isLoading: loadingCategories,
         isError: errorCategories,
     } = useGetCategories();
+    const { data: reviews = [] } = useGetReviews();
 
     useGetInventoryGroup();
 
@@ -369,6 +373,26 @@ const ProductDetail = () => {
                     mt: 3,
                 }}
             />
+
+            <Box
+                sx={{
+                    width: '100%',
+                    maxWidth: 900,
+                    mx: 'auto',
+                    mt: 4,
+                    px: 2,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                }}
+            >
+                <Box sx={{ width: '100%', mb: 4 }}>
+                    <Review product_id={productId} user_id={userId} />
+                </Box>
+                <Box sx={{ width: '100%' }}>
+                    <ReviewList reviews={reviews} />
+                </Box>
+            </Box>
         </>
     );
 };

@@ -31,7 +31,11 @@ export const LoginForm: React.FC = () => {
                             size="small"
                         />
                     }
-                    label={<Typography tw="text-black" variant="h6">Keep me sign in</Typography>}
+                    label={
+                        <Typography tw="text-black" variant="h6">
+                            Keep me sign in
+                        </Typography>
+                    }
                 />
                 <Link
                     variant="h6"
