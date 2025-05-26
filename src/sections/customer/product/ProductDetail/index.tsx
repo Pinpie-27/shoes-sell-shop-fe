@@ -3,8 +3,10 @@ import React from 'react';
 
 import { Box, Button, Divider, Grid, Typography } from '@mui/material';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useGetCategories, useGetProducts, useGetReviews } from '@/lib/hooks/features';
+import { useCreateCartItem } from '@/lib/hooks/features/cartItems';
 import { useGetColorVariants } from '@/lib/hooks/features/colorVariants';
 import { useGetInventory, useGetInventoryGroup } from '@/lib/hooks/features/inventory';
 import { useGetProductColors } from '@/lib/hooks/features/product-colors/get-productColor';
@@ -57,6 +59,27 @@ const ProductDetail = () => {
         isError: errorCategories,
     } = useGetCategories();
     const { data: reviews = [] } = useGetReviews();
+
+    const addToCart = useCreateCartItem();
+
+    const handleAddToCart = () => {
+        if (!selectedSize) {
+            toast.error('Please select a size before adding to cart');
+            return;
+        }
+
+        if (!product || !inventoryForPrice) {
+            toast.error('Invalid product information');
+            return;
+        }
+
+        addToCart.mutate({
+            product_id: productId,
+            quantity,
+            size: selectedSize,
+            price: inventoryForPrice.selling_price,
+        });
+    };
 
     useGetInventoryGroup();
 
@@ -317,6 +340,7 @@ const ProductDetail = () => {
                             <Button
                                 variant="contained"
                                 sx={{ background: 'var(--color-primary-main)' }}
+                                onClick={handleAddToCart}
                             >
                                 THÊM VÀO GIỎ
                             </Button>

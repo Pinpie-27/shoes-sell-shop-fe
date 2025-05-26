@@ -17,6 +17,7 @@ import ColorVariantPage from '@/pages/DashboardPage/ColorVariantPage';
 import ImportReceiptItemPage from '@/pages/DashboardPage/ImportReceiptItemPage';
 import ImportReceiptPage from '@/pages/DashboardPage/ImportReceiptPage';
 import InventoryPage from '@/pages/DashboardPage/InventoryPage';
+import OrderItemPage from '@/pages/DashboardPage/OrderItemPage';
 import ProductColorPage from '@/pages/DashboardPage/ProductColorPage';
 import ProductImagePage from '@/pages/DashboardPage/ProductImagePage';
 import ProductPage from '@/pages/DashboardPage/ProductPage';
@@ -24,6 +25,8 @@ import ReviewPage from '@/pages/DashboardPage/ReviewPage';
 import StylePage from '@/pages/DashboardPage/StylePage';
 import SupplierPage from '@/pages/DashboardPage/SupplierPage';
 import VipLevelPage from '@/pages/DashboardPage/VipLevelPage';
+import { CartPage } from '@/sections/customer/payment/CartPage';
+import { OrderDetailPage } from '@/sections/customer/payment/OrderDetailPage';
 import ProductDetail from '@/sections/customer/product/ProductDetail';
 
 const LoginPage = Loadable(lazy(() => import('@/pages/auth/LoginPage')));
@@ -108,6 +111,10 @@ const routers: RouteObject[] = [
                         path: 'importReceiptItems',
                         element: <ImportReceiptItemPage />,
                     },
+                    {
+                        path: 'orderItems',
+                        element: <OrderItemPage />,
+                    },
                 ],
             },
         ],
@@ -131,6 +138,14 @@ const routers: RouteObject[] = [
             {
                 path: 'product/:id',
                 element: <ProductDetail />,
+            },
+            {
+                path: 'cart',
+                element: <CartPage />,
+            },
+            {
+                path: 'orderDetail',
+                element: <OrderDetailPage />,
             },
         ],
     },

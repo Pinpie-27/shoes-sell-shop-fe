@@ -15,7 +15,7 @@ export const VipLevelBanner: React.FC = () => {
 
         const interval = setInterval(() => {
             setCurrentIndex((prev) => (prev === vipLevels.length - 1 ? 0 : prev + 1));
-        }, 1400);
+        }, 1800);
 
         return () => clearInterval(interval);
     }, [vipLevels]);
