@@ -35,6 +35,7 @@
         "style-page": "Kiểu dáng",
         "supplier-page": "Nhà cung cấp",
         "importReceipt-page": "Nhập kho",
-        "importReceiptItem-page": "Chi tiết nhập kho"
+        "importReceiptItem-page": "Chi tiết nhập kho",
+        "orderItem-page": "Chi tiết đơn hàng"
     }
 }

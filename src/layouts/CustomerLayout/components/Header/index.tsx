@@ -4,12 +4,13 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Box, Divider, Menu, MenuItem, Typography } from '@mui/material';
+import { Badge, Box, Divider, Menu, MenuItem, Typography } from '@mui/material';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
+import { useGetCartItems } from '@/lib/hooks/features/cartItems';
 import { formStructureSearchProducts } from '@/lib/hooks/features/products/search-product';
 
 interface HeaderProps {
@@ -18,6 +19,14 @@ interface HeaderProps {
 }
 export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) => {
     const navigate = useNavigate();
+    const { data: cartItems, isLoading, error } = useGetCartItems();
+    const totalQuantity = React.useMemo(() => {
+        if (!cartItems || isLoading || error) return 0;
+        return cartItems.reduce(
+            (sum: number, item: { quantity: number }) => sum + item.quantity,
+            0
+        );
+    }, [cartItems, isLoading, error]);
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('username');
@@ -70,10 +79,26 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                 spacing={tw`gap-4`}
             />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <ShoppingCartIcon
-                    sx={{ color: 'black', marginRight: '8px' }}
-                    onClick={() => navigate('/cart')}
-                />
+                <Badge
+                    badgeContent={totalQuantity}
+                    color="error"
+                    overlap="circular"
+                    sx={{
+                        '& .MuiBadge-badge': {
+                            fontSize: '0.65rem',
+                            minWidth: 15,
+                            height: 15,
+                            borderRadius: '50%',
+                            top: 6,
+                            right: 6,
+                        },
+                    }}
+                >
+                    <ShoppingCartIcon
+                        sx={{ color: 'black', marginRight: '8px', cursor: 'pointer' }}
+                        onClick={() => navigate('/customers/cart')}
+                    />
+                </Badge>
                 <AccountCircleIcon
                     // eslint-disable-next-line max-len
                     onClick={(event: React.MouseEvent<SVGSVGElement>) =>

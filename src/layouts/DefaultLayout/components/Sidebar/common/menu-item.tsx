@@ -116,6 +116,12 @@ export const menuItems: MenuItem[] = [
                 type: 'item',
                 url: '/user/importReceiptItems',
             },
+            {
+                id: 'orderItems',
+                title: 'Order Items',
+                type: 'item',
+                url: '/user/orderItems',
+            },
         ],
     },
 ];

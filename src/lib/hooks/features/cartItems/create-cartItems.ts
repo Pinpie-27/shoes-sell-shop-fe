@@ -1,21 +1,19 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface CartItem {
-    id: number;
-    user_id: number;
     product_id: number;
     quantity: number;
+    size: string;
     price: number;
-    created_at: string;
 }
 
 export const createCartItem = async (newCartItem: CartItem) => {
-    const response = await axiosClient.post(`/cart-items`, newCartItem);
+    const response = await axiosClient.post(`/cart_item`, newCartItem);
     return response.data;
-}
+};
 
 export const useCreateCartItem = () => {
     const queryClient = useQueryClient();
@@ -28,7 +26,6 @@ export const useCreateCartItem = () => {
         },
         onError: () => {
             toast.error('Failed to create cart item');
-        }
+        },
     });
-}
-
+};
