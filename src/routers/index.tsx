@@ -27,6 +27,7 @@ import SupplierPage from '@/pages/DashboardPage/SupplierPage';
 import VipLevelPage from '@/pages/DashboardPage/VipLevelPage';
 import { CartPage } from '@/sections/customer/payment/CartPage';
 import { OrderDetailPage } from '@/sections/customer/payment/OrderDetailPage';
+import { OrderSuccessPage } from '@/sections/customer/payment/OrderSuccessPage';
 import ProductDetail from '@/sections/customer/product/ProductDetail';
 
 const LoginPage = Loadable(lazy(() => import('@/pages/auth/LoginPage')));
@@ -128,7 +129,7 @@ const routers: RouteObject[] = [
         ),
         children: [
             {
-                path: 'profile',
+                path: 'profile/:username',
                 element: <ProfilePage />,
             },
             {
@@ -146,6 +147,10 @@ const routers: RouteObject[] = [
             {
                 path: 'orderDetail',
                 element: <OrderDetailPage />,
+            },
+            {
+                path: 'order-success',
+                element: <OrderSuccessPage />,
             },
         ],
     },

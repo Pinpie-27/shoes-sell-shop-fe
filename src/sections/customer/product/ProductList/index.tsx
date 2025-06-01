@@ -9,7 +9,10 @@ import {
     useMediaQuery,
     useTheme,
 } from '@mui/material';
+import { useAtom } from 'jotai';
 
+import { filterAtom } from '@/atoms/filterAtom';
+import { searchQueryAtom } from '@/atoms/searchAtom';
 import { useGetCategories, useGetProducts } from '@/lib/hooks/features';
 import { useGetColorVariants } from '@/lib/hooks/features/colorVariants';
 import { useGetInventoryGroup } from '@/lib/hooks/features/inventory';
@@ -21,6 +24,9 @@ import ProductCard from '../ProductCard';
 
 const ProductListPage: React.FC = () => {
     const [currentPage, setCurrentPage] = useState(1);
+    const [searchQuery] = useAtom(searchQueryAtom);
+    const [filter] = useAtom(filterAtom);
+
     const itemsPerPage = 8;
 
     const theme = useTheme();
@@ -109,11 +115,26 @@ const ProductListPage: React.FC = () => {
             product_name: productData?.name,
             category_name: category?.name,
             style_name: style?.name,
+            style_id: productData?.style_id,
+            category_id: productData?.category_id,
+            color_variant_id: productColor?.color_variant_id,
         };
     });
 
-    const totalPages = Math.ceil(productsWithImage.length / itemsPerPage);
-    const paginatedProducts = productsWithImage.slice(
+    const filteredProducts = productsWithImage.filter((item: any) => {
+        const name = item.product_name?.toLowerCase() || '';
+        const query = searchQuery.toLowerCase();
+
+        const matchQuery = name.includes(query);
+        const matchStyle = filter.styleId ? item.style_id === filter.styleId : true;
+        const matchCategory = filter.categoryId ? item.category_id === filter.categoryId : true;
+        const matchColor = filter.colorId ? item.color_variant_id === filter.colorId : true;
+
+        return matchQuery && matchStyle && matchCategory && matchColor;
+    });
+
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const paginatedProducts = filteredProducts.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );

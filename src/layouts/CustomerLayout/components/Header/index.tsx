@@ -1,3 +1,4 @@
+/* eslint-disable import/no-duplicates */
 import React from 'react';
 
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -5,10 +6,12 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Badge, Box, Divider, Menu, MenuItem, Typography } from '@mui/material';
+import { useAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import tw from 'twin.macro';
 
+import { searchQueryAtom } from '@/atoms/searchAtom';
 import { FieldGroup } from '@/components/interactive';
 import { useGetCartItems } from '@/lib/hooks/features/cartItems';
 import { formStructureSearchProducts } from '@/lib/hooks/features/products/search-product';
@@ -44,18 +47,22 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
 
     const username = localStorage.getItem('username') || '';
 
-    const [, setSearchTerm] = React.useState('');
+    const [, setSearchQuery] = useAtom(searchQueryAtom);
     const formHandlerSearch = useForm<{ search: string }>({
         defaultValues: { search: '' },
     });
 
-    React.useEffect(() => {
-        const subscription = formHandlerSearch.watch((value) => {
-            setSearchTerm(value.search || '');
-        });
+    const handleClearSearch = () => {
+        setSearchQuery('');
+    };
 
-        return () => subscription.unsubscribe();
-    }, [formHandlerSearch]);
+    const onSubmit = (data: { search: string }) => {
+        const searchTerm = data.search.trim();
+        if (searchTerm) {
+            setSearchQuery(searchTerm);
+            navigate('/customers/homepage');
+        }
+    };
 
     return (
         // eslint-disable-next-line max-len
@@ -73,11 +80,14 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                     onClick={() => setSidebarOpen(!sidebarOpen)}
                 />
             </Box>
-            <FieldGroup
-                formHandler={formHandlerSearch}
-                formStructure={formStructureSearchProducts}
-                spacing={tw`gap-4`}
-            />
+            <form onSubmit={formHandlerSearch.handleSubmit(onSubmit)} onClick={handleClearSearch}>
+                <FieldGroup
+                    formHandler={formHandlerSearch}
+                    formStructure={formStructureSearchProducts}
+                    spacing={tw`gap-4`}
+                />
+            </form>
+
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Badge
                     badgeContent={totalQuantity}
@@ -131,9 +141,21 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                         <Typography
                             sx={{ color: 'black', px: 1 }}
                             variant="body1"
-                            onClick={() => navigate('/customers/profile')}
+                            onClick={() => navigate(`/customers/profile/${username}`)}
                         >
                             Profile
+                        </Typography>
+                    </MenuItem>
+                    <Divider sx={{ my: 1, mx: 2, backgroundColor: 'var(--color-primary-main)' }} />
+                    <MenuItem sx={{ justifyContent: 'center' }}>
+                        <Typography
+                            sx={{ color: 'black', px: 1 }}
+                            variant="body1"
+                            onClick={() => {
+                                navigate(`/customers/orderDetail`);
+                            }}
+                        >
+                            Orders
                         </Typography>
                     </MenuItem>
                     <Divider sx={{ my: 1, mx: 2, backgroundColor: 'var(--color-primary-main)' }} />
