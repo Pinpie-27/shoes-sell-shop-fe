@@ -16,6 +16,7 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { useGetUsers, useGetVipLevels } from '@/lib/hooks/features';
 import {
     useDeleteCartItem,
     useGetCartItems,
@@ -46,6 +47,14 @@ export const CartPage = () => {
     const { mutate: createOrder, status } = useCreateOrder();
     const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
 
+    // ...existing import...
+    const { data: vipLevels = [] } = useGetVipLevels();
+    const { data: users = [] } = useGetUsers();
+    const username = localStorage.getItem('username');
+    const currentUser = users.find((u: any) => u.username === username);
+    const userVipLevel = vipLevels.find((level: any) => level.id === currentUser?.vip_level_id);
+    const discountPercent = userVipLevel ? Number(userVipLevel.discount_rate) : 0;
+
     // Thông tin nhận hàng
     const [receiverName, setReceiverName] = useState('');
     const [receiverPhone, setReceiverPhone] = useState('');
@@ -63,6 +72,10 @@ export const CartPage = () => {
     const getTotalPrice = () =>
         cartItems.reduce((acc: number, item: any) => acc + Number(item.price), 0);
 
+    const total = getTotalPrice();
+    const discount = (total * discountPercent) / 100;
+    const finalAmount = total - discount;
+
     const handleCreateOrder = () => {
         if (!receiverName.trim() || !receiverPhone.trim() || !receiverAddress.trim()) {
             toast.error('Please fill in all receiver information');
@@ -71,7 +84,7 @@ export const CartPage = () => {
 
         const payload = {
             user_id: cartItems[0]?.user_id,
-            total_price: getTotalPrice(),
+            total_price: finalAmount,
             created_at: new Date().toISOString(),
             receiver_name: receiverName,
             receiver_phone: receiverPhone,
@@ -86,13 +99,9 @@ export const CartPage = () => {
         console.log('Order payload:', payload);
 
         createOrder(payload, {
-            // onSuccess: (data) => {
-            //     console.log('orderId:', data.orderId);
-            //     navigate(`/customers/order-success?orderId=${data.orderId}`);
-            // },
             onSuccess: (data) => {
                 if (paymentMethod === 'VNPAY' && data.paymentUrl) {
-                    setPaymentUrl(data.paymentUrl); // lưu url để hiển thị mã QR
+                    setPaymentUrl(data.paymentUrl);
                 } else {
                     navigate(`/customers/order-success?orderId=${data.orderId}`);
                 }
@@ -222,6 +231,27 @@ export const CartPage = () => {
                     ))}
 
                     <Divider sx={{ my: 4 }} />
+
+                    <Box
+                        sx={{
+                            mb: 3,
+                            px: 4,
+                            py: 3,
+                            bgcolor: '#f5faff',
+                            borderRadius: 2,
+                            maxWidth: 700,
+                            mx: 'auto',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                        }}
+                    >
+                        <Typography fontWeight={600} color="#1976d2">
+                            Hạng thành viên: {userVipLevel?.level_name || 'Chưa có'}
+                        </Typography>
+                        <Typography color="#0288d1">
+                            Giảm giá: {discountPercent}%{' '}
+                            {discountPercent > 0 && `(Tiết kiệm ${discount.toLocaleString()} VNĐ)`}
+                        </Typography>
+                    </Box>
 
                     <Box
                         sx={{
@@ -392,9 +422,22 @@ export const CartPage = () => {
                             gap: 2,
                         }}
                     >
-                        <Typography variant="h6" fontWeight={700} color="black">
+                        {/* <Typography variant="h6" fontWeight={700} color="black">
                             Total: {getTotalPrice().toLocaleString()} VNĐ
-                        </Typography>
+                        </Typography> */}
+                        <Box>
+                            <Typography variant="h6" fontWeight={700} color="black">
+                                Tổng tiền: {total.toLocaleString()} VNĐ
+                            </Typography>
+                            {discountPercent > 0 && (
+                                <Typography fontWeight={600} color="#43a047">
+                                    Đã giảm: -{discount.toLocaleString()} VNĐ
+                                </Typography>
+                            )}
+                            <Typography variant="h6" fontWeight={700} color="#1976d2">
+                                Thành tiền: {finalAmount.toLocaleString()} VNĐ
+                            </Typography>
+                        </Box>
 
                         <Button
                             variant="contained"
