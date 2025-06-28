@@ -5,8 +5,9 @@ import { FieldValues, FormProvider, UseFormReturn } from 'react-hook-form';
 import tw, { TwStyle } from 'twin.macro';
 
 import { InputForm } from './InputForm';
+import { SelectForm } from './SelectForm';
 import { Col, FormWrapper } from './styled';
-import { FormInputGenericProps, FormInputTextField } from './type';
+import { FormInputGenericProps, FormInputTextField, FormSelectField } from './type';
 
 interface FieldGroupProps {
     formHandler: UseFormReturn<FieldValues, any> | UseFormReturn<any, any>;
@@ -17,10 +18,14 @@ interface FieldGroupProps {
     invisible?: boolean;
     disableInputFields?: boolean;
     componentStyle?: TwStyle;
+    selectOptions?: {
+        [fieldName: string]: { label: string; value: any }[];
+    };
 }
 
 export type FieldRenderProps = FormInputGenericProps & {
     defaultValues?: FieldValues;
+    options?: { label: string; value: any }[];
 };
 
 const FieldRender: React.FC<FieldRenderProps> = (props) => {
@@ -35,7 +40,12 @@ const FieldRender: React.FC<FieldRenderProps> = (props) => {
                 />
             );
         case 'SelectField':
-            return <></>;
+            return (
+                <SelectForm
+                    defaultValue={defaultValues?.[props.name]}
+                    {...(otherProps as FormSelectField)}
+                />
+            );
         default:
             return <div>Invalid inputType</div>;
     }
@@ -49,6 +59,7 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({
     disableInputFields,
     gridCols = tw`grid-cols-12`,
     spacing = tw`gap-4`,
+    selectOptions,
 }) => (
     <FormWrapper invisible={invisible} spacing={spacing} css={gridCols}>
         <FormProvider {...formHandler}>
@@ -58,6 +69,7 @@ export const FieldGroup: React.FC<FieldGroupProps> = ({
                         {...field}
                         defaultValues={defaultValues}
                         disabled={disableInputFields ?? field.disabled}
+                        options={selectOptions?.[field.name]}
                     />
                 </Col>
             ))}

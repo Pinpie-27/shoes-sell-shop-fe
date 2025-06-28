@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import tw from 'twin.macro';
+import { z } from 'zod';
 
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
@@ -26,10 +27,10 @@ export const useUpdateImportReceiptItem = () => {
         mutationFn: updateImportReceiptItemById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['import-receipt-item'] });
-            toast.success(`Import receipt item updated successfully`);
+            toast.success(`Sửa chi tiết phiếu nhập thành công`);
         },
         onError: () => {
-            toast.error('Failed to update import receipt item');
+            toast.error('Sửa chi tiết phiếu nhập thất bại');
         },
     });
 };
@@ -39,33 +40,37 @@ export const formStructureImportReceiptItem: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Import Receipt ID',
+        label: 'Phiếu nhập',
         name: 'import_receipt_id',
-        inputType: 'TextField',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
+        validate: z.number().min(1, 'Phiếu nhập không được để trống'),
     },
     {
-        label: 'Product ID',
+        label: 'Sản phẩm',
         name: 'product_id',
-        inputType: 'TextField',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
+        validate: z.number().min(1, 'Sản phẩm không được để trống'),
     },
     {
         label: 'Size',
         name: 'size',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().regex(/^\d+$/, 'Số điện thoại chỉ chứa số'),
     },
     {
-        label: 'Quantity',
+        label: 'Số lượng',
         name: 'quantity',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Import Price',
+        label: 'Giá nhập',
         name: 'price_import',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,

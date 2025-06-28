@@ -15,10 +15,6 @@ interface SideBarProps {
 }
 
 export const SideBar: React.FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen }) => {
-    // const [open, setOpen] = React.useState<boolean>(false);
-
-    // const handleOpen = () => setOpen(!open);
-
     const path = useLocation();
 
     const renderContent = () => (
@@ -46,6 +42,7 @@ export const SideBar: React.FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen })
                     width: sidebarOpen ? '260px' : '0px',
                     transition: 'width 0.3s ease-in-out',
                     overflow: 'hidden',
+                    backgroundColor: '#fff',
                 },
             }}
         >

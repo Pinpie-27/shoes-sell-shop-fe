@@ -18,7 +18,7 @@ export const formStructureSearchSuppliers: FormInputGenericProps[] = [
     {
         name: 'search',
         type: 'search',
-        placeholder: 'Enter the key...',
+        placeholder: 'Tìm kiếm...',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },

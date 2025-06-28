@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface Review {
     id: number;
@@ -23,10 +23,10 @@ export const useUpdateReview = () => {
         mutationFn: updateReviewById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['review'] });
-            toast.success(`Review updated successfully`);
+            toast.success(`Sửa bình luận thành công`);
         },
         onError: () => {
-            toast.error('Failed to update review ');
-        }
+            toast.error('Sửa bình luận thất bại');
+        },
     });
 };

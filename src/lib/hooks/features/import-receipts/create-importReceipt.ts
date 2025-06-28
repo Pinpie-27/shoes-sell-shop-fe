@@ -19,10 +19,10 @@ export const useCreateImportReceipt = () => {
         mutationFn: createImportReceipt,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['import-receipt'] });
-            toast.success(`Import receipt created successfully`);
+            toast.success(`Tạo phiếu nhập thành công`);
         },
         onError: () => {
-            toast.error('Failed to create import receipt');
+            toast.error('Tạo phiếu nhập thất bại');
         },
     });
 };

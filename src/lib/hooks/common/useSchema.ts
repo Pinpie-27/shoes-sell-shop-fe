@@ -11,7 +11,7 @@ export const useSchema = <Type>(formStructure: FormInputGenericProps[], refine: 
     const schema = formStructure.reduce(
         (acc, field) => ({
             ...acc,
-            [field.name]: field.validate,
+            [field.name]: field.validate ?? z.any(), 
         }),
         {}
     );

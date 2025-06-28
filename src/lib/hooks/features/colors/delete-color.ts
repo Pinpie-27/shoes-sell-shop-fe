@@ -15,10 +15,10 @@ export const useDeleteColor = () => {
         mutationFn: deleteColorById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color'] });
-            toast.success(`Color deleted successfully`);
+            toast.success(`Xoá màu thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete color');
+            toast.error('Xoá màu thất bại');
         },
     });
 };

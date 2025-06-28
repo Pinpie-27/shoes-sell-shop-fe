@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import tw from 'twin.macro';
+import { z } from 'zod';
 
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
@@ -26,10 +27,10 @@ export const useUpdateStyle = () => {
         mutationFn: updateStyleById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['style'] });
-            toast.success(`Style updated successfully`);
+            toast.success(`Sửa kiểu dáng thành công`);
         },
         onError: () => {
-            toast.error('Failed to update style');
+            toast.error('Sửa kiểu dáng thất bại');
         },
     });
 };
@@ -40,15 +41,17 @@ export const formStructureStyle: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Name',
+        label: 'Tên kiểu dáng',
         name: 'name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().min(1, 'Tên không được để trống'),
     },
     {
-        label: 'Description',
+        label: 'Mô tả',
         name: 'description',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,

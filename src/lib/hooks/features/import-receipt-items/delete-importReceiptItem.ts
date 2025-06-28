@@ -14,10 +14,10 @@ export const useDeleteImportReceiptItem = () => {
         mutationFn: deleteImportReceiptItemById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['import-receipt-item'] });
-            toast.success(`Import receipt item deleted successfully`);
+            toast.success(`Xoá chi tiết phiếu nhập thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete import receipt item');
+            toast.error('Xoá chi tiết phiếu nhập thất bại');
         },
     });
 };

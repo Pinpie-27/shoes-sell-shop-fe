@@ -20,10 +20,10 @@ export const useCreateProductColor = () => {
         mutationFn: createProductColor,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['productColor'] });
-            toast.success(`Prodcut color created successfully`);
+            toast.success(`Thêm màu sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to create prodcut color');
+            toast.error('Thêm màu sản phẩm thất bại');
         },
     });
 };

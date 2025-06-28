@@ -38,7 +38,7 @@ export const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
                 fontSize={30}
                 color="#1E293B"
             >
-                Customer Reviews
+                Danh sách đánh giá
             </Typography>
 
             {reviews.map((review) => {
@@ -55,18 +55,23 @@ export const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
                             boxShadow: '0 4px 12px rgba(0, 0, 0, 0.5)',
                         }}
                     >
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Typography
-                                variant="subtitle2"
-                                color="black"
-                                fontWeight={600}
-                                fontSize={20}
-                                mb={1}
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                            <Box
+                                sx={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'space-between',
+                                }}
                             >
-                                {productName ? ` ${productName}` : <Skeleton width={100} />}
-                            </Typography>
-
-                            <Box display="flex" alignItems="center" mb={1}>
+                                <Typography
+                                    variant="subtitle2"
+                                    color="black"
+                                    fontWeight={600}
+                                    fontSize={20}
+                                    mb={0}
+                                >
+                                    {productName ? ` ${productName}` : <Skeleton width={100} />}
+                                </Typography>
                                 <Rating
                                     value={review.rating}
                                     readOnly
@@ -76,22 +81,7 @@ export const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
                                 />
                             </Box>
                         </Box>
-                        <Divider
-                            sx={{
-                                borderStyle: 'dashed',
-                                borderColor: 'grey.500',
-                                borderWidth: '1px 0 0 0',
-                                mt: 0.5,
-                            }}
-                        />
-                        <Typography
-                            variant="body1"
-                            mt={0.5}
-                            color="black"
-                            sx={{ whiteSpace: 'pre-wrap', fontSize: '1rem', lineHeight: 1.6 }}
-                        >
-                            {review.comment}
-                        </Typography>
+
                         <Divider
                             sx={{
                                 borderStyle: 'dashed',
@@ -101,15 +91,31 @@ export const ReviewList: React.FC<ReviewListProps> = ({ reviews }) => {
                             }}
                         />
 
-                        {review.created_at && (
-                            <Typography variant="caption" color="black" fontStyle="italic" mt={3}>
-                                {new Date(review.created_at).toLocaleDateString(undefined, {
-                                    year: 'numeric',
-                                    month: 'short',
-                                    day: 'numeric',
-                                })}
+                        <Box sx={{ mt: 0.5, display: 'flex', justifyContent: 'space-between' }}>
+                            <Typography
+                                variant="body1"
+                                mt={1}
+                                color="black"
+                                sx={{ whiteSpace: 'pre-wrap', fontSize: '1rem', lineHeight: 1.6 }}
+                            >
+                                {review.comment}
                             </Typography>
-                        )}
+                            {review.created_at && (
+                                <Typography
+                                    variant="caption"
+                                    color="black"
+                                    fontStyle="italic"
+                                    mt={0.5}
+                                    sx={{ alignSelf: 'flex-end' }}
+                                >
+                                    {new Date(review.created_at).toLocaleDateString(undefined, {
+                                        year: 'numeric',
+                                        month: 'short',
+                                        day: 'numeric',
+                                    })}
+                                </Typography>
+                            )}
+                        </Box>
                     </Box>
                 );
             })}

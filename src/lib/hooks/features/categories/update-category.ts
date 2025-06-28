@@ -25,10 +25,10 @@ export const useUpdateCategory = () => {
         mutationFn: updateCategoryById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['category'] });
-            toast.success(`Category updated successfully`);
+            toast.success(`Cập nhật danh mục thành công`);
         },
         onError: () => {
-            toast.error('Failed to update category');
+            toast.error('Cập nhật danh mục thất bại');
         },
     });
 };
@@ -39,15 +39,16 @@ export const formStructureCategory: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Name',
+        label: 'Tên danh mục',
         name: 'name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Description',
+        label: 'Mô tả',
         name: 'description',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,

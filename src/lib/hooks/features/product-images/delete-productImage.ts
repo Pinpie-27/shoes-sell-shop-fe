@@ -15,10 +15,10 @@ export const useDeleteProductImage = () => {
         mutationFn: deleteProductImageById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['productImage'] });
-            toast.success(`Product image deleted successfully`);
+            toast.success(`Xoá hình ảnh sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete product image');
+            toast.error('Xoá hình ảnh sản phẩm thất bại');
         },
     });
 };

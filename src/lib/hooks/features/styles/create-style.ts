@@ -19,10 +19,10 @@ export const useCreateStyle = () => {
         mutationFn: createStyle,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['style'] });
-            toast.success(`Style created successfully`);
+            toast.success(`Thêm kiểu dáng thành công`);
         },
         onError: () => {
-            toast.error('Failed to create style');
+            toast.error('Thêm kiểu dáng thất bại');
         },
     });
 };

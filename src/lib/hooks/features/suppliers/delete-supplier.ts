@@ -15,10 +15,10 @@ export const useDeleteSupplier = () => {
         mutationFn: deleteSupplierById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['supplier'] });
-            toast.success(`Supplier deleted successfully`);
+            toast.success(`Xoá nhà cung cấp thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete supplier');
+            toast.error('Xoá nhà cung ');
         },
     });
 };

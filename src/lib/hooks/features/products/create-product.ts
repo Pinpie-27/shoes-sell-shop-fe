@@ -6,8 +6,8 @@ import axiosClient from '@/lib/configs/axios';
 interface Product {
     name: string;
     description: string;
-    category_id: number;
-    style_id: number;
+    category_id: string;
+    style_id: string;
 }
 
 export const createProduct = async (newProduct: Product) => {
@@ -22,10 +22,10 @@ export const useCreateProduct = () => {
         mutationFn: createProduct,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['product'] });
-            toast.success(`Product created successfully`);
+            toast.success(`Thêm sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to create product');
+            toast.error('Thêm sản phẩm thất bại');
         },
     });
 };

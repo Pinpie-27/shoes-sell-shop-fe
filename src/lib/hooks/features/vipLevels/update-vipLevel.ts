@@ -3,13 +3,13 @@ import { toast } from 'react-toastify';
 import tw from 'twin.macro';
 
 import { FormInputGenericProps } from '@/components/interactive';
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 interface VipLevel {
     id: number;
     level_name: string;
     discount_rate: number;
-    min_spend: number
+    min_spend: number;
 }
 interface UpdateVipLevelParams {
     id: number;
@@ -28,11 +28,11 @@ export const useUpdateVipLevel = () => {
         mutationFn: updateVipLevelById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['vip_level'] });
-            toast.success(`Vip level updated successfully`);
+            toast.success(`Sửa cấp độ VIP thành công`);
         },
         onError: () => {
-            toast.error('Failed to update user');
-        }
+            toast.error('Sửa cấp độ VIP thất bại');
+        },
     });
 };
 
@@ -42,23 +42,25 @@ export const formStructureVL: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Level name',
+        label: 'Tên cấp độ',
         name: 'level_name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Discount rate',
+        label: 'Mức giảm giá (%)',
         name: 'discount_rate',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Min spend',
+        label: 'Chi tiêu tối thiểu',
         name: 'min_spend',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
-    }
-]
+    },
+];

@@ -5,9 +5,6 @@ import { useState } from 'react';
 import {
     Box,
     Button,
-    Card,
-    CardContent,
-    CardMedia,
     Chip,
     Pagination,
     Stack,
@@ -68,168 +65,180 @@ export const OrderDetailPage = () => {
 
     const totalPages = orderItems ? Math.ceil(orderItems.length / itemsPerPage) : 0;
 
-    const paginatedOrderItems = orderItems.slice(
-        (currentPage - 1) * itemsPerPage,
-        currentPage * itemsPerPage
-    );
+    const paginatedOrderItems = orderItems
+        ? orderItems.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+        : [];
 
     return (
-        <>
-            <Box
+        <Box
+            sx={{
+                maxWidth: 900,
+                mx: 'auto',
+                mt: 5,
+                px: { xs: 1, sm: 3 },
+                bgcolor: 'linear-gradient(135deg, #fffbe6 0%, #fffde7 100%)',
+                borderRadius: 5,
+                pb: 6,
+                boxShadow: '0 8px 32px 0 rgba(255,173,66,0.15)',
+            }}
+        >
+            <Typography
+                variant="h4"
+                fontWeight={800}
+                mb={4}
+                textAlign="center"
+                color="#f15e2c"
+                letterSpacing={2}
                 sx={{
-                    maxWidth: 680,
-                    mx: 'auto',
-                    mt: 5,
-                    px: 2,
-                    bgcolor: '#fafafa',
-                    borderRadius: 3,
-                    pb: 4,
+                    textShadow: '0 2px 8px rgba(25, 118, 210, 0.08)',
+                    fontSize: { xs: '2rem', sm: '2.5rem' },
                 }}
             >
-                <Typography
-                    variant="h5"
-                    fontWeight={700}
-                    mb={3}
-                    textAlign="center"
-                    color="#222"
-                    letterSpacing={1}
-                    sx={{ userSelect: 'none' }}
-                >
-                    Order Details
-                </Typography>
+                LỊCH SỬ ĐẶT HÀNG
+            </Typography>
 
-                <Stack spacing={2}>
-                    {orderItems.length === 0 && (
-                        <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            textAlign="center"
-                            sx={{ fontStyle: 'italic' }}
-                        >
-                            No items in your order.
-                        </Typography>
-                    )}
+            {orderItems && orderItems.length === 0 && (
+                <Box sx={{ py: 8 }}>
+                    <Typography
+                        variant="h6"
+                        color="#ffad42"
+                        textAlign="center"
+                        sx={{
+                            fontStyle: 'italic',
+                            fontSize: '1.2rem',
+                            fontWeight: 700,
+                            letterSpacing: 1,
+                        }}
+                    >
+                        Bạn chưa có đơn hàng nào.
+                    </Typography>
+                </Box>
+            )}
 
+            {orderItems && orderItems.length > 0 && (
+                <Stack spacing={3}>
                     {paginatedOrderItems.map((item: any) => {
                         const product = products?.find((p: any) => p.id === item.product_id);
-
                         const order = orders?.find((o: any) => o.id === item.order_id);
 
                         return (
-                            <Card
+                            <Box
                                 key={item.id}
-                                elevation={0}
                                 sx={{
                                     display: 'flex',
-                                    alignItems: 'center',
-                                    border: '1px solid #ddd',
-                                    borderRadius: 2,
-                                    bgcolor: '#fff',
-                                    transition: 'box-shadow 0.25s ease',
-                                    cursor: 'default',
-                                    '&:hover': {
-                                        boxShadow: '0 6px 15px rgba(0, 0, 0, 0.08)',
-                                    },
+                                    flexDirection: { xs: 'column', sm: 'row' },
+                                    alignItems: { xs: 'flex-start', sm: 'center' },
+                                    gap: 3,
+                                    p: 3,
+                                    borderRadius: 4,
+                                    background: 'linear-gradient(90deg, #e3f2fd 60%, #fff 100%)',
+                                    boxShadow: '0 4px 20px rgba(25,118,210,0.10)',
+                                    border: '1.5px solid ',
+                                    transition: 'box-shadow 0.2s, border 0.2s',
                                 }}
                             >
-                                {product?.image && (
-                                    <CardMedia
-                                        component="img"
-                                        image={product.image}
-                                        alt={product.name}
-                                        sx={{
-                                            width: 100,
-                                            height: 100,
-                                            objectFit: 'contain',
-                                            borderTopLeftRadius: 8,
-                                            borderBottomLeftRadius: 8,
-                                            bgcolor: '#f9f9f9',
-                                            p: 1,
-                                        }}
-                                    />
-                                )}
-
-                                <CardContent sx={{ flex: 1, py: 1.5, px: 3 }}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-between',
-                                            alignItems: 'center',
-                                        }}
+                                <Box sx={{ flex: 1, minWidth: 0 }}>
+                                    <Typography fontWeight={700} fontSize="1.15rem" color="#212121">
+                                        {product?.name || 'Unknown Product'}
+                                    </Typography>
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
+                                        flexWrap="wrap"
+                                        mb={1}
                                     >
-                                        <Box
-                                            sx={{
-                                                display: 'flex',
-                                                flexDirection: 'column',
-                                                gap: 0.5,
-                                            }}
+                                        <Typography
+                                            sx={{ mr: 1, color: '#212121', fontWeight: 500 }}
                                         >
-                                            <Typography
-                                                variant="subtitle1"
-                                                fontWeight={600}
-                                                color="#222"
-                                                noWrap
-                                            >
-                                                {product?.name || 'Unknown Product'}
-                                            </Typography>
-
-                                            <Typography variant="body2" color="#444">
-                                                Quantity: <strong>{item.quantity}</strong>
-                                            </Typography>
-
-                                            <Typography variant="body2" color="#444">
-                                                Total:{' '}
-                                                <strong>
-                                                    {Number(item.price).toLocaleString()} VNĐ
-                                                </strong>
-                                            </Typography>
-
-                                            <Typography variant="body2" color="#444" mb={1}>
-                                                Order Date:{' '}
-                                                {order?.created_at &&
-                                                !isNaN(new Date(order.created_at).getTime())
-                                                    ? new Date(
-                                                          order.created_at
-                                                      ).toLocaleDateString()
-                                                    : 'N/A'}
-                                            </Typography>
-
-                                            <Chip
-                                                label={item.status}
-                                                color={getStatusColor(item.status)}
-                                                size="small"
-                                                sx={{
-                                                    fontWeight: 'bold',
-                                                    textTransform: 'capitalize',
-                                                    borderRadius: 1,
-                                                    px: 1.2,
-                                                    py: 0.3,
-                                                    fontSize: '0.75rem',
-                                                    letterSpacing: 0.5,
-                                                    mt: 0.5,
-                                                    width: 'fit-content',
-                                                }}
-                                            />
-                                        </Box>
-
-                                        <Button
-                                            variant="outlined"
+                                            Số lượng:{' '}
+                                            <span style={{ color: '#212121' }}>
+                                                {item.quantity}
+                                            </span>
+                                        </Typography>
+                                        <Typography
+                                            variant="h6"
+                                            fontSize={20}
+                                            fontWeight={700}
+                                            color="#388e3c"
+                                        >
+                                            Tổng:{' '}
+                                            {item.total_price !== undefined
+                                                ? Number(item.total_price).toLocaleString() + ' VNĐ'
+                                                : '0'}
+                                        </Typography>
+                                    </Stack>
+                                    <Stack
+                                        direction="row"
+                                        spacing={2}
+                                        alignItems="center"
+                                        flexWrap="wrap"
+                                    >
+                                        <Typography color="#888" fontSize="0.98rem">
+                                            Ngày đặt:{' '}
+                                            {order?.created_at &&
+                                            !isNaN(new Date(order.created_at).getTime())
+                                                ? new Date(order.created_at).toLocaleDateString()
+                                                : 'N/A'}
+                                        </Typography>
+                                        <Chip
+                                            label={item.status}
+                                            color={getStatusColor(item.status)}
                                             size="small"
-                                            onClick={() =>
-                                                navigate(
-                                                    `/customers/order-success?orderId=${item.order_id}`
-                                                )
-                                            }
-                                        >
-                                            View Order Details
-                                        </Button>
-                                    </Box>
-                                </CardContent>
-                            </Card>
+                                            sx={{
+                                                fontWeight: 'bold',
+                                                textTransform: 'capitalize',
+                                                borderRadius: 2,
+                                                px: 1.5,
+                                                py: 0.5,
+                                                fontSize: '1rem',
+                                                letterSpacing: 0.5,
+                                                bgcolor: '#fffbe6',
+                                                color: '#212121',
+                                                border: '1.5px solid #ffad42',
+                                                minWidth: 90,
+                                                justifyContent: 'center',
+                                            }}
+                                        />
+                                    </Stack>
+                                </Box>
+                                <Box
+                                    sx={{
+                                        minWidth: 120,
+                                        textAlign: 'center',
+                                        mt: { xs: 2, sm: 0 },
+                                    }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        color="primary"
+                                        sx={{
+                                            borderRadius: 10,
+                                            px: 5,
+                                            py: 0.5,
+                                            fontWeight: 600,
+                                            textTransform: 'none',
+                                            fontSize: '0.9rem',
+                                            boxShadow: '0 2px 12px 0 rgba(25,118,210,0.12)',
+                                            transition: 'all 0.2s',
+                                            letterSpacing: 1,
+                                        }}
+                                        size="medium"
+                                        onClick={() =>
+                                            navigate(
+                                                `/customers/order-success?orderId=${item.order_id}`
+                                            )
+                                        }
+                                    >
+                                        Xem chi tiết
+                                    </Button>
+                                </Box>
+                            </Box>
                         );
                     })}
                 </Stack>
-            </Box>
+            )}
+
             <Box mt={6} display="flex" justifyContent="center">
                 <Pagination
                     count={totalPages}
@@ -241,18 +250,19 @@ export const OrderDetailPage = () => {
                         '& .MuiPaginationItem-root': {
                             fontWeight: 'bold',
                             borderRadius: '12px',
-                            color: '#444',
+                            color: '#f15e2c',
+                            fontFamily: 'Oswald, Arial, sans-serif',
                         },
                         '& .Mui-selected': {
-                            backgroundColor: '#FFCC80',
-                            color: '#444',
+                            backgroundColor: '#ffad42',
+                            color: '#fff',
                             '&:hover': {
-                                backgroundColor: '#FFA726',
+                                backgroundColor: '#ffb86c',
                             },
                         },
                     }}
                 />
             </Box>
-        </>
+        </Box>
     );
 };

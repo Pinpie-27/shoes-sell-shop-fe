@@ -34,8 +34,8 @@ const ScrollToTopButton: React.FC = () => {
                 color="primary"
                 sx={{
                     position: 'fixed',
-                    bottom: 32,
-                    right: 32,
+                    bottom: 25,
+                    right: 80,
                     bgcolor: '#FFA726',
                     color: '#fff',
                     '&:hover': {

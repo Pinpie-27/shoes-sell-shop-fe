@@ -29,10 +29,10 @@ export const useSignup = () => {
         mutationFn: createAccount,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color-Variants'] });
-            toast.success(`Account created successfully`);
+            toast.success(`Tạo tài khoản thành công`);
         },
         onError: () => {
-            toast.error('Failed to create account');
+            toast.error('Tạo tài khoản thất bại. Vui lòng thử lại sau.');
         },
     });
 

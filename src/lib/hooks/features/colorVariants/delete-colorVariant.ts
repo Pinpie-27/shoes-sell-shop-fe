@@ -15,10 +15,10 @@ export const useDeleteColorVariant = () => {
         mutationFn: deleteColorVariantById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color-Variants'] });
-            toast.success(`Color variant deleted successfully`);
+            toast.success(`Xoá biến thể màu thành công`);
         },
         onError: () => {
-            toast.error(`Failed to delete color variant`);
+            toast.error(`Xoá biến thể màu thất bại`);
         },
     });
 };

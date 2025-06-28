@@ -20,10 +20,10 @@ export const useCreateCategory = () => {
         mutationFn: createCategory,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['category'] });
-            toast.success(`Category created successfully`);
+            toast.success(`Tạo danh mục sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to create category');
+            toast.error('Tạo danh mục sản phẩm thất bại');
         },
     });
 };

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 export const deleteCategoryById = async (id: number) => {
     const response = await axiosClient.delete(`/category/${id}`);
@@ -15,10 +15,10 @@ export const useDeleteCategory = () => {
         mutationFn: deleteCategoryById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['category'] });
-            toast.success(`Category deleted successfully`);
+            toast.success(`Xoá danh mục thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete category');
-        }
+            toast.error('Xoá danh mục thất bại');
+        },
     });
 };

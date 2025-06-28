@@ -28,10 +28,10 @@ export const useUpdateOrderItemStatus = () => {
         mutationFn: updateOrderItemStatusById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['order_item'] });
-            toast.success('Order item status updated successfully');
+            toast.success('Sửa trạng thái đơn hàng thành công');
         },
         onError: () => {
-            toast.error('Failed to update order item status');
+            toast.error('Sửa trạng thái đơn hàng thất bại');
         },
     });
 };
@@ -42,11 +42,12 @@ export const formStructureOrderItemStatus: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Status',
+        label: 'Trạng thái',
         name: 'status',
-        inputType: 'TextField',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
     },
 ];

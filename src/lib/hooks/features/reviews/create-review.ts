@@ -24,17 +24,17 @@ export const useCreateReview = () => {
         mutationFn: createReview,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['review'] });
-            toast.success(`Review created successfully`);
+            toast.success(`Tạo bình luận thành công`);
         },
         onError: () => {
-            toast.error('Failed to create review');
+            toast.error('Tạo bình luận thất bại');
         },
     });
 };
 
 export const formStructureReview: FormInputGenericProps[] = [
     {
-        label: 'Comment',
+        label: 'Bình luận',
         name: 'comment',
         inputType: 'TextField',
         colSpan: tw`col-span-2`,
