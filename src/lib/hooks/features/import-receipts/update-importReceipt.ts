@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import tw from 'twin.macro';
+import { z } from 'zod';
 
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
@@ -26,10 +27,10 @@ export const useUpdateImportReceipt = () => {
         mutationFn: updateImportReceiptById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['import-receipt'] });
-            toast.success(`Import receipt updated successfully`);
+            toast.success(`Sửa phiếu nhập thành công`);
         },
         onError: () => {
-            toast.error('Failed to update import receipt');
+            toast.error('Sửa phiếu nhập thất bại');
         },
     });
 };
@@ -39,23 +40,26 @@ export const formStructureImportReceipt: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Receipt Number',
+        label: 'Số phiếu nhập',
         name: 'receipt_number',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().min(1, 'Số phiếu nhập không được để trống'),
     },
     {
-        label: 'Import Date',
+        label: 'Ngày nhập',
         name: 'import_date',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().min(1, 'Ngày nhập không được để trống'),
     },
     {
-        label: 'Supplier ID',
-        name: 'supplierId',
-        inputType: 'TextField',
+        label: 'Nhà cung cấp',
+        name: 'supplier_id',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
     },
 ];

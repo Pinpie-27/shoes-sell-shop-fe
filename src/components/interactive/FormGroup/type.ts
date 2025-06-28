@@ -13,6 +13,11 @@ type GenericFormInput = {
     disabled?: boolean;
     colSpan: TwStyle; // Css of column span of the input container
     loading?: boolean;
+
+    required?: boolean;
+    error?: boolean;
+    errorMessage?: string;
+    touched?: boolean;
 };
 
 //TextField

@@ -14,10 +14,10 @@ export const useDeleteStyle = () => {
         mutationFn: deleteStyleById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['style'] });
-            toast.success(`Style deleted successfully`);
+            toast.success(`Xoá kiểu dáng thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete style');
+            toast.error('Xoá kiểu dáng thất bại');
         },
     });
 };

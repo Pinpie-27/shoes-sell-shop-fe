@@ -33,7 +33,7 @@ export const LoginForm: React.FC = () => {
                     }
                     label={
                         <Typography tw="text-black" variant="h6">
-                            Keep me sign in
+                            Giữ đăng nhập
                         </Typography>
                     }
                 />
@@ -43,7 +43,7 @@ export const LoginForm: React.FC = () => {
                     to="/auth/forgot-password"
                     tw="text-black"
                 >
-                    Forgot Password?
+                    Quên mật khẩu?
                 </Link>
             </Stack>
             <Button variant="contained" type="submit">

@@ -20,10 +20,10 @@ export const useCreateProductImage = () => {
         mutationFn: createProductImage,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['productImage'] });
-            toast.success(`Product image created successfully`);
+            toast.success(`Tạo hình ảnh sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to create product image');
+            toast.error('Tạo hình ảnh sản phẩm thất bại');
         },
     });
 };

@@ -206,14 +206,14 @@ const ProductDetail = () => {
                                 color="black"
                                 sx={{ fontWeight: 'normal' }}
                             >
-                                Style: {styleName}
+                                Kiểu dáng: {styleName}
                             </Typography>
                             <Typography
                                 variant="subtitle1"
                                 color="black"
                                 sx={{ fontWeight: 'normal' }}
                             >
-                                Category: {CategoryName}
+                                Danh mục: {CategoryName}
                             </Typography>
                         </Box>
 
@@ -225,7 +225,7 @@ const ProductDetail = () => {
                             gutterBottom
                             sx={{ fontWeight: 'normal', fontSize: '20px' }}
                         >
-                            Price:{' '}
+                            Giá:{' '}
                             {inventoryForPrice?.selling_price
                                 ? Number(inventoryForPrice.selling_price).toLocaleString() + ' VNĐ'
                                 : ' '}
@@ -313,7 +313,7 @@ const ProductDetail = () => {
                                 color="black"
                                 sx={{ fontWeight: 'normal', mr: 2 }}
                             >
-                                Quantity:
+                                Số lượng:
                             </Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                                 <Button

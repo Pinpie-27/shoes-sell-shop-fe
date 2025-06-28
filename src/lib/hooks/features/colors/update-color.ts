@@ -26,10 +26,10 @@ export const useUpdateColor = () => {
         mutationFn: updateColorById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color'] });
-            toast.success(`Color updated successfully`);
+            toast.success(`Sửa màu thành công`);
         },
         onError: () => {
-            toast.error('Failed to update color');
+            toast.error('Sửa màu thất bại');
         },
     });
 };
@@ -40,9 +40,10 @@ export const formStructureColor: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Name',
+        label: 'Tên màu',
         name: 'name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,

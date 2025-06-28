@@ -19,10 +19,10 @@ export const useCreateColor = () => {
         mutationFn: createColor,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color'] });
-            toast.success(`Color created successfully`);
+            toast.success(`Thêm màu thành công`);
         },
         onError: () => {
-            toast.error('Failed to create color');
+            toast.error('Thêm màu thất bại ');
         },
     });
 };

@@ -21,10 +21,10 @@ export const useCreateColorVariant = () => {
         mutationFn: createColorVariant,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color-Variants'] });
-            toast.success(`Color variant created successfully`);
+            toast.success(`Thêm biến thể màu thành công`);
         },
         onError: () => {
-            toast.error('Failed to create color variant');
+            toast.error('Thêm biến thể màu thất bại');
         },
     });
 };

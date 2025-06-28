@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import tw from 'twin.macro';
+import { z } from 'zod';
 
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
@@ -29,10 +30,10 @@ export const useUpdateProductImage = () => {
         mutationFn: updateProductImageById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['productImage'] });
-            toast.success(`Product image updated successfully`);
+            toast.success(`Sửa hình ảnh sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to update product image');
+            toast.error('Sửa hình ảnh sản phẩm thất bại');
         },
     });
 };
@@ -43,17 +44,20 @@ export const formStructureProductImage: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'ProductId',
+        label: 'Sản phẩm',
         name: 'product_id',
-        inputType: 'TextField',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
+        validate: z.number().min(1, 'Sản phẩm không được để trống'),
     },
     {
         label: 'ImageUrl',
         name: 'image_url',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().min(1, 'Hình ảnh không được để trống'),
     },
 ];

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 import tw from 'twin.macro';
+import { z } from 'zod';
 
 import { FormInputGenericProps } from '@/components/interactive';
 import axiosClient from '@/lib/configs/axios';
@@ -28,10 +29,10 @@ export const useUpdateColorVariant = () => {
         mutationFn: updateColorVariantById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['color-Variants'] });
-            toast.success(`Color variant updated successfully`);
+            toast.success(`Sửa biến thể màu thành công`);
         },
         onError: () => {
-            toast.error('Failed to update color variant');
+            toast.error('Sửa biến thể màu thất bại');
         },
     });
 };
@@ -42,23 +43,26 @@ export const formStructureColorVariants: FormInputGenericProps[] = [
         name: 'id',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        disabled: true,
     },
     {
-        label: 'Color Id',
+        label: 'Màu sắc',
         name: 'color_id',
-        inputType: 'TextField',
+        inputType: 'SelectField',
         colSpan: tw`col-span-12`,
     },
     {
-        label: 'Variant name',
+        label: 'Tên biến thể màu',
         name: 'variant_name',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().min(1, 'Tên không được để trống'),
     },
     {
-        label: 'Color code',
+        label: 'Mã màu',
         name: 'color_code',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
+        validate: z.string().regex(/^#([0-9A-Fa-f]{6}|[0-9A-Fa-f]{3})$/, 'Mã màu không hợp lệ'),
     },
 ];

@@ -15,10 +15,10 @@ export const useDeleteReview = () => {
         mutationFn: deleteReviewById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['review'] });
-            toast.success(`Review deleted successfully`);
+            toast.success(`Xoá bình luận thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete review');
+            toast.error('Xoá bình luận thất bại');
         }
     });
 };

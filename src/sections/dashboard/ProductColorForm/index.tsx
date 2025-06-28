@@ -1,13 +1,20 @@
+/* eslint-disable arrow-body-style */
 /* eslint-disable max-lines */
 /* eslint-disable max-len */
 import React from 'react';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import AddIcon from '@mui/icons-material/Add';
+import ColorLensIcon from '@mui/icons-material/ColorLens';
 import DeleteOutlineRoundedIcon from '@mui/icons-material/DeleteOutlineRounded';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
-// eslint-disable-next-line max-len
+import InventoryIcon from '@mui/icons-material/Inventory';
+import PaletteIcon from '@mui/icons-material/Palette';
 import {
     Box,
     Button,
+    Card,
+    CardContent,
     Dialog,
     DialogActions,
     DialogContent,
@@ -20,13 +27,19 @@ import {
     TableCell,
     TableContainer,
     TableHead,
+    TablePagination,
     TableRow,
+    Tooltip,
     Typography,
 } from '@mui/material';
 import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
+import { useSchema } from '@/lib/hooks';
+import { useGetProducts } from '@/lib/hooks/features';
+import { useGetColorVariants } from '@/lib/hooks/features/colorVariants';
 
 import {
     formStructureProductColor,
@@ -37,14 +50,28 @@ import {
     useSearchProductColors,
     useUpdateProductColor,
 } from '../../../lib/hooks/features/product-colors';
+
+
 interface ProductColor {
     id: number;
     product_id: number;
     color_variant_id: number;
 }
 
+interface Product {
+    id: number;
+    name: string;
+}
+
+interface ColorVariant {
+    id: number;
+    variant_name: string;
+}
+
 export const ProductColorForm: React.FC = () => {
     const { data: productColors, isLoading, isError, error } = useGetProductColors();
+    const { data: products } = useGetProducts();
+    const { data: colorVariants } = useGetColorVariants();
     const { mutate: deleteProductColor } = useDeleteProductColor();
     const { mutate: updateProductColor } = useUpdateProductColor();
     const { mutate: createProductColor } = useCreateProductColor();
@@ -55,13 +82,45 @@ export const ProductColorForm: React.FC = () => {
     const [openDialog, setOpenDialog] = React.useState(false);
     const [openEditDialog, setOpenEditDialog] = React.useState(false);
     const [openAddDialog, setOpenAddDialog] = React.useState(false);
-    const [selectedProductColors, setSelectedProductColors] = React.useState<ProductColor | null>(
+    const [selectedProductColor, setSelectedProductColor] = React.useState<ProductColor | null>(
         null
     );
-    const [, setNewProductColor] = React.useState({ product_id: '', color_variant_id: '' });
+
+    const productOptions = React.useMemo(() => {
+        const uniqueProducts = Array.from(
+            new Map(products?.map((p: Product) => [p.id, p])).values()
+        ) as Product[];
+        return uniqueProducts.map((name) => ({
+            label: name.name,
+            value: name.id,
+        }));
+    }, [products]);
+
+    const colorVariantOptions = React.useMemo(() => {
+        const uniqueColorVariants = Array.from(
+            new Map(colorVariants?.map((cv: ColorVariant) => [cv.id, cv])).values()
+        ) as ColorVariant[];
+        return uniqueColorVariants.map((name) => ({
+            label: name.variant_name,
+            value: name.id,
+        }));
+    }, [colorVariants]);
+
+    const getProductName = (id: number) => {
+        const found = products?.find((p: Product) => p.id === id);
+        return found?.name;
+    };
+
+    const getColorVariantName = (id: number) => {
+        const found = colorVariants?.find((cv: ColorVariant) => cv.id === id);
+        return found?.variant_name;
+    };
+    // Pagination states
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
     const handleOpenDialog = (id: number) => {
-        setSelectedProductColors(
+        setSelectedProductColor(
             productColors.find((productColor: ProductColor) => productColor.id === id) || null
         );
         setOpenDialog(true);
@@ -69,59 +128,88 @@ export const ProductColorForm: React.FC = () => {
 
     const handleCloseDialog = () => {
         setOpenDialog(false);
-        setSelectedProductColors(null);
+        setSelectedProductColor(null);
     };
 
     const handleConfirmDelete = () => {
-        if (selectedProductColors?.id !== undefined) {
-            deleteProductColor(selectedProductColors.id);
+        if (selectedProductColor?.id !== undefined) {
+            deleteProductColor(selectedProductColor.id);
         }
         handleCloseDialog();
     };
 
     const handleOpenEditDialog = (productColor: ProductColor) => {
-        setSelectedProductColors(productColor);
+        setSelectedProductColor(productColor);
         setOpenEditDialog(true);
     };
 
     const handleCloseEditDialog = () => {
         setOpenEditDialog(false);
-        setSelectedProductColors(null);
+        setSelectedProductColor(null);
     };
 
-    const formHandler = useForm<ProductColor>({ defaultValues: selectedProductColors ?? {} });
+    const schema = useSchema<typeof selectedProductColor>(formStructureProductColor, {
+        check: () => {
+            return true;
+        },
+    });
 
-    const handleEditSubmit = () => {
-        const updatedProductColor = formHandler.getValues();
-        if (selectedProductColors) {
-            updateProductColor({ id: selectedProductColors.id, updatedProductColor });
+    const formHandler = useForm<ProductColor>({
+        resolver: zodResolver(schema),
+        defaultValues: selectedProductColor ?? {},
+    });
+
+    const handleEditSubmit = formHandler.handleSubmit(
+        (updatedProductColor) => {
+            if (selectedProductColor) {
+                updateProductColor({ id: selectedProductColor.id, updatedProductColor });
+            }
+            handleCloseEditDialog();
+        },
+        (errors) => {
+            const firstError = Object.values(errors)?.[0];
+            if (firstError && typeof firstError.message === 'string') {
+                toast.error(firstError.message);
+            } else {
+                toast.error('Vui lòng kiểm tra lại thông tin');
+            }
         }
-        handleCloseEditDialog();
-    };
+    );
 
     React.useEffect(() => {
-        if (selectedProductColors) {
-            formHandler.reset(selectedProductColors);
+        if (selectedProductColor) {
+            formHandler.reset(selectedProductColor);
         }
-    }, [selectedProductColors, formHandler]);
+    }, [selectedProductColor, formHandler]);
+
     const handleOpenAddDialog = () => {
         setOpenAddDialog(true);
     };
 
     const handleCloseAddDialog = () => {
         setOpenAddDialog(false);
-        setNewProductColor({ product_id: '', color_variant_id: '' });
+        addFormHandler.reset();
     };
 
     const addFormHandler = useForm<Omit<ProductColor, 'id'>>({
+        resolver: zodResolver(schema),
         defaultValues: { product_id: 0, color_variant_id: 0 },
     });
 
-    const handleAddSubmit = () => {
-        const newProductColor = addFormHandler.getValues();
-        createProductColor(newProductColor);
-        handleCloseAddDialog();
-    };
+    const handleAddSubmit = addFormHandler.handleSubmit(
+        (newProductColor) => {
+            createProductColor(newProductColor);
+            handleCloseAddDialog();
+        },
+        (errors) => {
+            const firstError = Object.values(errors)?.[0];
+            if (firstError && typeof firstError.message === 'string') {
+                toast.error(firstError.message);
+            } else {
+                toast.error('Vui lòng kiểm tra lại thông tin');
+            }
+        }
+    );
 
     const formHandlerSearch = useForm<{ search: string }>({
         defaultValues: { search: '' },
@@ -130,142 +218,622 @@ export const ProductColorForm: React.FC = () => {
     React.useEffect(() => {
         const subscription = formHandlerSearch.watch((value) => {
             setSearchTerm(value.search || '');
+            setPage(0); // Reset to first page when searching
         });
 
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
 
-    if (isLoading) return <p>Loading categories...</p>;
-    if (isError) return <p>Error fetching categories: {error?.message}</p>;
+    // Get current data (search results or all product colors)
+    const currentData = searchedProductColors?.length ? searchedProductColors : productColors || [];
 
-    return (
-        <Box sx={{ padding: '30px' }}>
+    // Pagination logic
+    const totalRows = currentData.length;
+    const startIndex = page * rowsPerPage;
+    const endIndex = startIndex + rowsPerPage;
+    const paginatedData = currentData.slice(startIndex, endIndex);
+
+    const handleChangePage = (_event: unknown, newPage: number) => {
+        setPage(newPage);
+    };
+
+    const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setRowsPerPage(parseInt(event.target.value, 10));
+        setPage(0);
+    };
+
+    if (isLoading) {
+        return (
             <Box
                 sx={{
                     display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'flex-end',
-                    width: '100%',
-                    paddingBottom: '30px',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '400px',
                 }}
             >
-                <Button variant="contained" color="primary" onClick={handleOpenAddDialog}>
-                    Add Product Color
-                </Button>
-                <FieldGroup
-                    formHandler={formHandlerSearch}
-                    formStructure={formStructureSearchProductColors}
-                    spacing={tw`gap-4`}
-                />
+                <Typography variant="h6" sx={{ color: '#6b7280' }}>
+                    Đang tải dữ liệu...
+                </Typography>
             </Box>
-            <TableContainer sx={{ padding: '1rem', marginTop: '30px' }} component={Paper}>
-                <Table>
-                    <TableHead>
-                        <TableRow>
-                            <TableCell sx={{ color: 'black', fontWeight: 'bold' }}>ID</TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+        );
+    }
+
+    if (isError) {
+        return (
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    height: '400px',
+                }}
+            >
+                <Typography variant="h6" sx={{ color: '#dc2626' }}>
+                    Lỗi khi tải dữ liệu: {error?.message}
+                </Typography>
+            </Box>
+        );
+    }
+
+    return (
+        <Box
+            sx={{
+                padding: '32px',
+                background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)',
+                minHeight: '100vh',
+            }}
+        >
+            {/* Header */}
+            <Box sx={{ mb: 4 }}>
+                <Typography
+                    variant="h4"
+                    sx={{
+                        fontWeight: 700,
+                        color: '#1e293b',
+                        mb: 1,
+                        display: 'flex',
+                        alignItems: 'center',
+                    }}
+                >
+                    <PaletteIcon sx={{ mr: 2, fontSize: '2rem' }} />
+                    Quản lý màu sắc sản phẩm
+                </Typography>
+                <Typography variant="body1" sx={{ color: '#64748b', fontSize: '1.1rem' }}>
+                    Liên kết sản phẩm với các biến thể màu sắc trong hệ thống
+                </Typography>
+            </Box>
+
+            {/* Action & Search Section */}
+            <Card elevation={2} sx={{ mb: 4, borderRadius: 3 }}>
+                <CardContent sx={{ p: 3 }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            mb: 3,
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            startIcon={<AddIcon />}
+                            onClick={handleOpenAddDialog}
+                            color="primary"
+                        >
+                            Thêm màu sắc sản phẩm
+                        </Button>
+
+                        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <Typography
+                                variant="h6"
+                                sx={{ color: '#374151', fontWeight: 600, mr: 2 }}
                             >
-                                ProductId
-                            </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
+                                Tìm kiếm:
+                            </Typography>
+                            <Box sx={{ minWidth: '300px' }}>
+                                <FieldGroup
+                                    formHandler={formHandlerSearch}
+                                    formStructure={formStructureSearchProductColors}
+                                    spacing={tw`gap-4`}
+                                />
+                            </Box>
+                        </Box>
+                    </Box>
+                </CardContent>
+            </Card>
+
+            {/* Table */}
+            <Card elevation={3} sx={{ borderRadius: 4, overflow: 'hidden' }}>
+                <TableContainer
+                    component={Paper}
+                    sx={{
+                        background: '#ffffff',
+                        maxHeight: '70vh',
+                        '& .MuiTable-root': {
+                            borderCollapse: 'separate',
+                            borderSpacing: 0,
+                            tableLayout: 'fixed',
+                            width: '100%',
+                        },
+                    }}
+                >
+                    <Table>
+                        <TableHead>
+                            <TableRow
+                                sx={{
+                                    background: 'linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%)',
+                                    '& th': {
+                                        borderBottom: '2px solid #cbd5e1',
+                                        fontSize: '0.9rem',
+                                        fontWeight: 700,
+                                        color: '#334155',
+                                        py: 2.5,
+                                        position: 'sticky',
+                                        top: 0,
+                                        backgroundColor: '#f1f5f9',
+                                        zIndex: 1,
+                                    },
+                                }}
                             >
-                                ColorVariantId
-                            </TableCell>
-                            <TableCell
-                                sx={{ color: 'black', fontWeight: 'bold', textAlign: 'center' }}
-                            >
-                                Action
-                            </TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {(searchedProductColors?.length
-                            ? searchedProductColors
-                            : productColors
-                        )?.map((productColor: ProductColor) => (
-                            <TableRow key={productColor.id}>
-                                <TableCell sx={{ color: 'black' }}>{productColor.id}</TableCell>
-                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                    {productColor.product_id}
+                                <TableCell sx={{ width: '80px' }}>
+                                    <Box sx={{ display: 'flex', alignItems: 'center' }}>ID</Box>
                                 </TableCell>
-                                <TableCell sx={{ color: 'black', textAlign: 'center' }}>
-                                    {productColor.color_variant_id}
+                                <TableCell sx={{ width: '200px' }} align="center">
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <InventoryIcon
+                                            sx={{ mr: 1, fontSize: '1.2rem', color: '#64748b' }}
+                                        />
+                                        Mã sản phẩm
+                                    </Box>
                                 </TableCell>
-                                <TableCell sx={{ textAlign: 'center' }}>
-                                    <IconButton onClick={() => handleOpenEditDialog(productColor)}>
-                                        <EditNoteOutlinedIcon sx={{ color: 'black' }} />
-                                    </IconButton>
-                                    <IconButton onClick={() => handleOpenDialog(productColor.id)}>
-                                        <DeleteOutlineRoundedIcon sx={{ color: 'black' }} />
-                                    </IconButton>
+                                <TableCell sx={{ width: '200px' }} align="center">
+                                    <Box
+                                        sx={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                        }}
+                                    >
+                                        <ColorLensIcon
+                                            sx={{ mr: 1, fontSize: '1.2rem', color: '#64748b' }}
+                                        />
+                                        Biến thể màu
+                                    </Box>
+                                </TableCell>
+
+                                <TableCell align="center" sx={{ width: '120px' }}>
+                                    Thao tác
                                 </TableCell>
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
-            </TableContainer>
+                        </TableHead>
+                        <TableBody>
+                            {paginatedData?.map((productColor: ProductColor) => {
+                                return (
+                                    <TableRow
+                                        key={productColor.id}
+                                        sx={{
+                                            '&:hover': {
+                                                backgroundColor: '#f8fafc !important',
+                                                transition: 'background-color 0.2s ease',
+                                            },
+                                            '&:nth-of-type(even)': {
+                                                backgroundColor: '#f9fafb',
+                                            },
+                                            '& td': {
+                                                borderBottom: '1px solid #e5e7eb',
+                                                fontSize: '0.9rem',
+                                                py: 1.5,
+                                                overflow: 'hidden',
+                                                textOverflow: 'ellipsis',
+                                                whiteSpace: 'nowrap',
+                                            },
+                                        }}
+                                    >
+                                        <TableCell>
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    width: '32px',
+                                                    height: '32px',
+                                                    borderRadius: '8px',
 
-            <Dialog open={openDialog} onClose={handleCloseDialog}>
-                <DialogTitle sx={{ color: 'black' }}>Confirm Delete</DialogTitle>
+                                                    color: '#334155',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.8rem',
+                                                }}
+                                            >
+                                                {productColor.id}
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell align="center">
+                                            <Box
+                                                sx={{
+                                                    width: '100%',
+                                                    height: '32px',
+                                                    borderRadius: '8px',
+
+                                                    color: '#334155',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.8rem',
+                                                }}
+                                            >
+                                                {getProductName(productColor.product_id)}
+                                            </Box>
+                                        </TableCell>
+                                        <TableCell
+                                            sx={{
+                                                display: 'flex',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <Box
+                                                sx={{
+                                                    textAlign: 'center',
+                                                    height: '32px',
+                                                    width: '100%',
+                                                    borderRadius: '8px',
+
+                                                    color: '#334155',
+                                                    fontWeight: 700,
+                                                    fontSize: '0.8rem',
+                                                }}
+                                            >
+                                                {getColorVariantName(productColor.color_variant_id)}
+                                            </Box>
+                                        </TableCell>
+
+                                        <TableCell align="center">
+                                            <Box
+                                                sx={{
+                                                    display: 'flex',
+                                                    gap: 1,
+                                                    justifyContent: 'center',
+                                                }}
+                                            >
+                                                <Tooltip title="Chỉnh sửa">
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            handleOpenEditDialog(productColor)
+                                                        }
+                                                        size="small"
+                                                        sx={{
+                                                            color: '#3b82f6',
+                                                            '&:hover': {
+                                                                backgroundColor: '#dbeafe',
+                                                            },
+                                                            transition:
+                                                                'background-color 0.2s ease',
+                                                        }}
+                                                    >
+                                                        <EditNoteOutlinedIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                                <Tooltip title="Xóa">
+                                                    <IconButton
+                                                        onClick={() =>
+                                                            handleOpenDialog(productColor.id)
+                                                        }
+                                                        size="small"
+                                                        sx={{
+                                                            color: '#dc2626',
+                                                            '&:hover': {
+                                                                backgroundColor: '#fef2f2',
+                                                            },
+                                                            transition:
+                                                                'background-color 0.2s ease',
+                                                        }}
+                                                    >
+                                                        <DeleteOutlineRoundedIcon fontSize="small" />
+                                                    </IconButton>
+                                                </Tooltip>
+                                            </Box>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+
+                {/* Pagination */}
+                <Box
+                    sx={{
+                        borderTop: '1px solid #e5e7eb',
+                        backgroundColor: '#f9fafb',
+                    }}
+                >
+                    <TablePagination
+                        component="div"
+                        count={totalRows}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        rowsPerPage={rowsPerPage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                        rowsPerPageOptions={[5, 10, 15, 25, 50]}
+                        labelRowsPerPage="Số hàng mỗi trang:"
+                        labelDisplayedRows={({ from, to, count }) =>
+                            `${from}–${to} của ${count !== -1 ? count : `hơn ${to}`}`
+                        }
+                        SelectProps={{
+                            MenuProps: {
+                                PaperProps: {
+                                    sx: {
+                                        '& .MuiMenuItem-root': {
+                                            fontSize: '0.9rem',
+                                            color: '#374151',
+                                        },
+                                    },
+                                },
+                            },
+                        }}
+                        sx={{
+                            '& .MuiTablePagination-toolbar': {
+                                fontSize: '0.9rem',
+                                color: '#374151',
+                                px: 3,
+                                py: 2,
+                            },
+                            '& .MuiTablePagination-selectLabel': {
+                                fontSize: '0.9rem',
+                                color: '#374151',
+                                fontWeight: 500,
+                            },
+                            '& .MuiTablePagination-displayedRows': {
+                                fontSize: '0.9rem',
+                                color: '#374151',
+                                fontWeight: 500,
+                            },
+                            '& .MuiTablePagination-select': {
+                                fontSize: '0.9rem',
+                                color: '#374151',
+                            },
+                            '& .MuiIconButton-root': {
+                                color: '#374151',
+                                '&:hover': {
+                                    backgroundColor: '#e5e7eb',
+                                },
+                                '&.Mui-disabled': {
+                                    color: '#9ca3af',
+                                },
+                            },
+                        }}
+                    />
+                </Box>
+            </Card>
+
+            {/* Summary Info */}
+            {totalRows > 0 && (
+                <Box
+                    sx={{
+                        mt: 2,
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        color: '#64748b',
+                        fontSize: '0.9rem',
+                    }}
+                >
+                    <Typography variant="body2" sx={{ color: '#64748b' }}>
+                        {searchTerm ? (
+                            <>
+                                Tìm thấy <strong>{totalRows}</strong> kết quả cho "
+                                <strong>{searchTerm}</strong>"
+                            </>
+                        ) : (
+                            <>
+                                Tổng cộng <strong>{totalRows}</strong> liên kết màu sắc trong hệ
+                                thống
+                            </>
+                        )}
+                    </Typography>
+                    <Typography variant="body2" sx={{ color: '#64748b' }}>
+                        Trang {page + 1} / {Math.ceil(totalRows / rowsPerPage)}
+                    </Typography>
+                </Box>
+            )}
+
+            {/* Delete Dialog */}
+            <Dialog
+                open={openDialog}
+                onClose={handleCloseDialog}
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        minWidth: '400px',
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        color: '#1f2937',
+                        fontWeight: 700,
+                        fontSize: '1.3rem',
+                        pb: 1,
+                    }}
+                >
+                    Xác nhận xóa
+                </DialogTitle>
                 <DialogContent>
-                    <DialogContentText sx={{ color: 'black' }}>
-                        Are you sure you want to delete this product color?
+                    <DialogContentText
+                        sx={{
+                            color: '#4b5563',
+                            fontSize: '1rem',
+                            lineHeight: 1.6,
+                        }}
+                    >
+                        Bạn có chắc chắn muốn xóa liên kết màu sắc sản phẩm này không? Hành động này
+                        không thể hoàn tác.
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseDialog} color="primary">
-                        Cancel
+                <DialogActions sx={{ p: 3, pt: 1 }}>
+                    <Button
+                        onClick={handleCloseDialog}
+                        sx={{
+                            color: '#6b7280',
+                            borderColor: '#d1d5db',
+                            '&:hover': {
+                                borderColor: '#9ca3af',
+                                backgroundColor: '#f9fafb',
+                            },
+                        }}
+                        variant="outlined"
+                    >
+                        Hủy
                     </Button>
-                    <Button onClick={handleConfirmDelete} color="error">
-                        Delete
+                    <Button
+                        onClick={handleConfirmDelete}
+                        sx={{
+                            backgroundColor: 'primary',
+                        }}
+                        variant="contained"
+                    >
+                        Xóa
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={openEditDialog} onClose={handleCloseEditDialog} maxWidth="md" fullWidth>
-                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Edit product color
-                </Typography>
-                <DialogContent>
-                    {selectedProductColors && (
+            {/* Edit Dialog */}
+            <Dialog
+                open={openEditDialog}
+                onClose={handleCloseEditDialog}
+                maxWidth="md"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        color: '#1f2937',
+                        fontWeight: 700,
+                        fontSize: '1.5rem',
+                        borderBottom: '1px solid #e5e7eb',
+                        pb: 2,
+                        mb: 2,
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <EditNoteOutlinedIcon sx={{ mr: 2 }} />
+                        Chỉnh sửa màu sắc sản phẩm
+                    </Box>
+                </DialogTitle>
+                <DialogContent sx={{ pt: 2 }}>
+                    {selectedProductColor && (
                         <FieldGroup
                             formHandler={formHandler}
                             formStructure={formStructureProductColor}
                             spacing={tw`gap-4`}
+                            selectOptions={{
+                                product_id: productOptions,
+                                color_variant_id: colorVariantOptions,
+                            }}
                         />
                     )}
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseEditDialog} color="primary">
-                        Cancel
+                <DialogActions sx={{ p: 3, pt: 2, borderTop: '1px solid #e5e7eb' }}>
+                    <Button
+                        onClick={handleCloseEditDialog}
+                        sx={{
+                            color: '#6b7280',
+                            borderColor: '#d1d5db',
+                            '&:hover': {
+                                borderColor: '#9ca3af',
+                                backgroundColor: '#f9fafb',
+                            },
+                        }}
+                        variant="outlined"
+                    >
+                        Hủy
                     </Button>
-                    <Button onClick={handleEditSubmit} color="success">
-                        Save
+                    <Button
+                        onClick={handleEditSubmit}
+                        sx={{
+                            backgroundColor: 'primary',
+                        }}
+                        variant="contained"
+                    >
+                        Lưu thay đổi
                     </Button>
                 </DialogActions>
             </Dialog>
 
-            <Dialog open={openAddDialog} onClose={handleCloseAddDialog} maxWidth="md" fullWidth>
-                <Typography tw="text-black pl-[30px] pt-[30px]" variant="h3">
-                    Add product color
-                </Typography>
-                <DialogContent>
+            {/* Add Dialog */}
+            <Dialog
+                open={openAddDialog}
+                onClose={handleCloseAddDialog}
+                maxWidth="md"
+                fullWidth
+                PaperProps={{
+                    sx: {
+                        borderRadius: 3,
+                        maxHeight: '90vh',
+                    },
+                }}
+            >
+                <DialogTitle
+                    sx={{
+                        color: '#1f2937',
+                        fontWeight: 700,
+                        fontSize: '1.5rem',
+                        borderBottom: '1px solid #e5e7eb',
+                        pb: 2,
+                        mb: 2,
+                    }}
+                >
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <AddIcon sx={{ mr: 2 }} />
+                        Thêm màu sắc sản phẩm
+                    </Box>
+                </DialogTitle>
+                <DialogContent sx={{ pt: 2 }}>
                     <FieldGroup
                         formHandler={addFormHandler}
                         formStructure={formStructureProductColor.filter(
                             (field) => field.name !== 'id'
                         )}
+                        selectOptions={{
+                            product_id: productOptions,
+                            color_variant_id: colorVariantOptions,
+                        }}
                         spacing={tw`gap-4`}
                     />
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleCloseAddDialog} color="primary">
-                        Cancel
+                <DialogActions sx={{ p: 3, pt: 2, borderTop: '1px solid #e5e7eb' }}>
+                    <Button
+                        onClick={handleCloseAddDialog}
+                        sx={{
+                            color: '#6b7280',
+                            borderColor: '#d1d5db',
+                            '&:hover': {
+                                borderColor: '#9ca3af',
+                                backgroundColor: '#f9fafb',
+                            },
+                        }}
+                        variant="outlined"
+                    >
+                        Hủy
                     </Button>
-                    <Button onClick={handleAddSubmit} color="success">
-                        Add
+                    <Button
+                        onClick={handleAddSubmit}
+                        sx={{
+                            backgroundColor: 'primary',
+                        }}
+                        variant="contained"
+                    >
+                        Thêm màu sản phẩm
                     </Button>
                 </DialogActions>
             </Dialog>

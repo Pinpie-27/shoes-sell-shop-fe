@@ -14,7 +14,7 @@ export const useDeleteImportReceipt = () => {
         mutationFn: deleteImportReceiptById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['import-receipt'] });
-            toast.success(`Import receipt deleted successfully`);
+            toast.success(`Xoá phiếu nhập thành công`);
         },
         onError: () => {
             toast.error('Failed to delete import receipt');

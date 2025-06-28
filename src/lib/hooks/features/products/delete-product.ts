@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-import  axiosClient from '@/lib/configs/axios';
+import axiosClient from '@/lib/configs/axios';
 
 export const deleteProductById = async (id: number) => {
     const response = await axiosClient.delete(`/product/${id}`);
@@ -15,10 +15,10 @@ export const useDeleteProduct = () => {
         mutationFn: deleteProductById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['product'] });
-            toast.success(`Product deleted successfully`);
+            toast.success(`Xoá sản phẩm thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete product');
-        }
+            toast.error('Xoá sản phẩm thất bại');
+        },
     });
 };

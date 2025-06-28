@@ -21,10 +21,10 @@ export const useCreateSupplier = () => {
         mutationFn: createSupplier,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['supplier'] });
-            toast.success(`Supplier created successfully`);
+            toast.success(`Thêm nhà cung cấp thành công`);
         },
         onError: () => {
-            toast.error('Failed to create supplier');
+            toast.error('Thêm nhà cung cấp thất bại');
         },
     });
 };

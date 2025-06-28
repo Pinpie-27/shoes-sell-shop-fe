@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import tw from 'twin.macro';
 
 import { FormInputGenericProps } from '@/components/interactive';
@@ -18,6 +19,7 @@ export const useLogin = () => {
     const navigate = useNavigate();
 
     const [isRemember, setIsRemember] = React.useState<boolean>(false);
+    const [isLoading, setIsLoading] = React.useState<boolean>(false);
 
     const [loginForm, setLoginForm] = React.useState<LoginForm>({ username: '', password: '' });
     const [remember, setRemember, removeRemember] = useLocalStorage<string>('rememberMe', 'false');
@@ -57,6 +59,12 @@ export const useLogin = () => {
                 return;
             }
 
+            if (!result?.accessToken || !result?.role) {
+                toast.error('Đăng nhập thất bại. Vui lòng thử lại.');
+                setIsLoading(false);
+                return;
+            }
+
             if (!result?.role) {
                 console.error('Missing role in response');
                 return;
@@ -82,7 +90,9 @@ export const useLogin = () => {
                 navigate(result.role === 'admin' ? '/dashboard' : '/customers/homepage');
             }, 500);
         } catch (error) {
+            setIsLoading(false);
             console.error('Login failed:', error);
+            toast.error('Tên đăng nhập hoặc mật khẩu không đúng.');
         }
     };
 
@@ -104,5 +114,6 @@ export const useLogin = () => {
         onSubmit: handleSubmit(onSubmit),
         isRemember,
         setIsRemember,
+        isLoading,
     };
 };
