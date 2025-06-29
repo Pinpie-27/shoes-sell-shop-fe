@@ -7,6 +7,7 @@ import { AuthLayout } from '@/layouts/AuthLayout';
 import { CustomerLayout } from '@/layouts/CustomerLayout';
 import { DefaultLayout } from '@/layouts/DefaultLayout';
 import { AuthProvider } from '@/lib/providers';
+import ComingSoonPage from '@/pages/CustomerPage/ComingSoonPage';
 import HomePage from '@/pages/CustomerPage/HomePage';
 import ProfilePage from '@/pages/CustomerPage/ProfilePage';
 import AccountPage from '@/pages/DashboardPage/AccountPage';
@@ -133,7 +134,7 @@ const routers: RouteObject[] = [
                 element: <ProfilePage />,
             },
             {
-                path: 'homepage',
+                path: 'homepage/products',
                 element: <HomePage />,
             },
             {
@@ -151,6 +152,10 @@ const routers: RouteObject[] = [
             {
                 path: 'order-success',
                 element: <OrderSuccessPage />,
+            },
+            {
+                path: 'coming-soon',
+                element: <ComingSoonPage />,
             },
         ],
     },

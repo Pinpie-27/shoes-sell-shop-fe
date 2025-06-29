@@ -48,7 +48,7 @@ export const SideBar: React.FC<SideBarProps> = ({ sidebarOpen, setSidebarOpen })
                 <Box
                     tw="h-[60px] p-6 flex items-center justify-center cursor-pointer"
                     onClick={() => {
-                        navigate(`/customers/homepage`);
+                        navigate(`/customers/homepage/products`);
                     }}
                 >
                     <Img src={ananasLogo} alt="Logo" tw="w-full h-auto" />

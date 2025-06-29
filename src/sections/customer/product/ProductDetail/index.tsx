@@ -414,7 +414,7 @@ const ProductDetail = () => {
                     <Review product_id={productId} user_id={userId} />
                 </Box>
                 <Box sx={{ width: '100%' }}>
-                    <ReviewList reviews={reviews} />
+                    <ReviewList reviews={reviews} reviewsPerPage={3} />
                 </Box>
             </Box>
         </>

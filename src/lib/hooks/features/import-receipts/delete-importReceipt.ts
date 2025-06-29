@@ -17,7 +17,7 @@ export const useDeleteImportReceipt = () => {
             toast.success(`Xoá phiếu nhập thành công`);
         },
         onError: () => {
-            toast.error('Failed to delete import receipt');
+            toast.error('Xoá phiếu nhập thất bại');
         },
     });
 };

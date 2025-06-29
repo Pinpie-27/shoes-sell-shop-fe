@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable arrow-body-style */
 /* eslint-disable import/no-duplicates */
 import React from 'react';
 
@@ -5,7 +7,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import MenuIcon from '@mui/icons-material/Menu';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import { Badge, Box, Divider, Menu, MenuItem, Typography } from '@mui/material';
+import { Badge, Box, Button, Divider, Menu, MenuItem, Typography } from '@mui/material';
 import { useAtom } from 'jotai';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
@@ -60,8 +62,12 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
         const searchTerm = data.search.trim();
         if (searchTerm) {
             setSearchQuery(searchTerm);
-            navigate('/customers/homepage');
+            navigate('/customers/homepage/products');
         }
+    };
+
+    const isActiveRoute = (path: string) => {
+        return location.pathname === path || location.pathname.startsWith(path);
     };
 
     return (
@@ -87,6 +93,72 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                     spacing={tw`gap-4`}
                 />
             </form>
+
+            <Box
+                sx={{
+                    display: { xs: 'none', md: 'flex' },
+                    alignItems: 'center',
+                    gap: 4,
+                    flex: 1,
+                    justifyContent: 'center',
+                }}
+            >
+                <Button
+                    onClick={() => navigate('/customers/coming-soon')}
+                    sx={{
+                        color:
+                            isActiveRoute('/customers/coming-soon') &&
+                            !isActiveRoute('/customers/homepage/products')
+                                ? '#FF6B35'
+                                : '#374151',
+                        fontFamily: "'Nunito', sans-serif",
+                        fontSize: '16px',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        padding: '8px 16px',
+                        borderRadius: 0,
+                        position: 'relative',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            color: '#FF6B35',
+                        },
+
+                        '&:hover::after': {
+                            width: '100%',
+                        },
+                    }}
+                >
+                    TRANG CHỦ
+                </Button>
+
+                <Button
+                    onClick={() => navigate('/customers/homepage/products')}
+                    sx={{
+                        color: isActiveRoute('/customers/homepage/products')
+                            ? '#FF6B35'
+                            : '#374151',
+                        fontFamily: "'Nunito', sans-serif",
+                        fontSize: '16px',
+                        fontWeight: 700,
+                        textTransform: 'uppercase',
+                        letterSpacing: '0.5px',
+                        padding: '8px 16px',
+                        borderRadius: 0,
+                        position: 'relative',
+                        '&:hover': {
+                            backgroundColor: 'transparent',
+                            color: '#FF6B35',
+                        },
+
+                        '&:hover::after': {
+                            width: '100%',
+                        },
+                    }}
+                >
+                    SẢN PHẨM
+                </Button>
+            </Box>
 
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Badge
