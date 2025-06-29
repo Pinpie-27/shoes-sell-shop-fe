@@ -37,6 +37,6 @@ export const formStructureReview: FormInputGenericProps[] = [
         label: 'Bình luận',
         name: 'comment',
         inputType: 'TextField',
-        colSpan: tw`col-span-2`,
+        colSpan: tw`col-span-12`,
     },
 ];

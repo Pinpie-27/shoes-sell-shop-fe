@@ -51,7 +51,7 @@ export const Review: React.FC<ReviewProps> = ({ product_id, user_id }) => {
     });
 
     const getRatingText = (value: number | null) => {
-        if (!value) return 'Chưa đánh giá';
+        if (!value) return 'Chọn số sao';
         switch (value) {
             case 1:
                 return 'Rất tệ';
@@ -64,324 +64,276 @@ export const Review: React.FC<ReviewProps> = ({ product_id, user_id }) => {
             case 5:
                 return 'Xuất sắc';
             default:
-                return 'Chưa đánh giá';
+                return 'Chọn số sao';
         }
     };
 
-    const getRatingColor = (value: number | null) => {
-        if (!value) return '#94a3b8';
-        if (value <= 2) return '#ef4444';
-        if (value === 3) return '#f59e0b';
-        return '#10b981';
-    };
+    const isFormValid = rating && formHandler.watch('comment')?.trim();
 
     return (
-        <Card
-            elevation={4}
-            sx={{
-                maxWidth: 900,
-                mx: 'auto',
-                mt: 6,
-                borderRadius: 4,
-                background: 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-                border: '1px solid #e2e8f0',
-                overflow: 'visible',
-                position: 'relative',
-            }}
-        >
-            {/* Header with icon */}
-            <Box
-                sx={{
-                    position: 'absolute',
-                    top: -20,
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    width: 60,
-                    height: 60,
-                    borderRadius: '50%',
-                    background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    boxShadow: '0 8px 25px rgba(59, 130, 246, 0.3)',
-                }}
-            >
-                <RateReviewIcon sx={{ color: '#ffffff', fontSize: '1.8rem' }} />
+        <Box sx={{ mt: 4 }}>
+            {/* Compact Header */}
+            <Box sx={{ mb: 3, textAlign: 'left' }}>
+                <Typography
+                    variant="h5"
+                    fontWeight={600}
+                    mb={2}
+                    sx={{ color: 'black', fontSize: '25px' }}
+                >
+                    <RateReviewIcon sx={{ color: '#FF6B35', fontSize: '1.5rem' }} />
+                    Đánh giá sản phẩm
+                </Typography>
+                <Typography
+                    variant="body2"
+                    sx={{
+                        color: '#6B7280',
+                        fontFamily: "'Nunito', sans-serif",
+                        fontSize: '0.95rem',
+                    }}
+                >
+                    Chia sẻ trải nghiệm để giúp người khác
+                </Typography>
             </Box>
 
-            <CardContent sx={{ pt: 6, pb: 4, px: { xs: 3, sm: 5 } }}>
-                <Box component="form" onSubmit={onSubmit}>
-                    {/* Title */}
-                    <Typography
-                        variant="h4"
-                        sx={{
-                            fontWeight: 700,
-                            textAlign: 'center',
-                            color: '#1e293b',
-                            mb: 1,
-                            fontSize: { xs: '1.8rem', sm: '2rem' },
-                        }}
-                    >
-                        Đánh giá sản phẩm
-                    </Typography>
-
-                    <Typography
-                        variant="body1"
-                        sx={{
-                            textAlign: 'center',
-                            color: '#64748b',
-                            mb: 4,
-                            fontSize: '1.1rem',
-                        }}
-                    >
-                        Chia sẻ trải nghiệm của bạn để giúp những người khác
-                    </Typography>
-
-                    {/* Rating Section */}
-                    <Box
-                        sx={{
-                            backgroundColor: '#f8fafc',
-                            borderRadius: 3,
-                            p: 4,
-                            mb: 4,
-                            border: '2px solid #e2e8f0',
-                            textAlign: 'center',
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                borderColor: '#3b82f6',
-                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)',
-                            },
-                        }}
-                    >
-                        <Typography
-                            variant="h6"
-                            sx={{
-                                fontWeight: 600,
-                                color: '#374151',
-                                mb: 2,
-                            }}
-                        >
-                            Mức độ hài lòng của bạn?
-                        </Typography>
-
-                        <Rating
-                            name="rating"
-                            value={rating}
-                            onChange={(_, newValue) => setRating(newValue)}
-                            size="large"
-                            sx={{
-                                mb: 2,
-                                '& .MuiRating-iconFilled': {
-                                    color: '#fbbf24',
-                                },
-                                '& .MuiRating-iconHover': {
-                                    color: '#f59e0b',
-                                },
-                                '& .MuiRating-icon': {
-                                    fontSize: '2.5rem',
-                                    mx: 0.5,
-                                },
-                            }}
-                            icon={<StarIcon fontSize="inherit" />}
-                            emptyIcon={<StarBorderIcon fontSize="inherit" />}
-                        />
-
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                gap: 2,
-                            }}
-                        >
+            <Card
+                elevation={0}
+                sx={{
+                    borderRadius: 3,
+                    background: '#FFFFFF',
+                    border: '1px solid #E5E7EB',
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                        borderColor: 'rgba(255, 107, 53, 0.3)',
+                        boxShadow: '0 4px 20px rgba(255, 107, 53, 0.08)',
+                    },
+                }}
+            >
+                <CardContent sx={{ p: 3 }}>
+                    <Box component="form" onSubmit={onSubmit}>
+                        {/* Compact Rating Section */}
+                        <Box sx={{ mb: 3 }}>
                             <Typography
-                                variant="h6"
+                                variant="body1"
                                 sx={{
+                                    fontFamily: "'Nunito', sans-serif",
                                     fontWeight: 600,
-                                    color: getRatingColor(rating),
-                                    fontSize: '1.2rem',
+                                    color: '#374151',
+                                    mb: 2,
+                                    fontSize: '1rem',
                                 }}
                             >
-                                {getRatingText(rating)}
+                                Mức độ hài lòng:
                             </Typography>
-                            {rating && (
-                                <Box
+
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 2 }}>
+                                <Rating
+                                    name="rating"
+                                    value={rating}
+                                    onChange={(_, newValue) => setRating(newValue)}
+                                    size="medium"
                                     sx={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        gap: 0.5,
-                                        px: 2,
-                                        py: 0.5,
-                                        borderRadius: 2,
-                                        backgroundColor: getRatingColor(rating) + '20',
-                                        border: `1px solid ${getRatingColor(rating)}40`,
+                                        '& .MuiRating-iconFilled': {
+                                            color: '#FF6B35',
+                                        },
+                                        '& .MuiRating-iconHover': {
+                                            color: '#F7931E',
+                                        },
+                                        '& .MuiRating-icon': {
+                                            fontSize: '1.8rem',
+                                        },
                                     }}
-                                >
-                                    <StarIcon
-                                        sx={{ fontSize: '1rem', color: getRatingColor(rating) }}
-                                    />
-                                    <Typography
+                                    icon={<StarIcon fontSize="inherit" />}
+                                    emptyIcon={<StarBorderIcon fontSize="inherit" />}
+                                />
+
+                                {rating && (
+                                    <Box
                                         sx={{
-                                            fontWeight: 600,
-                                            color: getRatingColor(rating),
-                                            fontSize: '0.9rem',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            gap: 0.5,
+                                            px: 2,
+                                            py: 0.5,
+                                            borderRadius: 2,
+                                            backgroundColor: '#FF6B35',
+                                            color: '#FFFFFF',
                                         }}
                                     >
-                                        {rating}/5
-                                    </Typography>
-                                </Box>
+                                        <Typography
+                                            sx={{
+                                                fontFamily: "'Nunito', sans-serif",
+                                                fontWeight: 600,
+                                                fontSize: '0.85rem',
+                                            }}
+                                        >
+                                            {rating}/5
+                                        </Typography>
+                                    </Box>
+                                )}
+                            </Box>
+
+                            {rating && (
+                                <Typography
+                                    sx={{
+                                        fontFamily: "'Nunito', sans-serif",
+                                        fontWeight: 600,
+                                        color: '#FF6B35',
+                                        fontSize: '0.9rem',
+                                    }}
+                                >
+                                    {getRatingText(rating)}
+                                </Typography>
                             )}
                         </Box>
-                    </Box>
 
-                    {/* Comment Section */}
-                    <Box
-                        sx={{
-                            backgroundColor: '#ffffff',
-                            borderRadius: 3,
-                            p: 4,
-                            mb: 4,
-                            border: '2px solid #e2e8f0',
-                            transition: 'all 0.3s ease',
-                            '&:hover': {
-                                borderColor: '#3b82f6',
-                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.1)',
-                            },
-                            '& .MuiTextField-root': {
-                                '& .MuiOutlinedInput-root': {
-                                    borderRadius: 2,
-                                    backgroundColor: '#f8fafc',
-                                    fontSize: '1rem',
-                                    transition: 'all 0.2s ease',
-                                    '& fieldset': {
-                                        borderColor: '#cbd5e1',
-                                    },
-                                    '&:hover fieldset': {
-                                        borderColor: '#3b82f6',
-                                    },
-                                    '&.Mui-focused fieldset': {
-                                        borderColor: '#3b82f6',
-                                        borderWidth: '2px',
-                                    },
-                                    '&.Mui-focused': {
-                                        backgroundColor: '#ffffff',
-                                        boxShadow: '0 0 0 3px rgba(59, 130, 246, 0.1)',
-                                    },
-                                },
-                                '& .MuiInputLabel-root': {
-                                    color: '#64748b',
-                                    fontWeight: 500,
-                                    '&.Mui-focused': {
-                                        color: '#3b82f6',
-                                    },
-                                },
-                                '& textarea': {
-                                    minHeight: '120px !important',
-                                    lineHeight: 1.6,
-                                    fontFamily: 'inherit',
-                                },
-                            },
-                        }}
-                    >
-                        <Typography
-                            variant="h6"
+                        {/* Compact Comment Section */}
+                        <Box
                             sx={{
-                                fontWeight: 600,
-                                color: '#374151',
                                 mb: 3,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: 1,
+                                '& .MuiTextField-root': {
+                                    '& .MuiOutlinedInput-root': {
+                                        borderRadius: 2,
+                                        backgroundColor: '#F9FAFB',
+                                        fontSize: '0.95rem',
+                                        fontFamily: "'Nunito', sans-serif",
+                                        '& fieldset': {
+                                            borderColor: '#E5E7EB',
+                                        },
+                                        '&:hover fieldset': {
+                                            borderColor: '#FF6B35',
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                            borderColor: '#FF6B35',
+                                        },
+                                        '&.Mui-focused': {
+                                            backgroundColor: '#FFFFFF',
+                                            boxShadow: '0 0 0 2px rgba(255, 107, 53, 0.1)',
+                                        },
+                                    },
+                                    '& .MuiInputLabel-root': {
+                                        color: '#6B7280',
+                                        fontFamily: "'Nunito', sans-serif",
+                                        fontWeight: 500,
+                                        '&.Mui-focused': {
+                                            color: '#FF6B35',
+                                        },
+                                    },
+                                    '& textarea': {
+                                        minHeight: '80px !important',
+                                        lineHeight: 1.5,
+                                        fontFamily: "'Nunito', sans-serif",
+                                    },
+                                },
                             }}
                         >
-                            <SendIcon sx={{ fontSize: '1.3rem', color: '#3b82f6' }} />
-                            Chia sẻ chi tiết về trải nghiệm
-                        </Typography>
-
-                        <FieldGroup
-                            formHandler={formHandler}
-                            formStructure={formStructureReview}
-                            spacing={tw`gap-4`}
-                        />
-                    </Box>
-
-                    {/* Progress bar when submitting */}
-                    {isPending && (
-                        <Box sx={{ mb: 3 }}>
-                            <LinearProgress
-                                sx={{
-                                    height: 6,
-                                    borderRadius: 3,
-                                    backgroundColor: '#e2e8f0',
-                                    '& .MuiLinearProgress-bar': {
-                                        backgroundColor: '#3b82f6',
-                                        borderRadius: 3,
-                                    },
-                                }}
-                            />
                             <Typography
-                                variant="body2"
+                                variant="body1"
                                 sx={{
-                                    textAlign: 'center',
-                                    color: '#64748b',
-                                    mt: 1,
-                                    fontStyle: 'italic',
+                                    fontFamily: "'Nunito', sans-serif",
+                                    fontWeight: 600,
+                                    color: '#374151',
+                                    mb: 1.5,
+                                    fontSize: '1rem',
                                 }}
                             >
-                                Đang gửi đánh giá của bạn...
+                                Nhận xét chi tiết:
                             </Typography>
-                        </Box>
-                    )}
 
-                    {/* Submit Button */}
-                    <Box sx={{ textAlign: 'center' }}>
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            disabled={isPending || !rating || !formHandler.watch('comment')}
-                            startIcon={<SendIcon />}
-                            sx={{
-                                py: 2,
-                                px: 6,
-                                fontSize: '1.1rem',
-                                fontWeight: 600,
-                                borderRadius: 4,
-                                textTransform: 'none',
-                                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)',
-                                boxShadow: '0 4px 12px rgba(59, 130, 246, 0.3)',
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    background: 'linear-gradient(135deg, #2563eb 0%, #1e40af 100%)',
-                                    boxShadow: '0 6px 20px rgba(59, 130, 246, 0.4)',
-                                    transform: 'translateY(-2px)',
-                                },
-                                '&:active': {
-                                    transform: 'translateY(0)',
-                                },
-                                '&:disabled': {
-                                    background: 'linear-gradient(135deg, #cbd5e1 0%, #94a3b8 100%)',
-                                    color: '#64748b',
-                                    boxShadow: 'none',
-                                    transform: 'none',
-                                },
-                            }}
-                        >
-                            {isPending ? 'Đang gửi...' : 'Gửi đánh giá'}
-                        </Button>
+                            <FieldGroup
+                                formHandler={formHandler}
+                                formStructure={formStructureReview}
+                                spacing={tw`gap-3`}
+                            />
+                        </Box>
+
+                        {/* Progress bar when submitting */}
+                        {isPending && (
+                            <Box sx={{ mb: 3 }}>
+                                <LinearProgress
+                                    sx={{
+                                        height: 4,
+                                        borderRadius: 2,
+                                        backgroundColor: '#F3F4F6',
+                                        '& .MuiLinearProgress-bar': {
+                                            backgroundColor: '#FF6B35',
+                                            borderRadius: 2,
+                                        },
+                                    }}
+                                />
+                                <Typography
+                                    variant="body2"
+                                    sx={{
+                                        textAlign: 'center',
+                                        color: '#6B7280',
+                                        mt: 1,
+                                        fontFamily: "'Nunito', sans-serif",
+                                        fontSize: '0.9rem',
+                                    }}
+                                >
+                                    Đang gửi...
+                                </Typography>
+                            </Box>
+                        )}
+
+                        {/* Compact Submit Button */}
+                        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                            <Button
+                                type="submit"
+                                variant="contained"
+                                disabled={isPending || !isFormValid}
+                                startIcon={<SendIcon />}
+                                sx={{
+                                    py: 1.5,
+                                    px: 4,
+                                    fontSize: '0.95rem',
+                                    fontFamily: "'Nunito', sans-serif",
+                                    fontWeight: 600,
+                                    borderRadius: 2,
+                                    textTransform: 'none',
+                                    background: isFormValid
+                                        ? 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)'
+                                        : '#E5E7EB',
+                                    color: isFormValid ? '#FFFFFF' : '#9CA3AF',
+                                    boxShadow: isFormValid
+                                        ? '0 4px 12px rgba(255, 107, 53, 0.3)'
+                                        : 'none',
+                                    transition: 'all 0.2s ease',
+                                    '&:hover': {
+                                        background: isFormValid
+                                            ? 'linear-gradient(135deg, #F7931E 0%, #FF6B35 100%)'
+                                            : '#E5E7EB',
+                                        transform: isFormValid ? 'translateY(-1px)' : 'none',
+                                        boxShadow: isFormValid
+                                            ? '0 6px 16px rgba(255, 107, 53, 0.4)'
+                                            : 'none',
+                                    },
+                                    '&:disabled': {
+                                        background: '#E5E7EB',
+                                        color: '#9CA3AF',
+                                        boxShadow: 'none',
+                                        transform: 'none',
+                                    },
+                                }}
+                            >
+                                {isPending ? 'Đang gửi...' : 'Gửi đánh giá'}
+                            </Button>
+                        </Box>
 
                         <Typography
                             variant="body2"
                             sx={{
-                                color: '#94a3b8',
+                                color: '#9CA3AF',
                                 mt: 2,
-                                fontSize: '0.9rem',
+                                fontSize: '0.85rem',
+                                fontFamily: "'Nunito', sans-serif",
+                                textAlign: 'right',
                             }}
                         >
-                            Đánh giá của bạn sẽ giúp cải thiện chất lượng sản phẩm
+                            Cảm ơn bạn đã chia sẻ!
                         </Typography>
                     </Box>
-                </Box>
-            </CardContent>
-        </Card>
+                </CardContent>
+            </Card>
+        </Box>
     );
 };

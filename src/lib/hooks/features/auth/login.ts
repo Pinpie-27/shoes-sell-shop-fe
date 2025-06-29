@@ -87,7 +87,7 @@ export const useLogin = () => {
             }
 
             setTimeout(() => {
-                navigate(result.role === 'admin' ? '/dashboard' : '/customers/homepage');
+                navigate(result.role === 'admin' ? '/dashboard' : '/customers/coming-soon');
             }, 500);
         } catch (error) {
             setIsLoading(false);

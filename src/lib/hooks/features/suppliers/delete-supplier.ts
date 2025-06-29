@@ -18,7 +18,7 @@ export const useDeleteSupplier = () => {
             toast.success(`Xoá nhà cung cấp thành công`);
         },
         onError: () => {
-            toast.error('Xoá nhà cung ');
+            toast.error('Xoá nhà cung cấp thất bại');
         },
     });
 };

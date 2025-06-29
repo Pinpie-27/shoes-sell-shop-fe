@@ -59,7 +59,7 @@ export const formStructureUser: FormInputGenericProps[] = [
         label: 'Email',
         name: 'email',
         inputType: 'TextField',
-        colSpan: tw`col-span-12`,
+        colSpan: tw`col-span-12`,  
         validate: z.string().email('Email không hợp lệ'),
     },
     {
@@ -67,10 +67,7 @@ export const formStructureUser: FormInputGenericProps[] = [
         name: 'phone',
         inputType: 'TextField',
         colSpan: tw`col-span-12`,
-        validate: z
-            .string()
-            .regex(/^\d+$/, 'Số điện thoại chỉ chứa số')
-            .min(10, 'Số điện thoại phải có ít nhất 10 số'),
+         
     },
     {
         label: 'Địa chỉ',
