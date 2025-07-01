@@ -418,9 +418,9 @@ export const StyleForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontSize: '0.95rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {style.name}

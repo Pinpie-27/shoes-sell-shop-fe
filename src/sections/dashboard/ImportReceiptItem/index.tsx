@@ -539,9 +539,9 @@ export const ImportReceiptItemForm: React.FC = () => {
                                                     height: '32px',
                                                     borderRadius: '8px',
 
+                                                    fontWeight: 400,
                                                     color: '#374151',
-
-                                                    fontSize: '0.8rem',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {getReceiptNumber(
@@ -566,9 +566,9 @@ export const ImportReceiptItemForm: React.FC = () => {
                                                         height: '32px',
                                                         borderRadius: '8px',
 
+                                                        fontWeight: 400,
                                                         color: '#374151',
-
-                                                        fontSize: '0.rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getProductName(importReceiptItem.product_id) ||
@@ -612,9 +612,9 @@ export const ImportReceiptItemForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontSize: '0.9rem',
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontWeight: 600,
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {importReceiptItem.quantity}
@@ -622,28 +622,15 @@ export const ImportReceiptItemForm: React.FC = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Box
+                                            <Typography
                                                 sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: 1,
-                                                    backgroundColor: '#f0fdf4',
-                                                    borderRadius: 2,
-                                                    p: 1.5,
-                                                    border: '1px solid #d1fae5',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '0.85rem',
-                                                        color: '#16a34a',
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {formatPrice(importReceiptItem.price_import)}
-                                                </Typography>
-                                            </Box>
+                                                {formatPrice(importReceiptItem.price_import)}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Box

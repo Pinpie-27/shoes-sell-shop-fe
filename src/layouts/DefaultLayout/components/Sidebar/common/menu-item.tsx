@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
     AppstoreOutlined,
     BgColorsOutlined,
@@ -65,13 +66,7 @@ export const menuItems: MenuItem[] = [
                 url: '/user/categories',
                 icon: <AppstoreOutlined />,
             },
-            {
-                id: 'products',
-                title: 'Sản phẩm',
-                type: 'item',
-                url: '/user/products',
-                icon: <ShoppingOutlined />,
-            },
+
             {
                 id: 'reviews',
                 title: 'Bình luận',
@@ -79,41 +74,7 @@ export const menuItems: MenuItem[] = [
                 url: '/user/reviews',
                 icon: <MessageOutlined />,
             },
-            {
-                id: 'colors',
-                title: 'Màu sắc',
-                type: 'item',
-                url: '/user/colors',
-                icon: <BgColorsOutlined />,
-            },
-            {
-                id: 'colorVariants',
-                title: 'Biến thể màu',
-                type: 'item',
-                url: '/user/colorVariants',
-                icon: <SkinOutlined />,
-            },
-            {
-                id: 'inventories',
-                title: 'Kho hàng',
-                type: 'item',
-                url: '/user/inventories',
-                icon: <InboxOutlined />,
-            },
-            {
-                id: 'productColors',
-                title: 'Màu sản phẩm',
-                type: 'item',
-                url: '/user/productColors',
-                icon: <GoldOutlined />,
-            },
-            {
-                id: 'productImages',
-                title: 'Hình ảnh sản phẩm',
-                type: 'item',
-                url: '/user/productImages',
-                icon: <PictureOutlined />,
-            },
+
             {
                 id: 'styles',
                 title: 'Kiểu dáng',
@@ -128,6 +89,74 @@ export const menuItems: MenuItem[] = [
                 url: '/user/suppliers',
                 icon: <TeamOutlined />,
             },
+        ],
+    },
+    {
+        id: 'user',
+        title: 'Màu sắc',
+        type: 'group',
+        icon: <BgColorsOutlined />,
+        children: [
+            {
+                id: 'colors',
+                title: 'Màu sắc',
+                type: 'item',
+                url: '/user/colors',
+                icon: <BgColorsOutlined />,
+            },
+            {
+                id: 'colorVariants',
+                title: 'Biến thể màu',
+                type: 'item',
+                url: '/user/colorVariants',
+                icon: <SkinOutlined />,
+            },
+        ],
+    },
+    {
+        id: 'user',
+        title: 'Sản phẩm',
+        type: 'group',
+        icon: <ShoppingOutlined />,
+        children: [
+            {
+                id: 'products',
+                title: 'Sản phẩm',
+                type: 'item',
+                url: '/user/products',
+                icon: <ShoppingOutlined />,
+            },
+
+            {
+                id: 'productColors',
+                title: 'Màu sản phẩm',
+                type: 'item',
+                url: '/user/productColors',
+                icon: <GoldOutlined />,
+            },
+            {
+                id: 'productImages',
+                title: 'Hình ảnh sản phẩm',
+                type: 'item',
+                url: '/user/productImages',
+                icon: <PictureOutlined />,
+            },
+        ],
+    },
+    {
+        id: 'user',
+        title: 'Kho hàng',
+        type: 'group',
+        icon: <InboxOutlined />,
+        children: [
+            {
+                id: 'inventories',
+                title: 'Kho hàng',
+                type: 'item',
+                url: '/user/inventories',
+                icon: <InboxOutlined />,
+            },
+
             {
                 id: 'importReceipts',
                 title: 'Nhập hàng',
@@ -142,6 +171,14 @@ export const menuItems: MenuItem[] = [
                 url: '/user/importReceiptItems',
                 icon: <FileTextOutlined />,
             },
+        ],
+    },
+    {
+        id: 'user',
+        title: 'Đơn hàng',
+        type: 'group',
+        icon: <OrderedListOutlined />,
+        children: [
             {
                 id: 'orderItems',
                 title: 'Chi tiết đơn hàng',

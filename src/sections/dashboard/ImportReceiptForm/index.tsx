@@ -478,9 +478,9 @@ export const ImportReceiptForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontSize: '0.95rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {importReceipt.receipt_number}
@@ -517,9 +517,9 @@ export const ImportReceiptForm: React.FC = () => {
                                         <TableCell align="center">
                                             <Typography
                                                 sx={{
-                                                    fontWeight: 600,
+                                                    fontWeight: 400,
                                                     color: '#374151',
-                                                    fontSize: '0.95rem',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {getSupplierName(importReceipt.supplier_id)}

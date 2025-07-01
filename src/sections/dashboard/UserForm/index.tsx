@@ -17,7 +17,6 @@ import {
     Button,
     Card,
     CardContent,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -195,25 +194,6 @@ export const UserForm: React.FC = () => {
     const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
-    };
-
-    const getRoleColor = (role: string) => {
-        switch (role?.toLowerCase()) {
-            case 'admin':
-                return { color: '#dc2626', bg: '#fef2f2' };
-            case 'user':
-                return { color: '#16a34a', bg: '#f0fdf4' };
-
-            default:
-                return { color: '#6b7280', bg: '#f9fafb' };
-        }
-    };
-
-    const getVipLevelColor = (level: number) => {
-        if (level >= 5) return { color: '#7c3aed', bg: '#f5f3ff' };
-        if (level >= 3) return { color: '#ea580c', bg: '#fff7ed' };
-        if (level >= 1) return { color: '#16a34a', bg: '#f0fdf4' };
-        return { color: '#6b7280', bg: '#f9fafb' };
     };
 
     if (isLoading) {
@@ -453,7 +433,7 @@ export const UserForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
+                                                        fontWeight: 400,
                                                         color: '#374151',
                                                         fontSize: '0.9rem',
                                                     }}
@@ -466,7 +446,8 @@ export const UserForm: React.FC = () => {
                                     <TableCell>
                                         <Typography
                                             sx={{
-                                                color: '#4b5563',
+                                                fontWeight: 400,
+                                                color: '#374151',
                                                 fontSize: '0.9rem',
                                             }}
                                         >
@@ -476,9 +457,9 @@ export const UserForm: React.FC = () => {
                                     <TableCell>
                                         <Typography
                                             sx={{
-                                                color: '#4b5563',
+                                                fontWeight: 400,
+                                                color: '#374151',
                                                 fontSize: '0.9rem',
-                                                fontFamily: 'monospace',
                                             }}
                                         >
                                             {user.phone}
@@ -487,50 +468,35 @@ export const UserForm: React.FC = () => {
                                     <TableCell>
                                         <Typography
                                             sx={{
-                                                color: '#4b5563',
-                                                fontSize: '0.85rem',
-                                                overflow: 'hidden',
-                                                textOverflow: 'ellipsis',
-                                                whiteSpace: 'nowrap',
-                                                maxWidth: '180px',
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
                                         >
                                             {user.address}
                                         </Typography>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Chip
-                                            label={getVipLevelName(user.vip_level_id)}
-                                            size="small"
+                                        <Typography
                                             sx={{
-                                                backgroundColor: getVipLevelColor(user.vip_level_id)
-                                                    .bg,
-                                                color: getVipLevelColor(user.vip_level_id).color,
-                                                fontWeight: 600,
-                                                fontSize: '0.8rem',
-                                                height: '28px',
-                                                '& .MuiChip-label': {
-                                                    px: 1.5,
-                                                },
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
-                                        />
+                                        >
+                                            {getVipLevelName(user.vip_level_id)}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Chip
-                                            label={user.role}
-                                            size="small"
+                                        <Typography
                                             sx={{
-                                                backgroundColor: getRoleColor(user.role).bg,
-                                                color: getRoleColor(user.role).color,
-                                                fontWeight: 600,
-                                                fontSize: '0.8rem',
-                                                height: '28px',
-                                                textTransform: 'capitalize',
-                                                '& .MuiChip-label': {
-                                                    px: 1.5,
-                                                },
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
-                                        />
+                                        >
+                                            {user.role}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box
@@ -727,7 +693,6 @@ export const UserForm: React.FC = () => {
                         onClick={handleConfirmDelete}
                         sx={{
                             backgroundColor: 'primary',
-                            
                         }}
                         variant="contained"
                     >
@@ -766,7 +731,6 @@ export const UserForm: React.FC = () => {
                 </DialogTitle>
                 <DialogContent sx={{ pt: 2 }}>
                     {selectedUser && (
-                     
                         <FieldGroup
                             formHandler={formHandler}
                             formStructure={formStructureUser}

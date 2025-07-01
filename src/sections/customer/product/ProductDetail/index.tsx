@@ -151,6 +151,8 @@ const ProductDetail = () => {
     const styleName = styles.find((s: any) => s.id === product.style_id)?.name || '';
     const CategoryName = categories.find((s: any) => s.id === product.category_id)?.name || '';
 
+    const isOutOfStock = availableSizes.length === 0;
+
     return (
         <>
             <Box sx={{ maxWidth: 1000, mx: 'auto', p: 3 }}>
@@ -341,15 +343,9 @@ const ProductDetail = () => {
                                 variant="contained"
                                 sx={{ background: 'var(--color-primary-main)' }}
                                 onClick={handleAddToCart}
+                                disabled={isOutOfStock}
                             >
                                 THÊM VÀO GIỎ
-                            </Button>
-
-                            <Button
-                                variant="contained"
-                                sx={{ background: 'var(--color-primary-main)' }}
-                            >
-                                THANH TOÁN
                             </Button>
                         </Box>
 
