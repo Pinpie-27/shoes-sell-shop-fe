@@ -2,14 +2,6 @@
 import { useEffect, useState } from 'react';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CancelIcon from '@mui/icons-material/Cancel';
-import EditIcon from '@mui/icons-material/Edit';
-import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PersonIcon from '@mui/icons-material/Person';
-import PhoneIcon from '@mui/icons-material/Phone';
-import SaveIcon from '@mui/icons-material/Save';
 import {
     Box,
     Button,
@@ -55,7 +47,7 @@ const ProfileForm = ({ username }: { username: string }) => {
             )
             .refine(
                 (val) => {
-                    if (!val || val === '') return true; 
+                    if (!val || val === '') return true;
                     const cleanPhone = val.replace(/\s/g, '');
                     return cleanPhone.length >= 10 && cleanPhone.length <= 11;
                 },
@@ -63,7 +55,7 @@ const ProfileForm = ({ username }: { username: string }) => {
             )
             .refine(
                 (val) => {
-                    if (!val || val === '') return true; 
+                    if (!val || val === '') return true;
                     const cleanPhone = val.replace(/\s/g, '');
                     return /^(0[3|5|7|8|9])[0-9]{8,9}$/.test(cleanPhone);
                 },
@@ -83,28 +75,28 @@ const ProfileForm = ({ username }: { username: string }) => {
         handleSubmit,
         formState: { errors },
         reset,
+        setValue,
     } = useForm({
         resolver: zodResolver(schema),
         defaultValues: {
-            email: user?.email || '',
-            phone: user?.phone || '',
-            address: user?.address || '',
+            email: '',
+            phone: '',
+            address: '',
         },
     });
 
     // Update form default values when user data loads
     useEffect(() => {
         if (user) {
-            reset({
-                email: user.email || '',
-                phone: user.phone || '',
-                address: user.address || '',
-            });
+            setValue('email', user.email || '');
+            setValue('phone', user.phone || '');
+            setValue('address', user.address || '');
         }
-    }, [user, reset]);
+    }, [user, setValue]);
 
     const handleEditClick = () => {
         if (user) {
+            // Đảm bảo form được reset với dữ liệu hiện tại
             reset({
                 email: user.email || '',
                 phone: user.phone || '',
@@ -118,7 +110,7 @@ const ProfileForm = ({ username }: { username: string }) => {
         if (user) {
             const updatedData = {
                 ...data,
-                phone: data.phone.replace(/\s/g, ''), // Remove spaces from phone
+                phone: data.phone ? data.phone.replace(/\s/g, '') : '', // Remove spaces from phone
             };
 
             updateUser(
@@ -127,6 +119,9 @@ const ProfileForm = ({ username }: { username: string }) => {
                     onSuccess: () => {
                         setIsEditDialogOpen(false);
                     },
+                    onError: (error) => {
+                        console.error('Error updating user:', error);
+                    },
                 }
             );
         }
@@ -134,7 +129,21 @@ const ProfileForm = ({ username }: { username: string }) => {
 
     const handleCancel = () => {
         setIsEditDialogOpen(false);
-        reset();
+        // Reset form về giá trị ban đầu
+        if (user) {
+            reset({
+                email: user.email || '',
+                phone: user.phone || '',
+                address: user.address || '',
+            });
+        }
+    };
+
+    // Đóng dialog khi click outside hoặc ESC
+    const handleDialogClose = (_event: any, reason: string) => {
+        if (reason === 'backdropClick' || reason === 'escapeKeyDown') {
+            handleCancel();
+        }
     };
 
     if (isLoading)
@@ -149,9 +158,9 @@ const ProfileForm = ({ username }: { username: string }) => {
             >
                 <Typography
                     sx={{
-                        color: '#FF6B35',
+                        color: '#374151',
                         fontWeight: 600,
-                        fontSize: '1.2rem',
+                        fontSize: '1rem',
                     }}
                 >
                     Đang tải thông tin...
@@ -171,9 +180,9 @@ const ProfileForm = ({ username }: { username: string }) => {
             >
                 <Typography
                     sx={{
-                        color: '#DC2626',
+                        color: '#374151',
                         fontWeight: 600,
-                        fontSize: '1.2rem',
+                        fontSize: '1rem',
                     }}
                 >
                     Không tìm thấy người dùng.
@@ -185,49 +194,28 @@ const ProfileForm = ({ username }: { username: string }) => {
         <Box
             sx={{
                 minHeight: '100vh',
-                background: 'linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 50%, #F1F5F9 100%)',
-                py: 6,
+                py: 4,
                 px: { xs: 2, sm: 3 },
             }}
         >
             <Box sx={{ maxWidth: 900, mx: 'auto' }}>
                 {/* Header Card */}
                 <Card
-                    elevation={0}
                     sx={{
                         textAlign: 'center',
                         mb: 4,
-                        borderRadius: 4,
+                        borderRadius: 2,
                         border: '1px solid #E5E7EB',
-                        background: 'linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%)',
                     }}
                 >
-                    <CardContent sx={{ p: { xs: 4, md: 6 } }}>
-                        <Box
-                            sx={{
-                                display: 'inline-flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                width: 120,
-                                height: 120,
-                                borderRadius: '50%',
-                                background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                                mb: 3,
-                                boxShadow: '0 8px 25px rgba(255, 107, 53, 0.3)',
-                            }}
-                        >
-                            <PersonIcon sx={{ fontSize: '4rem', color: '#FFFFFF' }} />
-                        </Box>
-
+                    <CardContent sx={{ p: { xs: 3, md: 4 } }}>
                         <Typography
-                            variant="h3"
+                            variant="h4"
                             sx={{
-                                fontWeight: 900,
+                                fontWeight: 600,
                                 color: '#374151',
-                                fontSize: { xs: '2rem', md: '2.5rem' },
-                                letterSpacing: '1px',
-                                textTransform: 'uppercase',
-                                mb: 2,
+                                fontSize: { xs: '1.5rem', md: '2rem' },
+                                mb: 3,
                             }}
                         >
                             Thông tin cá nhân
@@ -240,51 +228,26 @@ const ProfileForm = ({ username }: { username: string }) => {
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: 2,
-                                mt: 2,
                             }}
                         >
-                            <Box
+                            <Typography
                                 sx={{
-                                    display: 'inline-flex',
-                                    alignItems: 'center',
-                                    gap: 1,
-                                    px: 3,
-                                    py: 1.5,
-                                    borderRadius: 3,
-                                    background: 'linear-gradient(135deg, #FFF8E7 0%, #FFFFFF 100%)',
-                                    border: '1px solid rgba(255, 107, 53, 0.2)',
+                                    color: '#374151',
+                                    fontSize: '1rem',
+                                    fontWeight: 600,
                                 }}
                             >
-                                <AccountCircleIcon sx={{ color: '#FF6B35', fontSize: '1.3rem' }} />
-                                <Typography
-                                    sx={{
-                                        fontFamily: "'Nunito', sans-serif",
-                                        color: '#374151',
-                                        fontSize: '1.1rem',
-                                        fontWeight: 600,
-                                    }}
-                                >
-                                    {user.username}
-                                </Typography>
-                            </Box>
+                                Tên đăng nhập: {user.username}
+                            </Typography>
 
                             <Button
                                 variant="outlined"
-                                startIcon={<EditIcon />}
                                 onClick={handleEditClick}
                                 sx={{
-                                    borderColor: '#FF6B35',
-                                    color: '#FF6B35',
-                                    fontFamily: "'Nunito', sans-serif",
-                                    fontWeight: 600,
                                     textTransform: 'none',
                                     px: 3,
                                     py: 1,
-                                    borderRadius: 3,
-                                    '&:hover': {
-                                        backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                                        borderColor: '#F7931E',
-                                    },
+                                    fontSize: '0.9rem',
                                 }}
                             >
                                 Chỉnh sửa thông tin
@@ -298,52 +261,28 @@ const ProfileForm = ({ username }: { username: string }) => {
                     {/* Email Card */}
                     <Grid item xs={12} md={6}>
                         <Card
-                            elevation={0}
                             sx={{
                                 height: '100%',
-                                borderRadius: 3,
+                                borderRadius: 2,
                                 border: '1px solid #E5E7EB',
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    borderColor: 'rgba(255, 107, 53, 0.3)',
-                                    boxShadow: '0 4px 20px rgba(255, 107, 53, 0.1)',
-                                    transform: 'translateY(-2px)',
-                                },
                             }}
                         >
-                            <CardContent sx={{ p: 4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                                        }}
-                                    >
-                                        <EmailIcon sx={{ color: '#3B82F6', fontSize: '1.5rem' }} />
-                                    </Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            fontFamily: "'Nunito', sans-serif",
-                                            fontWeight: 700,
-                                            color: '#374151',
-                                            fontSize: '1.2rem',
-                                        }}
-                                    >
-                                        Email
-                                    </Typography>
-                                </Box>
+                            <CardContent sx={{ p: 3 }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 600,
+                                        color: '#374151',
+                                        fontSize: '1.1rem',
+                                        mb: 2,
+                                    }}
+                                >
+                                    Email
+                                </Typography>
                                 <Typography
                                     sx={{
-                                        fontFamily: "'Nunito', sans-serif",
-                                        color: user.email ? '#6B7280' : '#9CA3AF',
+                                        color: user.email ? '#374151' : '#9CA3AF',
                                         fontSize: '1rem',
-                                        lineHeight: 1.6,
                                         fontStyle: user.email ? 'normal' : 'italic',
                                         wordBreak: 'break-word',
                                     }}
@@ -357,52 +296,28 @@ const ProfileForm = ({ username }: { username: string }) => {
                     {/* Phone Card */}
                     <Grid item xs={12} md={6}>
                         <Card
-                            elevation={0}
                             sx={{
                                 height: '100%',
-                                borderRadius: 3,
+                                borderRadius: 2,
                                 border: '1px solid #E5E7EB',
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    borderColor: 'rgba(255, 107, 53, 0.3)',
-                                    boxShadow: '0 4px 20px rgba(255, 107, 53, 0.1)',
-                                    transform: 'translateY(-2px)',
-                                },
                             }}
                         >
-                            <CardContent sx={{ p: 4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                        }}
-                                    >
-                                        <PhoneIcon sx={{ color: '#10B981', fontSize: '1.5rem' }} />
-                                    </Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            fontFamily: "'Nunito', sans-serif",
-                                            fontWeight: 700,
-                                            color: '#374151',
-                                            fontSize: '1.2rem',
-                                        }}
-                                    >
-                                        Số điện thoại
-                                    </Typography>
-                                </Box>
+                            <CardContent sx={{ p: 3 }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 600,
+                                        color: '#374151',
+                                        fontSize: '1.1rem',
+                                        mb: 2,
+                                    }}
+                                >
+                                    Số điện thoại
+                                </Typography>
                                 <Typography
                                     sx={{
-                                        fontFamily: "'Nunito', sans-serif",
-                                        color: user.phone ? '#6B7280' : '#9CA3AF',
+                                        color: user.phone ? '#374151' : '#9CA3AF',
                                         fontSize: '1rem',
-                                        lineHeight: 1.6,
                                         fontStyle: user.phone ? 'normal' : 'italic',
                                     }}
                                 >
@@ -415,53 +330,27 @@ const ProfileForm = ({ username }: { username: string }) => {
                     {/* Address Card */}
                     <Grid item xs={12}>
                         <Card
-                            elevation={0}
                             sx={{
-                                borderRadius: 3,
+                                borderRadius: 2,
                                 border: '1px solid #E5E7EB',
-                                transition: 'all 0.3s ease',
-                                '&:hover': {
-                                    borderColor: 'rgba(255, 107, 53, 0.3)',
-                                    boxShadow: '0 4px 20px rgba(255, 107, 53, 0.1)',
-                                    transform: 'translateY(-2px)',
-                                },
                             }}
                         >
-                            <CardContent sx={{ p: 4 }}>
-                                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, mb: 3 }}>
-                                    <Box
-                                        sx={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: 50,
-                                            height: 50,
-                                            borderRadius: '50%',
-                                            backgroundColor: 'rgba(255, 107, 53, 0.1)',
-                                        }}
-                                    >
-                                        <LocationOnIcon
-                                            sx={{ color: '#FF6B35', fontSize: '1.5rem' }}
-                                        />
-                                    </Box>
-                                    <Typography
-                                        variant="h6"
-                                        sx={{
-                                            fontFamily: "'Nunito', sans-serif",
-                                            fontWeight: 700,
-                                            color: '#374151',
-                                            fontSize: '1.2rem',
-                                        }}
-                                    >
-                                        Địa chỉ
-                                    </Typography>
-                                </Box>
+                            <CardContent sx={{ p: 3 }}>
+                                <Typography
+                                    variant="h6"
+                                    sx={{
+                                        fontWeight: 600,
+                                        color: '#374151',
+                                        fontSize: '1.1rem',
+                                        mb: 2,
+                                    }}
+                                >
+                                    Địa chỉ
+                                </Typography>
                                 <Typography
                                     sx={{
-                                        fontFamily: "'Nunito', sans-serif",
-                                        color: user.address ? '#6B7280' : '#9CA3AF',
+                                        color: user.address ? '#374151' : '#9CA3AF',
                                         fontSize: '1rem',
-                                        lineHeight: 1.6,
                                         fontStyle: user.address ? 'normal' : 'italic',
                                         whiteSpace: 'pre-wrap',
                                     }}
@@ -473,92 +362,73 @@ const ProfileForm = ({ username }: { username: string }) => {
                     </Grid>
                 </Grid>
 
-                {/* Footer Info */}
-                <Box
-                    sx={{
-                        mt: 4,
-                        p: 3,
-                        backgroundColor: '#FFF8E7',
-                        borderRadius: 3,
-                        border: '1px solid rgba(255, 107, 53, 0.2)',
-                        textAlign: 'center',
-                    }}
-                >
-                    <Typography
-                        sx={{
-                            fontFamily: "'Nunito', sans-serif",
-                            color: '#6B7280',
-                            fontSize: '0.9rem',
-                        }}
-                    >
-                        💡 Cần cập nhật thông tin? Vui lòng liên hệ bộ phận chăm sóc khách hàng của
-                        Ananas
-                    </Typography>
-                </Box>
-
                 {/* Edit Dialog */}
                 <Dialog
                     open={isEditDialogOpen}
-                    onClose={handleCancel}
+                    onClose={handleDialogClose}
                     maxWidth="sm"
                     fullWidth
+                    disableEscapeKeyDown={false}
                     PaperProps={{
                         sx: {
-                            borderRadius: 4,
+                            borderRadius: 2,
                             maxHeight: '80vh',
                         },
                     }}
                 >
                     <DialogTitle
                         sx={{
-                            fontFamily: "'Nunito', sans-serif",
-                            fontWeight: 700,
+                            fontWeight: 600,
                             color: '#374151',
-                            fontSize: '1.5rem',
+                            fontSize: '1.2rem',
                             textAlign: 'center',
                             borderBottom: '1px solid #E5E7EB',
                         }}
                     >
-                        ✏️ Chỉnh sửa thông tin cá nhân
+                        Chỉnh sửa thông tin cá nhân
                     </DialogTitle>
 
                     <form onSubmit={handleSubmit(handleSave)}>
-                        <DialogContent sx={{ p: 4 }}>
+                        <DialogContent sx={{ p: 3 }}>
                             <Grid container spacing={3}>
                                 <Grid item xs={12}>
                                     <Typography
                                         sx={{
-                                            fontFamily: "'Nunito', sans-serif",
                                             fontWeight: 600,
                                             color: '#374151',
                                             mb: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
+                                            fontSize: '0.9rem',
                                         }}
                                     >
-                                        <EmailIcon sx={{ color: '#3B82F6', fontSize: '1.2rem' }} />
                                         Email
                                     </Typography>
                                     <TextField
                                         {...register('email')}
                                         fullWidth
+                                        size="small"
                                         placeholder="Nhập email của bạn"
                                         error={!!errors.email}
-                                        // helperText={errors.email?.message}
+                                        helperText={errors.email?.message}
+                                        autoComplete="email"
                                         sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                fontFamily: "'Nunito', sans-serif",
-                                                borderRadius: 2,
-                                                color: '#212121',
-                                                '&:hover fieldset': { borderColor: '#FF6B35' },
-                                                '&.Mui-focused fieldset': {
-                                                    borderColor: '#FF6B35',
+                                            '& .MuiInputBase-input': {
+                                                color: '#374151 !important',
+                                                '&::placeholder': {
+                                                    color: '#9CA3AF',
+                                                    opacity: 1,
                                                 },
                                             },
-                                            '& .MuiInputLabel-root.Mui-focused': {
-                                                color: '#FF6B35',
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: '#E5E7EB',
                                             },
+                                            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#D1D5DB',
+                                                },
+                                            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#3B82F6',
+                                                },
                                         }}
                                     />
                                 </Grid>
@@ -566,37 +436,41 @@ const ProfileForm = ({ username }: { username: string }) => {
                                 <Grid item xs={12}>
                                     <Typography
                                         sx={{
-                                            fontFamily: "'Nunito', sans-serif",
                                             fontWeight: 600,
                                             color: '#374151',
                                             mb: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
+                                            fontSize: '0.9rem',
                                         }}
                                     >
-                                        <PhoneIcon sx={{ color: '#10B981', fontSize: '1.2rem' }} />
                                         Số điện thoại
                                     </Typography>
                                     <TextField
                                         {...register('phone')}
                                         fullWidth
+                                        size="small"
                                         placeholder="Nhập số điện thoại (VD: 0901234567)"
                                         error={!!errors.phone}
-                                        // helperText={errors.phone?.message}
+                                        helperText={errors.phone?.message}
+                                        autoComplete="tel"
                                         sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                fontFamily: "'Nunito', sans-serif",
-                                                borderRadius: 2,
-                                                color: '#212121',
-                                                '&:hover fieldset': { borderColor: '#FF6B35' },
-                                                '&.Mui-focused fieldset': {
-                                                    borderColor: '#FF6B35',
+                                            '& .MuiInputBase-input': {
+                                                color: '#374151 !important',
+                                                '&::placeholder': {
+                                                    color: '#9CA3AF',
+                                                    opacity: 1,
                                                 },
                                             },
-                                            '& .MuiInputLabel-root.Mui-focused': {
-                                                color: '#FF6B35',
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: '#E5E7EB',
                                             },
+                                            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#D1D5DB',
+                                                },
+                                            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#3B82F6',
+                                                },
                                         }}
                                     />
                                 </Grid>
@@ -604,42 +478,46 @@ const ProfileForm = ({ username }: { username: string }) => {
                                 <Grid item xs={12}>
                                     <Typography
                                         sx={{
-                                            fontFamily: "'Nunito', sans-serif",
                                             fontWeight: 600,
                                             color: '#374151',
                                             mb: 1,
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            gap: 1,
+                                            fontSize: '0.9rem',
                                         }}
                                     >
-                                        <LocationOnIcon
-                                            sx={{ color: '#FF6B35', fontSize: '1.2rem' }}
-                                        />
                                         Địa chỉ
                                     </Typography>
                                     <TextField
                                         {...register('address')}
                                         fullWidth
+                                        size="small"
                                         multiline
                                         rows={3}
                                         placeholder="Nhập địa chỉ của bạn"
                                         error={!!errors.address}
-                                        // helperText={errors.address?.message}
+                                        helperText={errors.address?.message}
+                                        autoComplete="address-line1"
                                         sx={{
-                                            '& .MuiOutlinedInput-root': {
-                                                fontFamily: "'Nunito', sans-serif",
-                                                borderRadius: 2,
-                                                color: '#212121',
-                                                padding: '10px',
-                                                '&:hover fieldset': { borderColor: '#FF6B35' },
-                                                '&.Mui-focused fieldset': {
-                                                    borderColor: '#FF6B35',
+                                            '& .MuiInputBase-input': {
+                                                color: '#374151 !important',
+                                                '&::placeholder': {
+                                                    color: '#9CA3AF',
+                                                    opacity: 1,
                                                 },
                                             },
-                                            '& .MuiInputLabel-root.Mui-focused': {
-                                                color: '#FF6B35',
+                                            '& .MuiInputBase-inputMultiline': {
+                                                color: '#374151 !important',
                                             },
+                                            '& .MuiOutlinedInput-notchedOutline': {
+                                                borderColor: '#E5E7EB',
+                                            },
+                                            '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#D1D5DB',
+                                                },
+                                            '& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline':
+                                                {
+                                                    borderColor: '#3B82F6',
+                                                },
                                         }}
                                     />
                                 </Grid>
@@ -650,20 +528,12 @@ const ProfileForm = ({ username }: { username: string }) => {
                             <Button
                                 onClick={handleCancel}
                                 variant="outlined"
-                                startIcon={<CancelIcon />}
+                                disabled={isUpdating}
                                 sx={{
-                                    borderColor: '#E5E7EB',
-                                    color: '#6B7280',
-                                    fontFamily: "'Nunito', sans-serif",
-                                    fontWeight: 600,
                                     textTransform: 'none',
                                     px: 3,
                                     py: 1,
-                                    borderRadius: 2,
-                                    '&:hover': {
-                                        backgroundColor: '#F3F4F6',
-                                        borderColor: '#D1D5DB',
-                                    },
+                                    fontSize: '0.9rem',
                                 }}
                             >
                                 Hủy
@@ -671,26 +541,12 @@ const ProfileForm = ({ username }: { username: string }) => {
                             <Button
                                 type="submit"
                                 variant="contained"
-                                startIcon={<SaveIcon />}
                                 disabled={isUpdating}
                                 sx={{
-                                    background: 'linear-gradient(135deg, #FF6B35 0%, #F7931E 100%)',
-                                    fontFamily: "'Nunito', sans-serif",
-                                    fontWeight: 700,
                                     textTransform: 'none',
                                     px: 3,
                                     py: 1,
-                                    borderRadius: 2,
-                                    boxShadow: '0 4px 12px rgba(255, 107, 53, 0.3)',
-                                    '&:hover': {
-                                        background:
-                                            'linear-gradient(135deg, #F7931E 0%, #FF6B35 100%)',
-                                        boxShadow: '0 6px 16px rgba(255, 107, 53, 0.4)',
-                                    },
-                                    '&:disabled': {
-                                        background: '#E5E7EB',
-                                        color: '#9CA3AF',
-                                    },
+                                    fontSize: '0.9rem',
                                 }}
                             >
                                 {isUpdating ? 'Đang lưu...' : 'Lưu thay đổi'}

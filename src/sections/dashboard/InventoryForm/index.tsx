@@ -127,13 +127,6 @@ export const InventoryForm: React.FC = () => {
         return sizeColors[size] || { color: '#6b7280', bg: '#f3f4f6' };
     };
 
-    const getQuantityStatus = (quantity: number) => {
-        if (quantity === 0) return { color: '#dc2626', bg: '#fef2f2', status: 'Hết hàng' };
-        if (quantity <= 10) return { color: '#ea580c', bg: '#fff7ed', status: 'Sắp hết' };
-        if (quantity <= 50) return { color: '#d97706', bg: '#fffbeb', status: 'Ít' };
-        return { color: '#16a34a', bg: '#f0fdf4', status: 'Còn nhiều' };
-    };
-
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -521,7 +514,6 @@ export const InventoryForm: React.FC = () => {
                         </TableHead>
                         <TableBody>
                             {paginatedData?.map((inventory: Inventory) => {
-                                const quantityStatus = getQuantityStatus(inventory.quantity);
                                 return (
                                     <TableRow
                                         key={inventory.id}
@@ -578,9 +570,9 @@ export const InventoryForm: React.FC = () => {
                                                         height: '32px',
                                                         borderRadius: '8px',
 
-                                                        color: '#334155',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getProductName(inventory.product_id)}
@@ -608,71 +600,26 @@ export const InventoryForm: React.FC = () => {
                                             />
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Box
+                                            <Typography
                                                 sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: 1,
-                                                    backgroundColor: quantityStatus.bg,
-                                                    borderRadius: 2,
-                                                    p: 1.5,
-                                                    border: `1px solid ${quantityStatus.color}20`,
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
-                                                <NumbersIcon
-                                                    sx={{
-                                                        fontSize: '1rem',
-                                                        color: quantityStatus.color,
-                                                    }}
-                                                />
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '0.9rem',
-                                                        color: quantityStatus.color,
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {inventory.quantity}
-                                                </Typography>
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '0.7rem',
-                                                        color: quantityStatus.color,
-                                                        fontWeight: 500,
-                                                        opacity: 0.8,
-                                                    }}
-                                                >
-                                                    ({quantityStatus.status})
-                                                </Typography>
-                                            </Box>
+                                                {inventory.quantity}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Box
+                                            <Typography
                                                 sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: 1,
-                                                    backgroundColor: '#f0fdf4',
-                                                    borderRadius: 2,
-                                                    p: 1.5,
-                                                    border: '1px solid #d1fae5',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
-                                                <AttachMoneyIcon
-                                                    sx={{ fontSize: '1rem', color: '#22c55e' }}
-                                                />
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '0.85rem',
-                                                        color: '#16a34a',
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {formatPrice(inventory.selling_price)}
-                                                </Typography>
-                                            </Box>
+                                                {formatPrice(inventory.selling_price)}
+                                            </Typography>
                                         </TableCell>
                                     </TableRow>
                                 );

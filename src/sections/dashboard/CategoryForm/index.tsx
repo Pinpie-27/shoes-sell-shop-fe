@@ -366,9 +366,9 @@ export const CategoryForm: React.FC = () => {
                                             <Box>
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
-                                                        color: '#334155',
-                                                        fontSize: '0.95rem',
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {category.name}
@@ -380,8 +380,9 @@ export const CategoryForm: React.FC = () => {
                                         <Tooltip title={category.description} arrow>
                                             <Typography
                                                 sx={{
-                                                    color: '#4b5563',
-                                                    fontSize: '0.85rem',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',

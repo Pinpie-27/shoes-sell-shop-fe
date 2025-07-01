@@ -16,7 +16,6 @@ import {
     Button,
     Card,
     CardContent,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -229,20 +228,6 @@ export const ColorVariantForm: React.FC = () => {
 
         return () => subscription.unsubscribe();
     }, [formHandlerSearch]);
-
-    const getColorChipColor = (colorId: number) => {
-        const colors = [
-            { color: '#3b82f6', bg: '#dbeafe' },
-            { color: '#10b981', bg: '#d1fae5' },
-            { color: '#f59e0b', bg: '#fef3c7' },
-            { color: '#ef4444', bg: '#fecaca' },
-            { color: '#8b5cf6', bg: '#ede9fe' },
-            { color: '#06b6d4', bg: '#cffafe' },
-            { color: '#84cc16', bg: '#ecfccb' },
-            { color: '#f97316', bg: '#fed7aa' },
-        ];
-        return colors[colorId % colors.length];
-    };
 
     const isValidHexColor = (color: string) => {
         return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
@@ -500,24 +485,15 @@ export const ColorVariantForm: React.FC = () => {
                                                     justifyContent: 'center',
                                                 }}
                                             >
-                                                <Chip
-                                                    label={getColorName(colorVariant.color_id)}
-                                                    size="small"
+                                                <Typography
                                                     sx={{
-                                                        backgroundColor: getColorChipColor(
-                                                            colorVariant.color_id
-                                                        ).bg,
-                                                        color: getColorChipColor(
-                                                            colorVariant.color_id
-                                                        ).color,
-                                                        fontWeight: 600,
-                                                        fontSize: '0.75rem',
-                                                        height: '24px',
-                                                        '& .MuiChip-label': {
-                                                            px: 1,
-                                                        },
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
-                                                />
+                                                >
+                                                    {getColorName(colorVariant.color_id)}
+                                                </Typography>
                                             </Box>
                                         </TableCell>
                                         <TableCell align="center">
@@ -530,9 +506,9 @@ export const ColorVariantForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontSize: '0.9rem',
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontWeight: 600,
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {colorVariant.variant_name}

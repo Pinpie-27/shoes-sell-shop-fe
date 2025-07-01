@@ -534,9 +534,9 @@ export const ReviewForm: React.FC = () => {
                                                         height: '32px',
                                                         borderRadius: '8px',
 
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getUserName(review.user_id)}
@@ -560,9 +560,9 @@ export const ReviewForm: React.FC = () => {
                                                         height: '32px',
                                                         borderRadius: '8px',
 
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getProductName(review.product_id)}

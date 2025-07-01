@@ -50,7 +50,6 @@ import {
     useUpdateSupplier,
 } from '@/lib/hooks/features/suppliers';
 
-
 interface Supplier {
     id: number;
     name: string;
@@ -451,7 +450,7 @@ export const SupplierForm: React.FC = () => {
                                             >
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
+                                                        fontWeight: 400,
                                                         color: '#374151',
                                                         fontSize: '0.9rem',
                                                     }}
@@ -462,101 +461,37 @@ export const SupplierForm: React.FC = () => {
                                         </Box>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Box
+                                        <Typography
                                             sx={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
-                                                backgroundColor: '#f0f9ff',
-                                                borderRadius: 2,
-                                                p: 1.5,
-                                                border: '1px solid #e0f2fe',
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
                                         >
-                                            <PhoneIcon
-                                                sx={{ fontSize: '1rem', color: '#0284c7' }}
-                                            />
-                                            <Typography
-                                                sx={{
-                                                    fontSize: '0.85rem',
-                                                    color: '#0369a1',
-                                                    fontWeight: 500,
-                                                }}
-                                            >
-                                                {supplier.phone}
-                                            </Typography>
-                                        </Box>
+                                            {supplier.phone}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Box
+                                        <Typography
                                             sx={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                gap: 1,
-                                                backgroundColor: '#f0fdf4',
-                                                borderRadius: 2,
-                                                p: 1.5,
-                                                border: '1px solid #d1fae5',
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
                                         >
-                                            <EmailIcon
-                                                sx={{ fontSize: '1rem', color: '#16a34a' }}
-                                            />
-                                            <Typography
-                                                sx={{
-                                                    fontSize: '0.8rem',
-                                                    color: '#15803d',
-                                                    fontWeight: 500,
-                                                    maxWidth: '150px',
-                                                    overflow: 'hidden',
-                                                    textOverflow: 'ellipsis',
-                                                    whiteSpace: 'nowrap',
-                                                }}
-                                            >
-                                                {supplier.email}
-                                            </Typography>
-                                        </Box>
+                                            {supplier.email}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Box
+                                        <Typography
                                             sx={{
-                                                display: 'flex',
-                                                alignItems: 'center',
-                                                justifyContent: 'flex-start',
-                                                gap: 1,
-                                                backgroundColor: '#fefbf2',
-                                                borderRadius: 2,
-                                                p: 1.5,
-                                                border: '1px solid #fef3c7',
-                                                minHeight: '50px',
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
                                         >
-                                            <LocationOnIcon
-                                                sx={{
-                                                    fontSize: '1rem',
-                                                    color: '#d97706',
-                                                    flexShrink: 0,
-                                                }}
-                                            />
-                                            <Typography
-                                                sx={{
-                                                    fontSize: '0.8rem',
-                                                    color: '#b45309',
-                                                    fontWeight: 400,
-                                                    lineHeight: 1.3,
-                                                    textAlign: 'left',
-                                                    overflow: 'hidden',
-                                                    display: '-webkit-box',
-                                                    WebkitLineClamp: 2,
-                                                    WebkitBoxOrient: 'vertical',
-                                                    whiteSpace: 'normal',
-                                                }}
-                                            >
-                                                {supplier.address}
-                                            </Typography>
-                                        </Box>
+                                            {supplier.address}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box

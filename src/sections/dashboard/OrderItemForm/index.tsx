@@ -15,8 +15,6 @@ import {
     Box,
     Button,
     Card,
-    CardContent,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -163,18 +161,6 @@ export const OrderItemForm: React.FC = () => {
         handleCloseDialog();
     };
 
-    const getStatusChipColor = (status: string) => {
-        const statusColors: { [key: string]: { color: string; bg: string } } = {
-            pending: { color: '#d97706', bg: '#fffbeb' },
-            processing: { color: '#0891b2', bg: '#ecfeff' },
-            shipped: { color: '#7c3aed', bg: '#faf5ff' },
-            delivered: { color: '#16a34a', bg: '#f0fdf4' },
-            cancelled: { color: '#dc2626', bg: '#fef2f2' },
-            returned: { color: '#ea580c', bg: '#fff7ed' },
-        };
-        return statusColors[status.toLowerCase()] || { color: '#6b7280', bg: '#f3f4f6' };
-    };
-
     const formatPrice = (price: number) =>
         new Intl.NumberFormat('vi-VN', {
             style: 'currency',
@@ -182,15 +168,6 @@ export const OrderItemForm: React.FC = () => {
         }).format(price);
 
     // Calculate summary statistics
-
-    const statusCounts = filteredData.reduce(
-        (acc: any, item: any) => {
-            // eslint-disable-next-line no-param-reassign
-            acc[item.status] = (acc[item.status] || 0) + 1;
-            return acc;
-        },
-        {} as { [key: string]: number }
-    );
 
     if (isLoading) {
         return (
@@ -252,84 +229,6 @@ export const OrderItemForm: React.FC = () => {
                 <Typography variant="body1" sx={{ color: '#64748b', fontSize: '1.1rem' }}>
                     Theo dõi và cập nhật trạng thái các sản phẩm trong đơn hàng
                 </Typography>
-            </Box>
-
-            {/* Summary Cards */}
-            <Box
-                sx={{
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                    gap: 3,
-                    mb: 4,
-                }}
-            >
-                <Card
-                    elevation={2}
-                    sx={{
-                        borderRadius: 3,
-                        background: 'linear-gradient(135deg, #fef3c7 0%, #f59e0b 100%)',
-                    }}
-                >
-                    <CardContent sx={{ p: 3 }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Box>
-                                <Typography
-                                    variant="h4"
-                                    sx={{ fontWeight: 700, color: '#92400e', mb: 1 }}
-                                >
-                                    {statusCounts['pending'] || 0}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: '#a16207', fontWeight: 500 }}
-                                >
-                                    Đang chờ xử lý
-                                </Typography>
-                            </Box>
-                            <FlagIcon sx={{ fontSize: '3rem', color: '#a16207' }} />
-                        </Box>
-                    </CardContent>
-                </Card>
-
-                <Card
-                    elevation={2}
-                    sx={{
-                        borderRadius: 3,
-                        background: 'linear-gradient(135deg, #ede9fe 0%, #8b5cf6 100%)',
-                    }}
-                >
-                    <CardContent sx={{ p: 3 }}>
-                        <Box
-                            sx={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'space-between',
-                            }}
-                        >
-                            <Box>
-                                <Typography
-                                    variant="h4"
-                                    sx={{ fontWeight: 700, color: '#581c87', mb: 1 }}
-                                >
-                                    {statusCounts['delivered'] || 0}
-                                </Typography>
-                                <Typography
-                                    variant="body2"
-                                    sx={{ color: '#6b21a8', fontWeight: 500 }}
-                                >
-                                    Đã giao hàng
-                                </Typography>
-                            </Box>
-                            <InventoryIcon sx={{ fontSize: '3rem', color: '#6b21a8' }} />
-                        </Box>
-                    </CardContent>
-                </Card>
             </Box>
 
             {/* Table */}
@@ -497,9 +396,9 @@ export const OrderItemForm: React.FC = () => {
                                                         width: '32px',
                                                         height: '32px',
                                                         borderRadius: '8px',
-                                                        color: '#334155',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {orderItem.order_id}
@@ -522,9 +421,9 @@ export const OrderItemForm: React.FC = () => {
                                                         width: '32px',
                                                         height: '32px',
                                                         borderRadius: '8px',
-                                                        color: '#334155',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getProductName(orderItem.product_id)}
@@ -556,48 +455,26 @@ export const OrderItemForm: React.FC = () => {
                                             </Box>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Box
+                                            <Typography
                                                 sx={{
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    justifyContent: 'center',
-                                                    gap: 1,
-                                                    backgroundColor: '#f0fdf4',
-                                                    borderRadius: 2,
-                                                    p: 1.5,
-                                                    border: '1px solid #d1fae5',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
-                                                <Typography
-                                                    sx={{
-                                                        fontSize: '0.85rem',
-                                                        color: '#16a34a',
-                                                        fontWeight: 600,
-                                                    }}
-                                                >
-                                                    {formatPrice(orderItem.price)}
-                                                </Typography>
-                                            </Box>
+                                                {formatPrice(orderItem.price)}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell align="center">
-                                            <Chip
-                                                label={orderItem.status}
-                                                size="small"
+                                            <Typography
                                                 sx={{
-                                                    backgroundColor: getStatusChipColor(
-                                                        orderItem.status
-                                                    ).bg,
-                                                    color: getStatusChipColor(orderItem.status)
-                                                        .color,
-                                                    fontWeight: 600,
-                                                    fontSize: '0.75rem',
-                                                    height: '28px',
-                                                    textTransform: 'capitalize',
-                                                    '& .MuiChip-label': {
-                                                        px: 1.5,
-                                                    },
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
-                                            />
+                                            >
+                                                {orderItem.status}
+                                            </Typography>
                                         </TableCell>
                                         <TableCell align="center">
                                             <Tooltip title="Cập nhật trạng thái">

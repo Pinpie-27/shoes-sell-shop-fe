@@ -477,9 +477,9 @@ export const ProductImageForm: React.FC = () => {
                                                         height: '32px',
                                                         borderRadius: '8px',
 
+                                                        fontWeight: 400,
                                                         color: '#374151',
-                                                        fontWeight: 700,
-                                                        fontSize: '0.8rem',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {getProductName(productImage.product_id)}

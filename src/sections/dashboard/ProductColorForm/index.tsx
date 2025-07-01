@@ -51,7 +51,6 @@ import {
     useUpdateProductColor,
 } from '../../../lib/hooks/features/product-colors';
 
-
 interface ProductColor {
     id: number;
     product_id: number;
@@ -461,9 +460,9 @@ export const ProductColorForm: React.FC = () => {
                                                     height: '32px',
                                                     borderRadius: '8px',
 
-                                                    color: '#334155',
-                                                    fontWeight: 700,
-                                                    fontSize: '0.8rem',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {getProductName(productColor.product_id)}
@@ -483,9 +482,9 @@ export const ProductColorForm: React.FC = () => {
                                                     width: '100%',
                                                     borderRadius: '8px',
 
-                                                    color: '#334155',
-                                                    fontWeight: 700,
-                                                    fontSize: '0.8rem',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                 }}
                                             >
                                                 {getColorVariantName(productColor.color_variant_id)}

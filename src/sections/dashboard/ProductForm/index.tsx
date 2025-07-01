@@ -17,7 +17,6 @@ import {
     Button,
     Card,
     CardContent,
-    Chip,
     Dialog,
     DialogActions,
     DialogContent,
@@ -252,28 +251,6 @@ export const ProductForm: React.FC = () => {
         setPage(0);
     };
 
-    const getCategoryChipColor = (categoryId: number) => {
-        const colors = [
-            { color: '#3b82f6', bg: '#dbeafe' },
-            { color: '#10b981', bg: '#d1fae5' },
-            { color: '#f59e0b', bg: '#fef3c7' },
-            { color: '#ef4444', bg: '#fecaca' },
-            { color: '#8b5cf6', bg: '#ede9fe' },
-        ];
-        return colors[categoryId % colors.length];
-    };
-
-    const getStyleChipColor = (styleId: number) => {
-        const colors = [
-            { color: '#06b6d4', bg: '#cffafe' },
-            { color: '#84cc16', bg: '#ecfccb' },
-            { color: '#f97316', bg: '#fed7aa' },
-            { color: '#ec4899', bg: '#fce7f3' },
-            { color: '#6366f1', bg: '#e0e7ff' },
-        ];
-        return colors[styleId % colors.length];
-    };
-
     if (isLoading) {
         return (
             <Box
@@ -505,9 +482,9 @@ export const ProductForm: React.FC = () => {
                                             <Box>
                                                 <Typography
                                                     sx={{
-                                                        fontWeight: 600,
-                                                        color: '#334155',
-                                                        fontSize: '0.95rem',
+                                                        fontWeight: 400,
+                                                        color: '#374151',
+                                                        fontSize: '0.9rem',
                                                     }}
                                                 >
                                                     {product.name}
@@ -519,8 +496,9 @@ export const ProductForm: React.FC = () => {
                                         <Tooltip title={product.description} arrow>
                                             <Typography
                                                 sx={{
-                                                    color: '#4b5563',
-                                                    fontSize: '0.85rem',
+                                                    fontWeight: 400,
+                                                    color: '#374151',
+                                                    fontSize: '0.9rem',
                                                     overflow: 'hidden',
                                                     textOverflow: 'ellipsis',
                                                     whiteSpace: 'nowrap',
@@ -533,45 +511,26 @@ export const ProductForm: React.FC = () => {
                                         </Tooltip>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Chip
-                                            label={getCategoryName(Number(product.category_id))}
-                                            size="small"
+                                        <Typography
                                             sx={{
-                                                backgroundColor: getCategoryChipColor(
-                                                    Number(product.category_id)
-                                                ).bg,
-                                                color: getCategoryChipColor(
-                                                    Number(product.category_id)
-                                                ).color,
-                                                fontWeight: 600,
-                                                fontSize: '0.8rem',
-                                                height: '28px',
-                                                minWidth: '60px',
-                                                '& .MuiChip-label': {
-                                                    px: 1.5,
-                                                },
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
-                                        />
+                                        >
+                                            {getCategoryName(Number(product.category_id))}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
-                                        <Chip
-                                            label={getStyleName(Number(product.style_id))}
-                                            size="small"
+                                        <Typography
                                             sx={{
-                                                backgroundColor: getStyleChipColor(
-                                                    Number(product.style_id)
-                                                ).bg,
-                                                color: getStyleChipColor(Number(product.style_id))
-                                                    .color,
-                                                fontWeight: 600,
-                                                fontSize: '0.8rem',
-                                                height: '28px',
-                                                minWidth: '60px',
-                                                '& .MuiChip-label': {
-                                                    px: 1.5,
-                                                },
+                                                fontWeight: 400,
+                                                color: '#374151',
+                                                fontSize: '0.9rem',
                                             }}
-                                        />
+                                        >
+                                            {getStyleName(Number(product.style_id))}
+                                        </Typography>
                                     </TableCell>
                                     <TableCell align="center">
                                         <Box
