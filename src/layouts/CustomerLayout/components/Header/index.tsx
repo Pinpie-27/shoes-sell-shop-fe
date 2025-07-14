@@ -202,7 +202,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                 >
                     <MenuItem sx={{ justifyContent: 'center' }}>
                         <Typography sx={{ color: 'black', px: 1 }} variant="body1">
-                            Username:
+                            Tên người dùng:
                         </Typography>
                         <Typography sx={{ color: 'black' }} variant="body1">
                             {username}
@@ -215,7 +215,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                             variant="body1"
                             onClick={() => navigate(`/customers/profile/${username}`)}
                         >
-                            Profile
+                            Hồ sơ cá nhân
                         </Typography>
                     </MenuItem>
                     <Divider sx={{ my: 1, mx: 2, backgroundColor: 'var(--color-primary-main)' }} />
@@ -227,14 +227,14 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                                 navigate(`/customers/orderDetail`);
                             }}
                         >
-                            Orders
+                            Lịch sử đơn hàng
                         </Typography>
                     </MenuItem>
                     <Divider sx={{ my: 1, mx: 2, backgroundColor: 'var(--color-primary-main)' }} />
                     <MenuItem sx={{ justifyContent: 'center' }} onClick={handleLogout}>
                         <LogoutIcon sx={{ color: 'var(--color-primary-main)' }} />
                         <Typography sx={{ color: 'black', ml: 1 }} variant="body2">
-                            Logout
+                            Đăng xuất
                         </Typography>
                     </MenuItem>
                 </Menu>

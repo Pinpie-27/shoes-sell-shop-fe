@@ -499,6 +499,7 @@ const ProfileForm = ({ username }: { username: string }) => {
                                         sx={{
                                             '& .MuiInputBase-input': {
                                                 color: '#374151 !important',
+                                                padding: '10px',
                                                 '&::placeholder': {
                                                     color: '#9CA3AF',
                                                     opacity: 1,

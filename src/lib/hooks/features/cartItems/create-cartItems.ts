@@ -22,10 +22,10 @@ export const useCreateCartItem = () => {
         mutationFn: createCartItem,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cartItems'] });
-            toast.success(`Cart item created successfully`);
+            toast.success(`Tạo giỏ hàng thành công`);
         },
         onError: () => {
-            toast.error('Failed to create cart item');
+            toast.error('Tạo giỏ hàng thất bại');
         },
     });
 };

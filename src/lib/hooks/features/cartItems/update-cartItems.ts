@@ -23,10 +23,10 @@ export const useUpdateCartItem = () => {
         mutationFn: updateCartItemById,
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['cartItems'] });
-            toast.success(`Cart item updated successfully`);
+            toast.success(`Sửa giỏ hàng thành công`);
         },
         onError: () => {
-            toast.error('Failed to update cart item ');
+            toast.error('Sửa giỏ hàng thất bại');
         },
     });
 };

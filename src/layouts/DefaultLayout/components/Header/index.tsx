@@ -65,7 +65,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                 >
                     <MenuItem sx={{ justifyContent: 'center' }}>
                         <Typography sx={{ color: 'black', px: 1 }} variant="body1">
-                            Username:
+                            Tên người dùng:
                         </Typography>
                         <Typography sx={{ color: 'black' }} variant="body1">
                             {username}
@@ -75,7 +75,7 @@ export const Header: React.FC<HeaderProps> = ({ sidebarOpen, setSidebarOpen }) =
                     <MenuItem sx={{ justifyContent: 'center' }} onClick={handleLogout}>
                         <LogoutIcon sx={{ color: 'var(--color-primary-main)' }} />
                         <Typography sx={{ color: 'black', ml: 1 }} variant="body2">
-                            Logout
+                            Đăng xuất
                         </Typography>
                     </MenuItem>
                 </Menu>
