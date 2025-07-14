@@ -3,7 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react';
 
-import { zodResolver } from '@hookform/resolvers/zod';
+// import { zodResolver } from '@hookform/resolvers/zod';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import EditNoteOutlinedIcon from '@mui/icons-material/EditNoteOutlined';
@@ -35,8 +35,8 @@ import { useForm } from 'react-hook-form';
 import tw from 'twin.macro';
 
 import { FieldGroup } from '@/components/interactive';
-import { useSchema } from '@/lib/hooks';
-import { formStructure, useGetProducts } from '@/lib/hooks/features';
+// import { useSchema } from '@/lib/hooks';
+import { useGetProducts } from '@/lib/hooks/features';
 import {
     formStructureOrderItemStatus,
     useGetAllOrderItems,
@@ -86,14 +86,14 @@ export const OrderItemForm: React.FC = () => {
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-    const schema = useSchema<typeof selectedOrderItem>(formStructure, {
-        check: () => {
-            return true;
-        },
-    });
+    // const schema = useSchema<typeof selectedOrderItem>(formStructure, {
+    //     check: () => {
+    //         return true;
+    //     },
+    // });
 
     const formHandler = useForm<Order_Items>({
-        resolver: zodResolver(schema),
+        // resolver: zodResolver(schema),
         defaultValues: {
             id: 0,
             status: '',
